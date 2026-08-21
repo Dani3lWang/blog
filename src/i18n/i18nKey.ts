@@ -263,6 +263,7 @@ enum I18nKey {
 	moviesGamesTabMusic = "moviesGamesTabMusic",
 	moviesGamesNoData = "moviesGamesNoData",
 	moviesGamesDoubanRating = "moviesGamesDoubanRating",
+	moviesGamesTracklist = "moviesGamesTracklist",
 
 	// 游戏页面（平台游戏库）
 	games = "games",

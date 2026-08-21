@@ -275,6 +275,7 @@ export const ru: Translation = {
 	[Key.moviesGamesTabMusic]: "Музыка",
 	[Key.moviesGamesNoData]: "Пока нет контента",
 	[Key.moviesGamesDoubanRating]: "Рейтинг Douban",
+	[Key.moviesGamesTracklist]: "Список треков",
 
 	// Страница игр (библиотека по платформам)
 	[Key.games]: "Игры",
