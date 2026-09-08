@@ -89,6 +89,9 @@
 - [x] **亮暗色模式** - 支持亮色/暗色/跟随系统三种模式
 - [x] **导航栏自定义** - Logo、标题、链接全面自定义，支持 static/fixed/dynamic 三种模式（`navbarMode`）
 - [x] **沉浸阅读模式** - 文章页可一键进入无干扰的全屏阅读视图
+- [x] **项目展示页** - `/projects/` 页面聚合展示项目卡片与链接，按状态过滤（`siteConfig.pages.projects` 开关，内容放 `src/content/projects/`）
+- [x] **RSS / Atom 订阅** - 内置 RSS 与 Atom 订阅源及订阅引导页，`siteConfig.feed.contentMode` 可选全文或摘要模式
+- [x] **llms.txt 支持** - 站点自动生成 `/llms.txt`，方便 LLM 理解站点结构
 - [x] **壁纸模式切换** - 横幅壁纸、全屏壁纸、全屏透明壁纸、纯色背景
 - [x] **主题色自定义** - 360° 色相调节
 
