@@ -46,22 +46,46 @@ const KEY_PAGES: KeyPage[] = [
 		pageKey: "projects",
 	},
 	{
+		labelKey: I18nKey.books,
+		path: "/books/",
+		descKey: I18nKey.booksSubtitle,
+		pageKey: "books",
+	},
+	{
+		labelKey: I18nKey.moviesGames,
+		path: "/movies-games/",
+		descKey: I18nKey.moviesGamesSubtitle,
+		pageKey: "moviesGames",
+	},
+	{
+		labelKey: I18nKey.games,
+		path: "/games/",
+		descKey: I18nKey.gamesSubtitle,
+		pageKey: "games",
+	},
+	{
+		labelKey: I18nKey.changelog,
+		path: "/changelog/",
+		descKey: I18nKey.changelogSubtitle,
+		pageKey: "changelog",
+	},
+	{
 		labelKey: I18nKey.gallery,
-		path: "/gallery/",
+		path: "/moments/gallery/",
 		descKey: I18nKey.galleryDescription,
 		pageKey: "gallery",
+	},
+	{
+		labelKey: I18nKey.guestbook,
+		path: "/moments/guestbook/",
+		descKey: I18nKey.guestbookDescription,
+		pageKey: "guestbook",
 	},
 	{
 		labelKey: I18nKey.booknav,
 		path: "/booknav/",
 		descKey: I18nKey.booknavDescription,
 		pageKey: "booknav",
-	},
-	{
-		labelKey: I18nKey.bilibili,
-		path: "/bilibili/",
-		descKey: I18nKey.bilibiliSubtitle,
-		pageKey: "bilibili",
 	},
 	{
 		labelKey: I18nKey.bangumi,
@@ -74,12 +98,6 @@ const KEY_PAGES: KeyPage[] = [
 		path: "/vndb/",
 		descKey: I18nKey.vndbSubtitle,
 		pageKey: "vndb",
-	},
-	{
-		labelKey: I18nKey.mal,
-		path: "/myanimelist/",
-		descKey: I18nKey.malSubtitle,
-		pageKey: "mal",
 	},
 	{
 		labelKey: I18nKey.sponsor,

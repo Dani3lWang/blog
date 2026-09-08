@@ -253,6 +253,9 @@ export default defineConfig({
 				if (pathname === "/dynamic/" && !siteConfig.pages.dynamic) {
 					return false;
 				}
+				if (pathname.startsWith("/projects/") && !siteConfig.pages.projects) {
+					return false;
+				}
 				if (pathname.startsWith("/gallery/") && !siteConfig.pages.gallery) {
 					return false;
 				}
