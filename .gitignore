@@ -38,6 +38,7 @@ yarn.lock
 .vscode/
 .reasonix/
 .zcode/
+.trae/
 
 # docs
 Firefly-docs/
