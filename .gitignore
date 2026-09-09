@@ -39,10 +39,11 @@ yarn.lock
 .reasonix/
 .zcode/
 .trae/
+.commandcode/
 
 # docs
 Firefly-docs/
-docs/分析/
+docs/分析
 src/content/example/
 src/content/template/
 .playwright-mcp/
