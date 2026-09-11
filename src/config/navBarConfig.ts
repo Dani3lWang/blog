@@ -96,7 +96,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		const defaultUrl = siteConfig.pages.books
 			? "/books/"
 			: siteConfig.pages.moviesGames
-				? "/movies-games/"
+				? "/TV-albums/"
 				: siteConfig.pages.games
 					? "/games/"
 					: siteConfig.pages.musicPage
@@ -275,7 +275,7 @@ export const LinkPresets: Record<string, NavBarLink> = {
 	},
 	MoviesGames: {
 		name: "影视和音乐",
-		url: "/movies-games/",
+		url: "/TV-albums/",
 		icon: "material-symbols:movie",
 	},
 	Games: {

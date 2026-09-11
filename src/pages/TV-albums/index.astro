@@ -30,14 +30,6 @@ const metingApiBase = musicPlayerConfig.meting?.api || "";
 
 const customBangumi = await getCollection("bangumi");
 
-const statusMap: Record<number, string> = {
-	1: "wish",
-	2: "collect",
-	3: "doing",
-	4: "on_hold",
-	5: "dropped",
-};
-
 interface MgItem {
 	subject_id: number;
 	subject_type: number;
@@ -309,7 +301,6 @@ interface SectionData {
 	tabName: string;
 	tabCount: number;
 	items: MgItem[] | MusicItem[];
-	filters: { value: string; label: string; count: number }[];
 	isMusic: boolean;
 }
 
@@ -327,63 +318,11 @@ for (const tc of tabConfig) {
 
 	if (tc.key !== "all" && items.length === 0) continue;
 
-	const statusCounts: Record<string, number> = {};
-	for (const item of items) {
-		const statusValue = "status" in item ? item.status : (item as MgItem).type;
-		const s = statusMap[statusValue] || "unknown";
-		statusCounts[s] = (statusCounts[s] || 0) + 1;
-	}
-
-	// 音乐分区状态收敛为"听过/在听/搁置/抛弃"(无想听档),影视沿用"看过/在看/想看"
-	const isMusicSection = tc.key === "music";
-
-	const filters = [
-		{
-			value: "all",
-			label: i18n(I18nKey.bangumiFilterAll),
-			count: items.length,
-		},
-		{
-			value: "collect",
-			label: isMusicSection
-				? i18n(I18nKey.bangumiFilterMusicListened)
-				: i18n(I18nKey.bangumiFilterWatched),
-			count: statusCounts.collect || 0,
-		},
-		{
-			value: "doing",
-			label: isMusicSection
-				? i18n(I18nKey.bangumiFilterMusicListening)
-				: i18n(I18nKey.bangumiFilterWatching),
-			count: statusCounts.doing || 0,
-		},
-		...(isMusicSection
-			? []
-			: [
-					{
-						value: "wish",
-						label: i18n(I18nKey.bangumiFilterWish),
-						count: statusCounts.wish || 0,
-					},
-				]),
-		{
-			value: "on_hold",
-			label: i18n(I18nKey.bangumiFilterOnHold),
-			count: statusCounts.on_hold || 0,
-		},
-		{
-			value: "dropped",
-			label: i18n(I18nKey.bangumiFilterDropped),
-			count: statusCounts.dropped || 0,
-		},
-	].filter((f) => f.value === "all" || f.count > 0);
-
 	sections.push({
 		tabKey: tc.key,
 		tabName: i18n(tc.i18nKey),
 		tabCount: items.length,
 		items,
-		filters,
 		isMusic: tc.key === "music",
 	});
 }
@@ -458,26 +397,6 @@ const musicDataJson = JSON.stringify({
 						<div class:list={["mg-section", { "hidden": sec.tabKey !== activeTab }]} data-section={sec.tabKey}>
 							{sec.items.length > 0 ? (
 								<>
-									<!-- Filters -->
-									<div class="mg-filter-wrapper flex flex-wrap gap-2 mb-5">
-										{sec.filters.map((filter) => (
-											<button
-												class:list={[
-													"mg-filter-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border flex-shrink-0",
-													filter.value === "all"
-														? "bg-[var(--primary)] text-white border-[var(--primary)] shadow-sm"
-														: "bg-[var(--card-bg)] text-[var(--content-meta)] border-[var(--line-divider)] hover:border-[var(--primary)]/30 hover:text-[var(--deep-text)]",
-												]}
-												data-filter={filter.value}
-												data-section={sec.tabKey}
-												type="button"
-											>
-												<span>{filter.label}</span>
-												<span class="text-[10px] font-semibold tabular-nums">({filter.count})</span>
-											</button>
-										))}
-									</div>
-
 									<!-- Grid -->
 									<div class="mg-grid grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
 										{sec.isMusic
@@ -485,7 +404,6 @@ const musicDataJson = JSON.stringify({
 													<div
 														class="mg-item music-item"
 														data-item-section={sec.tabKey}
-														data-item-status={statusMap[item.status] || "unknown"}
 													>
 														<a href={item.link} class="music-card-link">
 															<MusicCollectionCard
@@ -507,7 +425,6 @@ const musicDataJson = JSON.stringify({
 													<div
 														class="mg-item"
 														data-item-section={sec.tabKey}
-														data-item-status={statusMap[item.type] || "unknown"}
 													>
 														<MovieGameCard item={item as any} link={item.link} />
 													</div>
@@ -549,7 +466,7 @@ const musicDataJson = JSON.stringify({
 			/>
 		</div>
 	</div>
-<Comment customPath="/movies-games/" />
+<Comment customPath="/TV-albums/" />
 </MainGridLayout>
 
 <style>
@@ -603,4 +520,3 @@ const musicDataJson = JSON.stringify({
 		}
 	}
 </style>
-

@@ -38,21 +38,7 @@ const TAB_INACTIVE_CLASSES = [
 	"hover:text-[var(--deep-text)]",
 	"hover:bg-[var(--btn-card-bg-hover)]",
 ];
-const FILTER_ACTIVE_CLASSES = [
-	"bg-[var(--primary)]",
-	"text-white",
-	"border-[var(--primary)]",
-	"shadow-sm",
-];
-const FILTER_INACTIVE_CLASSES = [
-	"bg-[var(--card-bg)]",
-	"text-[var(--content-meta)]",
-	"border-[var(--line-divider)]",
-	"hover:border-[var(--primary)]/30",
-	"hover:text-[var(--deep-text)]",
-];
-
-// 防重复绑定：mg-tab / games-tab / filter 通过 clone 去重，无全局状态；
+// 防重复绑定：mg-tab / games-tab 通过 clone 去重，无全局状态；
 // music manager 的事件监听需要全局标记避免累积
 let musicListenersAttached = false;
 
@@ -97,56 +83,6 @@ function initMgTabs(root: HTMLElement): void {
 			sections.forEach((section) => {
 				section.classList.toggle("hidden", section.dataset.section !== target);
 			});
-		});
-	});
-}
-
-function initMgFilters(root: HTMLElement): void {
-	const filterButtons = root.querySelectorAll<HTMLElement>(".mg-filter-btn");
-	if (filterButtons.length === 0) return;
-
-	filterButtons.forEach((btn) => {
-		const clone = btn.cloneNode(true) as HTMLElement;
-		btn.parentNode?.replaceChild(clone, btn);
-	});
-
-	root.querySelectorAll<HTMLElement>(".mg-filter-btn").forEach((btn) => {
-		btn.addEventListener("click", () => {
-			const filter = btn.dataset.filter;
-			const sectionId = btn.dataset.section;
-
-			root
-				.querySelectorAll<HTMLElement>(
-					`[data-section="${sectionId}"].mg-filter-btn`,
-				)
-				.forEach((b) => {
-					b.classList.remove(...FILTER_ACTIVE_CLASSES);
-					b.classList.add(...FILTER_INACTIVE_CLASSES);
-				});
-			btn.classList.remove(...FILTER_INACTIVE_CLASSES);
-			btn.classList.add(...FILTER_ACTIVE_CLASSES);
-
-			root
-				.querySelectorAll<HTMLElement>(`[data-item-section="${sectionId}"]`)
-				.forEach((item) => {
-					const show = filter === "all" || item.dataset.itemStatus === filter;
-					item.classList.toggle("hidden", !show);
-					item.style.display = show ? "block" : "none";
-				});
-
-			const pagination = root.querySelector<HTMLElement>(
-				`[data-pagination-section="${sectionId}"]`,
-			);
-			if (pagination) {
-				const visible = root.querySelectorAll(
-					`[data-item-section="${sectionId}"]:not(.hidden)`,
-				);
-				pagination.dispatchEvent(
-					new CustomEvent("updatePagination", {
-						detail: { visibleCount: visible.length },
-					}),
-				);
-			}
 		});
 	});
 }
@@ -405,14 +341,12 @@ export function initPageTabs(): void {
 	if (!root) return;
 
 	const hasMgTabs = root.querySelector(".mg-tab") !== null;
-	const hasMgFilters = root.querySelector(".mg-filter-btn") !== null;
 	const hasGamesTabs = root.querySelector(".games-tab") !== null;
 	const hasMusic = root.querySelector(".music-card") !== null;
 	const hasDetailTracklist =
 		root.querySelector(".mg-track[data-track-index]") !== null;
 
 	if (hasMgTabs) initMgTabs(root);
-	if (hasMgFilters) initMgFilters(root);
 	if (hasGamesTabs) initGamesTabs(root);
 	if (hasMusic) {
 		const data = getMusicData(root);

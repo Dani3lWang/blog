@@ -53,7 +53,7 @@ const KEY_PAGES: KeyPage[] = [
 	},
 	{
 		labelKey: I18nKey.moviesGames,
-		path: "/movies-games/",
+		path: "/TV-albums/",
 		descKey: I18nKey.moviesGamesSubtitle,
 		pageKey: "moviesGames",
 	},

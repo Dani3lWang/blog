@@ -253,7 +253,7 @@ src/
 
 ## 🎬 影视与音乐（豆瓣评分）
 
-`/movies-games/` 页面的影视条目来自 `src/content/bangumi/` 内容集合：`category` 用 `real`（影视）或 `anime`（动画），`subcategory` 用 `tv` / `movie` / `documentary` / `anime`，短评写在 `comment` 字段，悬停卡片即可查看。
+`/TV-albums/` 页面的影视条目来自 `src/content/bangumi/` 内容集合：`category` 用 `real`（影视）或 `anime`（动画），`subcategory` 用 `tv` / `movie` / `documentary` / `anime`，短评写在 `comment` 字段，悬停卡片即可查看。
 
 条目配置 `doubanId`（豆瓣条目 ID，即豆瓣页面 URL 中的数字）后，构建时会自动从豆瓣抓取评分，卡片短评区域会显示豆瓣评分，点击右侧外链图标可跳转豆瓣条目页：
 
@@ -279,7 +279,7 @@ pnpm douban-ratings --refresh # 强制重新抓取全部
 
 ## 🎮 游戏模块（平台游戏库）
 
-独立的游戏记录页面 `/games/`，按平台（Steam / Nintendo Switch / Xbox / Epic / PlayStation）展示游戏，支持游玩时长、最近游玩、成就进度等数据。影视与游戏页面（`/movies-games/`）已剥离游戏内容，专注影视和音乐。
+独立的游戏记录页面 `/games/`，按平台（Steam / Nintendo Switch / Xbox / Epic / PlayStation）展示游戏，支持游玩时长、最近游玩、成就进度等数据。影视和音乐页面（`/TV-albums/`）已剥离游戏内容，专注影视和音乐。
 
 ### 开启/关闭
 

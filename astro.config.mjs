@@ -75,6 +75,7 @@ export default defineConfig({
 	redirects: {
 		"/gallery/": "/moments/gallery/",
 		"/guestbook/": "/moments/guestbook/",
+		"/movies-games/": "/TV-albums/",
 		"/life/": "/moments/",
 		"/life/notebooks/": "/moments/notebooks/",
 		"/life/routines/": "/routines/",
@@ -310,7 +311,7 @@ export default defineConfig({
 				if (pathname === "/books/" && !siteConfig.pages.books) {
 					return false;
 				}
-				if (pathname === "/movies-games/" && !siteConfig.pages.moviesGames) {
+				if (pathname === "/TV-albums/" && !siteConfig.pages.moviesGames) {
 					return false;
 				}
 				if (pathname === "/games/" && !siteConfig.pages.games) {
