@@ -193,7 +193,7 @@ export const ja: Translation = {
 	[Key.bangumiCategoryReal]: "実写",
 
 	// バングミデータ更新
-	[Key.bangumiLastUpdated]: "データ更新",
+	[Key.bangumiLastUpdated]: "データ更新日",
 	[Key.bangumiUpdatedAt]: "ビルド時間",
 	[Key.bangumiDataStatic]: "静的データ",
 
@@ -221,7 +221,7 @@ export const ja: Translation = {
 	[Key.vndbNotConfigured]: "VNDB ユーザーIDが未設定です",
 	[Key.vndbNotConfiguredDesc]:
 		"src/config/siteConfig.ts で VNDB ユーザーIDを設定してください",
-	[Key.vndbLastUpdated]: "データ更新",
+	[Key.vndbLastUpdated]: "データ更新日",
 	[Key.vndbVotes]: "票",
 	[Key.vndbLengthVeryShort]: "非常に短い",
 	[Key.vndbLengthShort]: "短い",
@@ -516,6 +516,7 @@ export const ja: Translation = {
 	[Key.galleryAlbums]: "冊のアルバム",
 	[Key.galleryNoAlbums]: "アルバムがありません",
 	[Key.galleryBackToAlbums]: "アルバム一覧に戻る",
+	[Key.galleryEnterAlbum]: "アルバムを見る",
 	[Key.searchAlbums]: "アルバムを検索...",
 
 	// パスワード保護

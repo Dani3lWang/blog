@@ -194,7 +194,7 @@ export const ru: Translation = {
 	[Key.bangumiCategoryReal]: "Реальный",
 
 	// Обновление данных Бангуми
-	[Key.bangumiLastUpdated]: "Данные обновлены",
+	[Key.bangumiLastUpdated]: "Дата обновления данных",
 	[Key.bangumiUpdatedAt]: "Время сборки",
 	[Key.bangumiDataStatic]: "Статические данные",
 
@@ -222,7 +222,7 @@ export const ru: Translation = {
 	[Key.vndbNotConfigured]: "ID пользователя VNDB не настроен",
 	[Key.vndbNotConfiguredDesc]:
 		"Укажите ID пользователя VNDB в src/config/siteConfig.ts",
-	[Key.vndbLastUpdated]: "Данные обновлены",
+	[Key.vndbLastUpdated]: "Дата обновления данных",
 	[Key.vndbVotes]: "голосов",
 	[Key.vndbLengthVeryShort]: "Очень короткая",
 	[Key.vndbLengthShort]: "Короткая",
@@ -525,6 +525,7 @@ export const ru: Translation = {
 	[Key.galleryAlbums]: "альбомов",
 	[Key.galleryNoAlbums]: "Пока нет альбомов",
 	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
+	[Key.galleryEnterAlbum]: "Открыть альбом",
 	[Key.searchAlbums]: "Поиск альбомов...",
 
 	// Защита паролем
