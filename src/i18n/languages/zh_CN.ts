@@ -189,7 +189,7 @@ export const zh_CN: Translation = {
 	[Key.bangumiCategoryReal]: "三次元",
 
 	// 番组数据更新
-	[Key.bangumiLastUpdated]: "数据更新于",
+	[Key.bangumiLastUpdated]: "数据更新日期",
 	[Key.bangumiUpdatedAt]: "构建时间",
 	[Key.bangumiDataStatic]: "静态数据",
 
@@ -217,7 +217,7 @@ export const zh_CN: Translation = {
 	[Key.vndbNotConfigured]: "未配置 VNDB 用户ID",
 	[Key.vndbNotConfiguredDesc]:
 		"请在 src/config/siteConfig.ts 中配置你的 VNDB 用户ID",
-	[Key.vndbLastUpdated]: "数据更新于",
+	[Key.vndbLastUpdated]: "数据更新日期",
 	[Key.vndbVotes]: "票",
 	[Key.vndbLengthVeryShort]: "极短",
 	[Key.vndbLengthShort]: "短",
@@ -505,6 +505,7 @@ export const zh_CN: Translation = {
 	[Key.galleryAlbums]: "本相册",
 	[Key.galleryNoAlbums]: "暂无相册",
 	[Key.galleryBackToAlbums]: "返回相册列表",
+	[Key.galleryEnterAlbum]: "进入相册",
 	[Key.searchAlbums]: "搜索相簿...",
 
 	// 密码保护

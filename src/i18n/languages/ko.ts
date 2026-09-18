@@ -193,7 +193,7 @@ export const ko: Translation = {
 	[Key.bangumiCategoryReal]: "실사",
 
 	// Bangumi Data Update
-	[Key.bangumiLastUpdated]: "데이터 업데이트 시각",
+	[Key.bangumiLastUpdated]: "데이터 업데이트 날짜",
 	[Key.bangumiUpdatedAt]: "빌드 시각",
 	[Key.bangumiDataStatic]: "정적 데이터",
 
@@ -221,7 +221,7 @@ export const ko: Translation = {
 	[Key.vndbNotConfigured]: "VNDB 사용자 ID가 설정되지 않았습니다",
 	[Key.vndbNotConfiguredDesc]:
 		"src/config/siteConfig.ts에서 VNDB 사용자 ID를 설정하세요",
-	[Key.vndbLastUpdated]: "데이터 업데이트 시각",
+	[Key.vndbLastUpdated]: "데이터 업데이트 날짜",
 	[Key.vndbVotes]: "표",
 	[Key.vndbLengthVeryShort]: "매우 짧음",
 	[Key.vndbLengthShort]: "짧음",
@@ -448,6 +448,7 @@ export const ko: Translation = {
 	[Key.galleryAlbums]: "앨범",
 	[Key.galleryNoAlbums]: "아직 앨범이 없습니다",
 	[Key.galleryBackToAlbums]: "앨범으로 돌아가기",
+	[Key.galleryEnterAlbum]: "앨범 보기",
 	[Key.searchAlbums]: "앨범 검색...",
 
 	// Password Protection

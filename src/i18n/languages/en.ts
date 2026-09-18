@@ -194,7 +194,7 @@ export const en: Translation = {
 	[Key.bangumiCategoryReal]: "Real",
 
 	// Bangumi Data Update
-	[Key.bangumiLastUpdated]: "Data updated at",
+	[Key.bangumiLastUpdated]: "Data updated on",
 	[Key.bangumiUpdatedAt]: "Build time",
 	[Key.bangumiDataStatic]: "Static data",
 
@@ -222,7 +222,7 @@ export const en: Translation = {
 	[Key.vndbNotConfigured]: "VNDB User ID Not Configured",
 	[Key.vndbNotConfiguredDesc]:
 		"Please configure your VNDB user ID in src/config/siteConfig.ts",
-	[Key.vndbLastUpdated]: "Data updated at",
+	[Key.vndbLastUpdated]: "Data updated on",
 	[Key.vndbVotes]: "votes",
 	[Key.vndbLengthVeryShort]: "Very short",
 	[Key.vndbLengthShort]: "Short",
@@ -523,6 +523,7 @@ export const en: Translation = {
 	[Key.galleryAlbums]: "albums",
 	[Key.galleryNoAlbums]: "No albums yet",
 	[Key.galleryBackToAlbums]: "Back to albums",
+	[Key.galleryEnterAlbum]: "Enter album",
 	[Key.searchAlbums]: "Search albums...",
 
 	// Password Protection
