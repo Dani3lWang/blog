@@ -1,536 +1,149 @@
-
-<img src="./docs/images/1131.png" width = "350" height = "500" alt="Firefly" align=right />
-
 <div align="center">
 
-# 流萤 / Firefly 
-> 一款清新美观的 Astro 静态博客主题模板
-> 
-> ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen) 
-![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-7-orange)
-![TypeScript](https://img.shields.io/badge/TypeScript-6-blue)
->
-> [![Stars](https://img.shields.io/github/stars/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/stargazers)
-[![Forks](https://img.shields.io/github/forks/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/network/members)
-[![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
-> 
-> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
->
-> **QQ交流群：[1087127207](https://qm.qq.com/q/ZGsFa8qX2G)**
-> 
-> ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
-[![爱发电打赏](https://img.shields.io/badge/爱发电-打赏作者-ff69b4.svg)](https://ifdian.net/a/cuteleaf)
+# LXBlog
+
+### 芭乐通信 · GUAVA DISPATCH
+
+喊我吃芭乐的个人主页与内容档案。
+
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.23.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-11.22.0-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+[![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+
+[在线访问](https://lovelongxin.me) · [Firefly 上游](https://github.com/CuteLeaf/Firefly) · [Firefly 文档](https://docs-firefly.cuteleaf.cn/)
 
 </div>
 
+## 关于项目
 
----
-📖 README：
-**[简体中文](README.md)** | **[繁體中文](docs/README.zh-TW.md)** | **[English](README.en.md)** | **[日本語](docs/README.ja.md)** | **[한국어](docs/README.ko.md)**
+LXBlog 是基于 [CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly) 长期维护的个人博客分支，站点名称为 **芭乐通信**。项目保留 Firefly 的 Astro 内容系统、响应式布局和可配置能力，并围绕个人写作、生活记录与长期归档进行了定制。
 
-🚀 快速指南：
-[**🖥️在线预览**](https://firefly.cuteleaf.cn/) /
-[**📝使用文档**](https://docs-firefly.cuteleaf.cn/) /
-[**🍀我的博客**](https://blog.cuteleaf.cn) 
+这个仓库包含站点专属的内容、配置和设计取舍。如果你需要一套干净、通用的博客模板，请直接使用 [Firefly](https://github.com/CuteLeaf/Firefly)。
 
-⚡ 静态站点生成: 基于 Astro 的超快加载速度和 SEO 优化
+## 当前形态
 
-🎨 现代化设计: 简洁美观的界面，支持自定义主题色
+- **杂志式主页**：`/` 以刊头、本期主稿、此刻、最近动态、生活索引和数据页脚组织内容。
+- **独立文章列表**：完整文章位于 `/posts/`，支持分页、分类、标签、归档、系列和上一篇／下一篇导航。
+- **生活内容归档**：按配置启用动态、相册、书架、影视与音乐、游戏、书签导航、留言板和更新日志。
+- **阅读体验**：支持亮暗主题、响应式布局、全文搜索、目录、沉浸阅读、代码高亮和 Swup 页面过渡。
+- **内容输出**：提供 RSS、Atom、sitemap 和 `llms.txt`。
+- **数据集成**：包含豆瓣评分缓存、Steam 游戏数据同步、GitHub 卡片、图片 LQIP、字体子集化和 Pagefind 索引。
+- **Markdown 扩展**：支持 GFM、提醒块、Mermaid、PlantUML、增强代码块与 GitHub 仓库卡片。
 
-📱 移动友好: 完美的响应式体验，移动端专项优化
+部分页面虽然保留实现，但会在没有真实内容时关闭。页面是否公开以 `src/config/siteConfig.ts` 中的 `siteConfig.pages` 为准。
 
-🔧 高度可配置: 大部分功能模块均可通过配置文件自定义
+## 技术栈
 
-<table width="100%" align="center">
-  <tr>
-    <td colspan="3" align="center">
-      <img src="./docs/images/1.webp" >
-      <br>横幅模式</td>
-    </td>
-  </tr>
-  <tr>
-    <td align="center"><img src="./docs/images/3.webp" width="300"><br>透明覆盖模式</td>
-    <td align="center"><img src="./docs/images/2.webp" width="300"><br>全屏壁纸模式</td>
-    <td align="center"><img src="./docs/images/4.webp" width="300"><br>纯色模式</td>
-  </tr>
-</table>
-<img alt="Lighthouse" src="./docs/images/Lighthouse.png" />
+- [Astro 7](https://astro.build/)：静态站点生成与页面路由
+- [Svelte 5](https://svelte.dev/)：交互组件
+- [TypeScript](https://www.typescriptlang.org/)：类型约束
+- [Tailwind CSS](https://tailwindcss.com/)：样式工具
+- [Swup](https://swup.js.org/)：页面过渡
+- [Pagefind](https://pagefind.app/)：静态全文搜索
+- [Biome](https://biomejs.dev/)：格式化与代码检查
 
->[!TIP]
->
->Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
->
->**如果你参考或使用了 Firefly 的组件设计和相关代码，请注明来自 Firefly。**
->
->Firefly 也保留了原版 fuwari 的布局，可根据自己的喜好在配置文件中自由切换。
->
->**更多布局配置及演示请查看：[Firefly 布局系统详解](https://firefly.cuteleaf.cn/posts/guide/firefly-layout-system/)**
->
->Firefly 支持 i18n 多语言 UI，但除了简体中文，其他语言均为 AI 翻译转换，如有错误，欢迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
-
-## ✨ 功能特性
-
-### 核心功能
-
-- [x] **Astro + Tailwind CSS** - 基于现代技术栈的超快静态站点生成
-- [x] **流畅动画** - Swup 页面过渡动画，提供丝滑的浏览体验
-- [x] **响应式设计** - 完美适配桌面端、平板和移动设备
-- [x] **多语言支持** - i18n 国际化，UI 支持简体中文、繁体中文、英文、日文、俄语、韩文
-- [x] **全文搜索** - 基于 Pagefind 的客户端搜索，支持文章内容索引
-- [x] **文章系列** - 通过 frontmatter 的 `series` / `seriesOrder` 将文章归入系列，`/series/` 页面聚合展示并支持上一篇/下一篇导航
-
-### 个性化
-- [x] **动态侧边栏** - 支持配置单侧边栏、双侧边栏
-- [x] **文章布局** - 支持配置(单列)列表、网格(多列/瀑布流)布局
-- [x] **字体管理** - 支持自定义字体，丰富的字体选择器
-- [x] **页脚配置** - HTML 内容注入，完全自定义
-- [x] **亮暗色模式** - 支持亮色/暗色/跟随系统三种模式
-- [x] **导航栏自定义** - Logo、标题、链接全面自定义，支持 static/fixed/dynamic 三种模式（`navbarMode`）
-- [x] **沉浸阅读模式** - 文章页可一键进入无干扰的全屏阅读视图
-- [x] **项目展示页** - `/projects/` 页面聚合展示项目卡片与链接，按状态过滤（`siteConfig.pages.projects` 开关，内容放 `src/content/projects/`）
-- [x] **RSS / Atom 订阅** - 内置 RSS 与 Atom 订阅源及订阅引导页，`siteConfig.feed.contentMode` 可选全文或摘要模式
-- [x] **llms.txt 支持** - 站点自动生成 `/llms.txt`，方便 LLM 理解站点结构
-- [x] **壁纸模式切换** - 横幅壁纸、全屏壁纸、全屏透明壁纸、纯色背景
-- [x] **主题色自定义** - 360° 色相调节
-
-如果你有好用的功能和优化，请提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)
-
-## 🚀 快速开始
+## 本地开发
 
 ### 环境要求
 
-- Node.js ≥ 22
-- pnpm ≥ 11
+- Node.js `>=22.23.0`
+- pnpm `11.22.0`
 
-### 本地开发部署
-
-1. **克隆仓库：**
-   ```bash
-   git clone https://github.com/Cuteleaf/Firefly.git
-   cd Firefly
-   ```
-   
-   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库再克隆（推荐），记得先点 Star 再 Fork 哦！**
-
-   ```bash
-   git clone https://github.com/you-github-name/Firefly.git
-   cd Firefly
-   ```
-3. **安装依赖：**
-   ```bash
-   # 如果没有安装 pnpm，先安装
-   npm install -g pnpm
-   
-   # 安装项目依赖
-   pnpm install
-   ```
-
-4. **配置博客：**
-   - 编辑 `src/config/` 目录下的配置文件自定义博客设置
-
-5. **启动开发服务器：**
-   ```bash
-   pnpm dev
-   ```
-   博客将在 `http://localhost:4321` 可用
-
-### 平台托管部署
-- **参考[官方指南](https://docs.astro.build/zh-cn/guides/deploy/)将博客部署至 Vercel, Netlify, Cloudflare Pages, EdgeOne Pages 等。**
-- **Vercel**、**Netlify** 等主流平台自动部署，会根据环境自动选择适配器。
-
-   框架预设： `Astro`
-
-   根目录： `./`
-
-   输出目录： `dist`
-
-   构建命令： `pnpm run build`
-
-   安装命令： `pnpm install`
-
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
-   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
-
-### Fork 后的远程推送
-
-如果你是从本仓库 fork 之后再做修改，推荐先按下面的方式理解远程仓库：
-
-- `origin`：你自己的 fork 仓库，日常提交都推送到这里
-- `upstream`：原仓库，只用于同步上游更新
-
-#### 推送你自己的修改
-
-先在本地提交，再推送到你的 fork：
+项目通过 `packageManager` 固定 pnpm 版本，推荐使用 Corepack：
 
 ```bash
-git checkout -b kelly
-git add .
-git commit -m "update site config"
-git push -u origin kelly
+git clone https://github.com/Dani3lWang/lxblog.git
+cd lxblog
+
+corepack enable
+corepack pnpm install --frozen-lockfile
+corepack pnpm dev
 ```
 
-如果你已经在 `master` 上直接修改，也可以直接推送：
+开发服务器默认运行在 <http://localhost:4321>。
 
-```bash
-git add .
-git commit -m "update site config"
-git push origin master
+## 常用命令
+
+| 命令 | 用途 |
+| --- | --- |
+| `pnpm dev` | 启动本地开发服务器 |
+| `pnpm check` | 运行 Astro 类型与模板检查 |
+| `pnpm type-check` | 运行 TypeScript 检查 |
+| `pnpm build` | 执行完整生产构建 |
+| `pnpm preview` | 预览生产构建结果 |
+| `pnpm new-post <文件名>` | 创建文章草稿 |
+| `pnpm new-d <内容>` | 创建一条动态 |
+| `pnpm douban-ratings` | 增量同步豆瓣评分 |
+| `pnpm sync-games` | 同步已配置的游戏平台数据 |
+| `pnpm github-cards` | 更新 GitHub 卡片缓存 |
+| `pnpm admin` | 启动本地内容管理工具 |
+
+`pnpm build` 包含联网数据拉取和生成步骤，可能刷新 `src/constants/` 下的缓存文件。提交前请检查 Git diff，避免把网络失败造成的空缓存或无关时间戳变化纳入提交。
+
+## 配置入口
+
+配置统一放在 `src/config/`，常用入口如下：
+
+| 文件 | 作用 |
+| --- | --- |
+| `siteConfig.ts` | 站点信息、页面开关、文章与订阅设置 |
+| `homeConfig.ts` | 首页刊头、主稿、此刻、生活入口和模块顺序 |
+| `profileConfig.ts` | 头像、签名和社交链接 |
+| `navBarConfig.ts` | 顶部导航及子菜单 |
+| `backgroundWallpaper.ts` | 背景与壁纸模式 |
+| `sidebarConfig.ts` | 侧栏结构 |
+| `musicConfig.ts` | 全局音乐播放器 |
+| `dynamicConfig.ts` | 动态页与 Memos 数据源 |
+| `gamesConfig.ts` | 游戏页展示和 Steam 同步 |
+| `commentConfig.ts` | 评论系统 |
+
+配置项是项目的公共接口。新增或调整配置时，应同步维护 `src/types/` 中的类型和 `src/config/index.ts` 的导出。
+
+## 内容目录
+
+| 路径 | 内容 |
+| --- | --- |
+| `src/content/posts/` | 文章与系列文章 |
+| `src/content/dynamic/` | 短动态（首次运行 `pnpm new-d` 时自动创建） |
+| `src/content/life/` | 书架、相册等生活记录 |
+| `src/content/bangumi/` | 影视、动画和音乐条目 |
+| `src/content/games/` | 游戏平台数据 |
+| `src/content/changelog/` | 站点更新日志 |
+
+文章与内容条目使用 Markdown／MDX，并由 `src/content.config.ts` 中的集合 schema 校验。封面图片优先与内容文件放在一起并使用相对路径。
+
+## 分支与上游同步
+
+- `master`：跟随 `upstream/master` 的上游镜像分支。
+- `develop`：本地功能开发与验证分支。
+- `kelly`：保留站点定制的稳定分支，也是部署分支。
+- `origin`：本项目自己的远端仓库。
+- `upstream`：`CuteLeaf/Firefly`，用于获取上游更新。
+
+同步 Firefly 时先更新 `master`，再把需要的改动整合到本地分支。个人内容、站点配置和专属设计只保留在本仓库中，不写入上游。
+
+## 部署
+
+生产环境通过 Cloudflare 的 Git 集成从 `kelly` 分支构建。通用部署参数如下：
+
+```text
+安装命令：pnpm install --frozen-lockfile
+构建命令：pnpm build
+输出目录：dist
 ```
 
-#### 同步原仓库更新
+完整构建会访问外部数据源。部署环境中需要使用的令牌应通过平台环境变量提供，不要写入源码或提交历史。
 
-当原仓库有新提交时，先把上游合并到本地，再推回你的 fork：
+## 贡献范围
 
-```bash
-git fetch upstream
-git checkout master
-git merge upstream/master
-git push origin master
-```
+这是个人站点仓库，内容、个人配置和站点专属功能在本仓库维护。对于能够在原版 Firefly 中复现的通用显示问题或代码缺陷，会在完成复现、验证并剥离个人配置后，再考虑向上游提交 Pull Request。
 
-如果你更习惯线性提交历史，也可以把 `merge` 换成 `rebase`：
+## 致谢与许可
 
-```bash
-git fetch upstream
-git checkout master
-git rebase upstream/master
-git push origin master
-```
+本项目建立在以下开源项目和贡献之上：
 
-## 📖 配置说明
+- [CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)
+- [saicaca/fuwari](https://github.com/saicaca/fuwari)
 
-> 📚 **详细配置文档**: 查看 [Firefly 使用文档](https://docs-firefly.cuteleaf.cn/) 获取完整的配置指南
-
-### 设置网站语言
-
-要设置博客的默认语言，请编辑 `src/config/siteConfig.ts` 文件：
-
-```typescript
-// 定义站点语言
-const SITE_LANG = "zh_CN";
-```
-
-**支持的语言代码：**
-- `zh_CN` - 简体中文
-- `zh_TW` - 繁体中文
-- `en` - 英文
-- `ja` - 日文
-- `ru` - 俄文
-- `ko` - 韩文
-
-### 配置文件结构
-
-```
-src/
-├── config/
-│   ├── index.ts                  # 配置索引文件
-│   ├── siteConfig.ts             # 站点基础配置
-│   ├── analyticsConfig.ts        # 统计分析配置
-│   ├── announcementConfig.ts     # 公告配置
-│   ├── backgroundWallpaper.ts    # 背景壁纸配置
-│   ├── commentConfig.ts          # 评论系统配置
-│   ├── coverImageConfig.ts       # 封面图配置
-│   ├── displaySettingsConfig.ts  # 设置面板配置
-│   ├── dynamicConfig.ts          # 动态页面配置
-│   ├── effectsConfig.ts          # 动画特效配置（樱花等）
-│   ├── expressiveCodeConfig.ts   # 代码高亮配置
-│   ├── fontConfig.ts             # 字体配置
-│   ├── FooterConfig.html           # 页脚配置
-│   ├── friendsConfig.ts          # 友链配置
-│   ├── galleryConfig.ts          # 相册配置
-│   ├── homeConfig.ts             # 内容首页（芭乐通信）配置
-│   ├── licenseConfig.ts          # 许可证配置
-│   ├── musicConfig.ts            # 音乐播放器配置
-│   ├── navBarConfig.ts           # 导航栏配置
-│   ├── pioConfig.ts              # 看板娘配置
-│   ├── mermaidConfig.ts          # Mermaid 图表配置
-│   ├── plantumlConfig.ts         # PlantUML 图表配置
-│   ├── profileConfig.ts          # 用户资料配置
-│   ├── sidebarConfig.ts          # 侧边栏布局配置
-│   ├── sponsorConfig.ts          # 打赏配置
-```
-
-### 个人主页（芭乐通信）
-
-首页是一份内容杂志：刊头、内容导览、本期主稿、此刻、最近动态、生活索引和数据页脚。个人资料集中在 `/about/`，完整文章列表在 `/posts/`（分页为 `/posts/2/`），文章详情 URL 不变。
-
-首页专属文案、刊号、主稿和模块顺序都在 `src/config/homeConfig.ts`；站名与描述来自 `src/config/siteConfig.ts`，头像、签名和社交链接由 `src/config/profileConfig.ts` 提供给个人资料页。
-
-```typescript
-export const homeConfig: HomeConfig = {
-	brand: {
-		englishName: "GUAVA DISPATCH", // 刊头右侧英文标识
-		editionLabel: "ISSUE {issue} · PERSONAL ARCHIVE", // {issue}/{month}/{year} 自动替换
-		tagline: "把最近写下的，摊开成一份今日读物。", // 首页导览主标题
-		since: "SINCE 2026",
-	},
-	hero: { kicker: "...", introduction: "...", primaryAction: "开始阅读" },
-	featuredPosts: {
-		slugs: [], // 手动指定主稿，留空则用最新文章
-		fallbackToLatest: true, // slug 写错或文章不存在时回退到最新文章
-		limit: 3, // 1 = 整版主稿；2-3 = 主稿 + 短稿；0 = 隐藏
-	},
-	now: [
-		{ label: "最近在读", value: "", icon: "material-symbols:book-2-outline", href: "/books/" },
-	],
-	recentDynamicLimit: 2, // 最近动态条数，0 = 隐藏
-	portalOrder: ["gallery", "books", "moviesGames", "games", "booknav", "guestbook"],
-	portals: { gallery: { title: "相册", description: "我看见的" } },
-	showStats: true, // 数据页脚
-	showRandomPost: true, // 「换一篇」随机阅读
-};
-```
-
-几点约定：
-
-- **留空即隐藏**：`now` 中 `value` 为空的行、`limit` 为 0 的板块都不会渲染，也不会用演示数据填充；这些都关闭时首页不会去查询对应的内容集合。
-- **主稿选择**：`featuredPosts.slugs` 填文章 slug（不带扩展名、可含分类目录，例如 `guide/firefly-wiki-link`）。匹配不到时构建阶段会输出警告并按 `fallbackToLatest` 回退。
-- **此刻 / NOW**：`value` 只填愿意公开的内容，例如「《XXX》读到第三章」；`href` 可指向书架、影视或任意外链，省略则渲染为不可点击卡片。
-- **生活索引**：顺序由 `portalOrder` 决定，同时受 `siteConfig.pages` 控制——页面关闭时入口自动消失，不显示「即将上线」占位。`portals` 可覆盖标题、说明和图标。
-- **随机阅读**：从已发布、非草稿、非加密的文章中随机挑选，并要求它不是本期主稿；没有合适文章时按钮自动隐藏。
-- **改名**：站名在 `siteConfig.title`，导航栏与刊头的中文名、以及刊头「芭」字印章都跟随它；导航栏站标是 `public/assets/images/logo/guava-seal-{light,dark}.svg`，替换这两个文件即可换标记。
-
-## 🎬 影视与音乐（豆瓣评分）
-
-`/TV-albums/` 页面的影视条目来自 `src/content/bangumi/` 内容集合：`category` 用 `real`（影视）或 `anime`（动画），`subcategory` 用 `tv` / `movie` / `documentary` / `anime`，短评写在 `comment` 字段，悬停卡片即可查看。
-
-条目配置 `doubanId`（豆瓣条目 ID，即豆瓣页面 URL 中的数字）后，构建时会自动从豆瓣抓取评分，卡片短评区域会显示豆瓣评分，点击右侧外链图标可跳转豆瓣条目页：
-
-```yaml
----
-title: "聪明镇"
-category: "real"
-subcategory: "tv"
-status: 2
-doubanId: 35896166   # 豆瓣条目 ID
-comment: "短评内容……"
----
-```
-
-评分缓存写入 `src/constants/douban-ratings.json`（构建时增量更新，当天已抓取的条目不重复请求；豆瓣不可用时保留旧数据、不中断构建），也可手动同步：
-
-```bash
-pnpm douban-ratings           # 手动增量同步
-pnpm douban-ratings --refresh # 强制重新抓取全部
-```
-
-点击卡片可打开条目详情页（`/bangumi/{slug}/`），展示封面、元信息、短评与豆瓣评分，正文可在条目文件 Markdown 中撰写。
-
-## 🎮 游戏模块（平台游戏库）
-
-独立的游戏记录页面 `/games/`，按平台（Steam / Nintendo Switch / Xbox / Epic / PlayStation）展示游戏，支持游玩时长、最近游玩、成就进度等数据。影视和音乐页面（`/TV-albums/`）已剥离游戏内容，专注影视和音乐。
-
-### 开启/关闭
-
-- 页面开关：`siteConfig.pages.games`（`src/config/siteConfig.ts`），关闭后 `/games/` 返回 404 并从 sitemap 剔除
-- 导航入口：顶部导航"记录"菜单与页面内记录 tab 栏自动跟随开关显示"游戏"
-
-### 数据文件
-
-所有游戏数据存放在 `src/content/games/game-platforms.json`（与 HEXO 博客的 `game-platforms.json` 结构兼容），顶层按平台分组：
-
-```json
-{
-  "steam": [
-    {
-      "name": "Counter-Strike 2",
-      "hours": 12.5,
-      "minutes": 750,
-      "cover": "https://.../header.jpg",
-      "last_played": "2026-07-30",
-      "store_url": "https://store.steampowered.com/app/730/",
-      "earned_achievements": 10,
-      "total_achievements": 30,
-      "achievements": [
-        { "name": "成就名称", "image": "https://.../icon.jpg", "achieved": true }
-      ],
-      "appid": 730
-    }
-  ],
-  "switch": [],
-  "xbox": [],
-  "epic": [],
-  "playstation": []
-}
-```
-
-- 平台 ID 固定为：`steam` / `switch` / `xbox` / `epic` / `playstation`
-- 字段均可选（`name` 必填）；`hours` 与 `minutes` 叠加计算总时长
-- 同步脚本只更新时长、成就等实时数据，会保留你手写的 `cover` 等字段
-- 空数组的平台在页面上不显示 tab
-
-### Steam 自动同步（可选）
-
-不配置也可手动维护 JSON；配置后构建前自动从 Steam API 拉取游戏库、游玩时长与成就：
-
-1. 到 <https://steamcommunity.com/dev/apikey> 申请 Steam Web API Key
-2. 在 `src/config/gamesConfig.ts` 的 `sync.steam` 填 `steamId` / `apiKey`，**或**使用环境变量（推荐，避免 Key 进仓库）：
-   ```powershell
-   $env:STEAM_ID="76561198xxxxxxxxxx"
-   $env:STEAM_API_KEY="xxxx"
-   ```
-3. 运行 `pnpm build`（自动同步）或 `pnpm sync-games`（仅手动同步）
-
-相关配置（`src/config/gamesConfig.ts`，文件内有完整注释说明）：
-
-- `sync.steam.enabled`：Steam 同步开关
-- `sync.steam.achievementFetchLimit`：成就抓取上限（只对最近游玩的前 N 款游戏抓取，0=关闭）
-- `sync.steam.excludeAppIds`：排除不想展示的游戏 appid
-- `display.defaultPlatform`：默认选中的平台（`all` 或平台 ID）
-- `display.sortBy`：排序方式（`lastPlayed` 最近游玩 / `hours` 时长 / `name` 名称）
-- `display.showAchievements`：是否显示成就进度条
-- `display.gamesPerPage`：每页游戏数量
-
-> Epic / Xbox / Switch 平台暂未实现自动同步，游戏需手动维护在 JSON 中（`sync.epic` / `sync.exophase` / `sync.switch` 为预留开关）。
-
-## 🎵 音乐下载脚本
-
-`scripts/fetch-music/` 提供一组 Python 音乐工具（依赖 `mutagen`，搜索下载需可用的 Meting API）：
-
-- `fetch-lrc.py`：主脚本。M4A 封面/歌词提取 + 多平台搜索下载（tencent → kugou → netease 自动 fallback，直到拿到完整版音频），支持 `--md` 自动生成博客 Markdown（默认输出到 `src/content/bangumi/music/`）
-- `batch-download.py`：从 QQ 音乐复制的歌单文本批量下载（音频 + 封面 + 歌词 + md）
-- `extract-lrc.py`：从本地 M4A 文件提取内嵌歌词生成 .lrc，无需 ffmpeg
-
-```bash
-python scripts/fetch-music/fetch-lrc.py "晴天" "周杰伦" --md        # 搜索下载
-python scripts/fetch-music/fetch-lrc.py <本地M4A文件> --md          # 本地提取
-python scripts/fetch-music/batch-download.py songs.txt --dry-run   # 歌单批量（先预览）
-```
-
-自定义 API 端点、默认输出目录与音频 URL 前缀等均可在脚本头部注释中配置。
-
-## ⚙️ 文章 Frontmatter
-
-```yaml
----
-title: My First Blog Post
-published: 2023-09-09
-description: This is the first post of my new Astro blog.
-image: ./cover.jpg  # 或使用 "api" 来启用随机封面图
-tags: [Foo, Bar]
-category: Front-end
-draft: false
-lang: zh-CN      # 仅当文章语言与 `siteConfig.ts` 中的网站语言不同时需要设置
-pinned: false    # 置顶
-comment: true    # 是否允许评论
-series: "系列名"  # 所属文章系列，同一系列名的文章归入 /series/ 同一系列
-seriesOrder: 1   # 该篇在系列中的顺序（可选）
----
-```
-
-## 动态
-
-动态文件保存在 `src/content/dynamic/` 中，一个 Markdown 文件对应一条动态。可以使用快捷命令创建：
-
-```bash
-pnpm new-d 今天心情不错，出去吃了一顿火锅
-```
-
-`pnpm new-dynamic <content>` 也可以使用，和 `new-d` 完全等价。
-
-```yaml
----
-published: 2026-07-15 16:15:29
-pinned: true  # 置顶
-location: China # 位置
----
-
-动态内容可以使用 Markdown 语法。
-```
-
-也支持对接 [Memos](https://www.usememos.com/) 作为数据源，在 `src/config/dynamicConfig.ts` 中配置 `memos` 选项即可实时获取 Memos 动态，支持置顶同步和图片附件展示。详见[动态文档](https://docs-firefly.cuteleaf.cn/zh/guide/dynamic.html)。
-
-## 🧩 Markdown 扩展语法
-
-除了 Astro 默认支持的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，还包含了一些额外的 Markdown 功能：
-
-- 提醒块（Admonitions） - 支持 GitHub, Obsidian, VitePress, Docusaurus 四种风格主题配置 ([预览和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
-- GitHub 仓库卡片 ([预览和用法](https://firefly.cuteleaf.cn/posts/markdown-extended/))
-- 基于 Expressive Code 的增强代码块 ([预览](http://firefly.cuteleaf.cn/posts/code-examples/) / [文档](https://expressive-code.com/))
-
-## 🧞 指令
-
-下列指令均需要在项目根目录执行：
-
-| Command                    | Action                                 |
-| :------------------------- | :------------------------------------- |
-| `pnpm install`             | 安装依赖                               |
-| `pnpm dev`                 | 在 `localhost:4321` 启动本地开发服务器 |
-| `pnpm build`               | 构建网站至 `./dist/`                   |
-| `pnpm preview`             | 本地预览已构建的网站                   |
-| `pnpm check`               | 检查代码中的错误                       |
-| `pnpm format`              | 使用 Biome 格式化您的代码              |
-| `pnpm new-post <filename>` | 创建新文章                             |
-| `pnpm new-d <content>`     | 创建一条动态                           |
-| `pnpm new-dynamic <content>` | 创建一条动态（完整命令）              |
-| `pnpm sync-games`          | 手动触发 Steam 游戏数据同步（构建前也会自动执行） |
-| `pnpm douban-ratings`     | 手动同步豆瓣评分（构建前也会自动执行，追加 `--refresh` 强制重抓） |
-| `pnpm github-cards`       | 生成 GitHub 卡片缓存数据（构建前也会自动执行） |
-| `python scripts/fetch-music/fetch-lrc.py "歌名" "歌手" --md` | 多平台搜索下载音乐（音频+歌词+封面+博客md） |
-| `pnpm astro ...`           | 执行 `astro add`, `astro check` 等指令 |
-| `pnpm astro --help`        | 显示 Astro CLI 帮助                    |
-
-## 🙏 致谢
-
-非常感谢 [saicaca](https://github.com/saicaca) 开发的 [fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基于这个模板二次开发
-
-流萤部分相关图片素材版权归游戏 [《崩坏：星穹铁道》](https://sr.mihoyo.com/) 开发商 [米哈游](https://www.mihoyo.com/) 所有
-
-### 技术栈
-
-- [Astro](https://astro.build) 
-- [Tailwind CSS](https://tailwindcss.com) 
-- [Iconify](https://iconify.design)
-
-### 灵感项目
-
-- [fuwari](https://github.com/saicaca/fuwari)
-- [hexo-theme-shoka](https://github.com/amehime/hexo-theme-shoka)
-- [astro-koharu](https://github.com/cosZone/astro-koharu)
-- [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
-
-### 其他参考
-- 博主`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 页面组件
-- 哔哩哔哩up主 `公公的日常` 的Q版 [流萤看板娘 Spine 切片数据](https://www.bilibili.com/video/BV1fuVzzdE5y) 
-
-## 📝 许可协议
-
-本项目遵循 [MIT license](https://mit-license.org/) 开源协议，详细查看 [LICENSE](./LICENSE) 文件
-
-最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感谢原作者的贡献
-
-**版权声明：**
-- Copyright (c) 2024 [saicaca](https://github.com/saicaca) - [fuwari](https://github.com/saicaca/fuwari)
-- Copyright (c) 2025 [CuteLeaf](https://github.com/CuteLeaf) - [Firefly](https://github.com/CuteLeaf/Firefly) 
-
-根据 MIT 开源协议，你可以自由使用、修改、分发代码，但需保留上述版权声明。
-
-## 🍀 贡献者
-
-感谢以下贡献者对本项目做出的贡献，如有问题或建议，请提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
-
-><a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
-></a>
-
-感谢以下贡献者对原项目 [fuwari](https://github.com/saicaca/fuwari) 做出的贡献，为本项目奠定了基础。
-
-><a href="https://github.com/saicaca/fuwari/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
-></a>
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=CuteLeaf/Firefly&type=Date)](https://star-history.com/#CuteLeaf/Firefly&Date)
-
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+项目遵循 [MIT License](./LICENSE)。使用和分发时请保留原项目版权声明及许可证文本。
