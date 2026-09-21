@@ -1,7 +1,7 @@
 import type { HomeConfig } from "@/types/homeConfig";
 
 /**
- * 个人主页（芭乐通信 / GUAVA DISPATCH）配置
+ * 内容首页（芭乐通信 / GUAVA DISPATCH）配置
  *
  * 只放「首页专属」的内容：
  *   - 站名        → siteConfig.title（本文件不重复维护）
@@ -20,22 +20,20 @@ export const homeConfig: HomeConfig = {
 		// 刊号行；{issue} 为按站点建立月份自动推算的期号，{month}/{year} 为构建日期
 		editionLabel: "ISSUE {issue} · PERSONAL ARCHIVE",
 		// 刊头导语
-		tagline: "你好，我是喊我吃芭乐。",
+		tagline: "把最近写下的，摊开成一份今日读物。",
 		// 创刊标识
 		since: "SINCE 2026",
 	},
 
-	// ── 人物封面 ────────────────────────────────────────────
+	// ── 内容导览 ────────────────────────────────────────────
 	hero: {
 		// 主标题上方的小标题
-		kicker: "PERSONAL HOMEPAGE",
+		kicker: "FRONT PAGE / 今日版面",
 		// 简介段落
-		introduction: "在这里记录想法、兴趣，以及值得反复翻阅的生活片段。",
+		introduction:
+			"这里收集长文、近况与生活记录。可以从本期主稿开始，也可以沿着目录随意翻阅。",
 		// 主按钮文案
-		primaryAction: "阅读文章",
-		// 个人状态行（例如「目前生活于中国 / 最近更新于…」）
-		// 只填你愿意公开的内容；留空则不渲染，页面也不会推断任何隐私信息
-		status: "",
+		primaryAction: "开始阅读",
 	},
 
 	// ── 本期主稿 ────────────────────────────────────────────

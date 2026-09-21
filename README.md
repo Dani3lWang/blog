@@ -240,7 +240,7 @@ src/
 │   ├── FooterConfig.html           # 页脚配置
 │   ├── friendsConfig.ts          # 友链配置
 │   ├── galleryConfig.ts          # 相册配置
-│   ├── homeConfig.ts             # 个人主页（芭乐通信）配置
+│   ├── homeConfig.ts             # 内容首页（芭乐通信）配置
 │   ├── licenseConfig.ts          # 许可证配置
 │   ├── musicConfig.ts            # 音乐播放器配置
 │   ├── navBarConfig.ts           # 导航栏配置
@@ -254,19 +254,19 @@ src/
 
 ### 个人主页（芭乐通信）
 
-首页是一份个人杂志：刊头、人物封面、本期主稿、此刻、最近动态、生活索引和数据页脚。完整文章列表在 `/posts/`（分页为 `/posts/2/`），文章详情 URL 不变。
+首页是一份内容杂志：刊头、内容导览、本期主稿、此刻、最近动态、生活索引和数据页脚。个人资料集中在 `/about/`，完整文章列表在 `/posts/`（分页为 `/posts/2/`），文章详情 URL 不变。
 
-首页专属文案、刊号、主稿和模块顺序都在 `src/config/homeConfig.ts`；站名、描述、头像、签名和社交链接分别来自 `src/config/siteConfig.ts` 与 `src/config/profileConfig.ts`，不在 `homeConfig` 里重复维护。
+首页专属文案、刊号、主稿和模块顺序都在 `src/config/homeConfig.ts`；站名与描述来自 `src/config/siteConfig.ts`，头像、签名和社交链接由 `src/config/profileConfig.ts` 提供给个人资料页。
 
 ```typescript
 export const homeConfig: HomeConfig = {
 	brand: {
 		englishName: "GUAVA DISPATCH", // 刊头右侧英文标识
 		editionLabel: "ISSUE {issue} · PERSONAL ARCHIVE", // {issue}/{month}/{year} 自动替换
-		tagline: "你好，我是喊我吃芭乐。", // 人物封面主标题
+		tagline: "把最近写下的，摊开成一份今日读物。", // 首页导览主标题
 		since: "SINCE 2026",
 	},
-	hero: { kicker: "...", introduction: "...", primaryAction: "阅读文章", status: "" },
+	hero: { kicker: "...", introduction: "...", primaryAction: "开始阅读" },
 	featuredPosts: {
 		slugs: [], // 手动指定主稿，留空则用最新文章
 		fallbackToLatest: true, // slug 写错或文章不存在时回退到最新文章

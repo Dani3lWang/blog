@@ -1,8 +1,8 @@
 /**
- * 个人主页（芭乐通信 / GUAVA DISPATCH）配置类型
+ * 内容首页（芭乐通信 / GUAVA DISPATCH）配置类型
  *
  * 设计约定：
- * - 中文站名沿用 siteConfig.title，个人姓名/头像/签名/社交链接沿用 profileConfig；
+ * - 中文站名沿用 siteConfig.title，个人资料统一留在 profileConfig 与 /about/；
  * - 本文件只描述「首页专属」的品牌文案、主稿选择、模块开关与生活索引入口排序；
  * - 所有文案与开关都可由使用者显式配置，留空表示隐藏该模块，不使用演示数据兜底。
  */
@@ -59,16 +59,14 @@ export type HomeConfig = {
 		/** 创刊标识，例如 "SINCE 2026" */
 		since: string;
 	};
-	/** 人物封面文案 */
+	/** 首页内容导览文案 */
 	hero: {
-		/** 小标题，例如 "PERSONAL HOMEPAGE" */
+		/** 小标题，例如 "FRONT PAGE / 今日版面" */
 		kicker: string;
 		/** 简介段落 */
 		introduction: string;
 		/** 主按钮文案 */
 		primaryAction: string;
-		/** 可选的个人状态行（生活地、最近状态等）；留空则不渲染，不推断隐私信息 */
-		status?: string;
 	};
 	/** 本期主稿 */
 	featuredPosts: {

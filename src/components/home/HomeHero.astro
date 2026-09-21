@@ -1,18 +1,14 @@
 ---
 import { Icon } from "astro-icon/components";
-import ImageWrapper from "@/components/common/ImageWrapper.astro";
-import { homeConfig, profileConfig } from "@/config";
+import { homeConfig } from "@/config";
 import type { HomeRandomCandidate } from "@/utils/home-utils";
 import { url } from "@/utils/url-utils";
 
 /**
- * 人物封面
+ * 首页内容导览
  *
- * 桌面端 7:5 不对称栅格：左侧小标题 / 主标题 / 简介 / 签名 / 三个入口，
- * 右侧人物肖像（杂志裁切 + 细边框 + 图注）。
- * 社交链接以页边注形式收在左下，不占据主视觉。
- *
- * 只展示用户显式配置的内容：homeConfig.hero.status 未填写时不推断任何隐私信息。
+ * 首页负责把访客送往内容，不重复 /about/ 的个人资料。
+ * 左侧是本期导语和阅读操作，右侧以目录形式列出文章、动态和生活记录。
  */
 interface Props {
 	/** 随机阅读候选池；为空时不渲染「换一篇」 */
@@ -22,13 +18,27 @@ interface Props {
 const { randomPool } = Astro.props;
 
 const hero = homeConfig.hero;
-const links = profileConfig.links ?? [];
-const aboutUrl = url("/about/");
 const postsUrl = url("/posts/");
-
-// 联系入口：优先取 profileConfig.links 里的邮件/外链，没有则回落到关于页
-const contactLink = links.find((item) => item.url?.startsWith("mailto:"));
-const socialLinks = links.filter((item) => item.url !== contactLink?.url);
+const dispatchLinks = [
+	{
+		number: "01",
+		label: "文章",
+		description: "长文、随笔与完整归档",
+		href: postsUrl,
+	},
+	{
+		number: "02",
+		label: "动态",
+		description: "最近发生的生活切片",
+		href: url("/dynamic/"),
+	},
+	{
+		number: "03",
+		label: "生活索引",
+		description: "书影音、游戏与去过的地方",
+		href: "#life-index",
+	},
+];
 ---
 
 <section class="ed-hero onload-animation ed-section" style="--ed-delay: 60ms">
@@ -36,16 +46,11 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
     {hero.kicker && <p class="ed-hero__kicker">{hero.kicker}</p>}
     <p class="ed-hero__title">{homeConfig.brand.tagline}</p>
     {hero.introduction && <p class="ed-hero__intro">{hero.introduction}</p>}
-    {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
 
     <div class="ed-hero__actions">
       <a class="ed-action ed-action--solid" href={postsUrl}>
         <Icon name="material-symbols:article-outline" class="text-[1.05rem]" />
         {hero.primaryAction}
-      </a>
-      <a class="ed-action" href={aboutUrl}>
-        <Icon name="material-symbols:person-outline" class="text-[1.05rem]" />
-        关于我
       </a>
       {randomPool && randomPool.length > 0 && (
         <button
@@ -58,50 +63,28 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
           换一篇
         </button>
       )}
-      {contactLink && (
-        <a class="ed-action" href={contactLink.url}>
-          <Icon name="fa7-solid:envelope" class="text-[0.95rem]" />
-          联系我
-        </a>
-      )}
     </div>
-
-    {
-      socialLinks.length > 0 && (
-        <div class="ed-margin-note">
-          <span aria-hidden="true">SOCIAL</span>
-          {socialLinks.map((item) => (
-            <a
-              href={item.url}
-              target={item.url?.startsWith("http") ? "_blank" : undefined}
-              rel={item.url?.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
-              <Icon name={item.icon} class="text-[0.9rem]" />
-              {item.name}
-            </a>
-          ))}
-        </div>
-      )
-    }
   </div>
 
-  <figure class="ed-portrait">
-    <div class="ed-portrait__frame">
-      <ImageWrapper
-        src={profileConfig.avatar || ""}
-        alt={`${profileConfig.name} 的头像`}
-        class="ed-portrait__image"
-        loading="eager"
-        fetchpriority="high"
-        widths={[320, 480]}
-        sizes="(min-width: 1024px) 320px, 80vw"
-      />
+  <nav class="ed-dispatch" aria-label="首页内容导览">
+    <div class="ed-dispatch__head">
+      <span>CONTENTS</span>
+      <span aria-hidden="true">↘</span>
     </div>
-    <figcaption class="ed-portrait__caption">
-      {profileConfig.name}{profileConfig.bio ? ` · ${profileConfig.bio}` : ""}
-    </figcaption>
-    {hero.status && <p class="ed-portrait__status">{hero.status}</p>}
-  </figure>
+    <p class="ed-dispatch__title">从这里开始</p>
+    <div class="ed-dispatch__list">
+      {dispatchLinks.map((item) => (
+        <a class="ed-dispatch__item" href={item.href}>
+          <span class="ed-dispatch__number">{item.number}</span>
+          <span class="ed-dispatch__copy">
+            <strong>{item.label}</strong>
+            <small>{item.description}</small>
+          </span>
+          <Icon name="material-symbols:arrow-outward-rounded" class="ed-dispatch__arrow" />
+        </a>
+      ))}
+    </div>
+  </nav>
 </section>
 
 <script>
