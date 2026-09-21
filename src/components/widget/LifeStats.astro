@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { getVisitedCityCount } from "@/utils/site-stats-utils";
 
 interface Props {
 	class?: string;
@@ -20,11 +21,11 @@ const isIn = (entryId: string, folder: string) =>
 	entryId.replace(/\\/g, "/").startsWith(`${folder}/`);
 
 // 统计地点
-const places = lifeEntries
-	.filter((entry) => isIn(entry.id, "places"))
-	.map((e) => e.data);
-const placesCount = places.length;
-const visitedCities = new Set(places.map((p) => p.city).filter(Boolean)).size;
+const placesCount = lifeEntries.filter((entry) =>
+	isIn(entry.id, "places"),
+).length;
+// 去过的不重复城市数（与首页数据页脚共用口径）
+const visitedCities = await getVisitedCityCount();
 
 // 统计笔记本（排除 _index 文件）
 const notebookFolders = new Set(

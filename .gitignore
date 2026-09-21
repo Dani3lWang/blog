@@ -4,11 +4,16 @@ dist/
 # generated vndb covers
 public/vndb-covers/
 
+# 构建时下载的字体源文件（体积大，由 scripts/fetch-fonts.ts 按需拉取，不进仓库）
+public/assets/fonts/*.download
+public/assets/fonts/LXGWWenKaiLite-*.ttf
+
 # generated types
 .astro/
 
 # dependencies
 node_modules/
+.pnpm-store/
 
 # logs
 npm-debug.log*

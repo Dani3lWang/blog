@@ -465,6 +465,18 @@ export const ru: Translation = {
 	[Key.siteStatsLastUpdate]: "Последняя активность",
 	[Key.siteStatsDaysAgo]: "{days} дней назад",
 	[Key.siteStatsDays]: "{days} дней",
+
+	// Персональная главная страница (GUAVA DISPATCH)
+	[Key.homeNow]: "Сейчас",
+	[Key.homeFeatured]: "Главное за выпуск",
+	[Key.homeRecentDynamic]: "Последние записи",
+	[Key.homePortalIndex]: "Индекс жизни",
+	[Key.homeRandomPost]: "Случайная статья",
+	[Key.homeAllPosts]: "Все статьи",
+	[Key.homeViewAll]: "Смотреть все",
+	[Key.homeReadArticle]: "Читать статью",
+	[Key.homeStats]: "Колофон",
+	[Key.homeStatsCities]: "Посещённые города",
 	[Key.today]: "Сегодня",
 
 	// Информация о сайте

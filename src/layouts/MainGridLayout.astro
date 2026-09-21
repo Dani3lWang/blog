@@ -51,6 +51,12 @@ interface Props {
 		minutes?: number;
 	};
 	heading?: string;
+	/**
+	 * 布局变体：
+	 * - "default"：现有布局（可选左右侧栏 + 分类栏）
+	 * - "editorial-home"：个人主页专用，隐藏左右侧栏与分类栏，改为单列满宽杂志版式
+	 */
+	variant?: "default" | "editorial-home";
 }
 
 const backgroundImages = getBackgroundImages();
@@ -70,12 +76,17 @@ const {
 	encrypted = false,
 	bannerPostMeta,
 	heading,
+	variant = "default",
 } = Astro.props;
+
+const isEditorialHome = variant === "editorial-home";
 
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 
 const shouldRenderCategoryBar =
-	!!siteConfig.categoryBar && isCategoryBarVisible(Astro.url.pathname);
+	!isEditorialHome &&
+	!!siteConfig.categoryBar &&
+	isCategoryBarVisible(Astro.url.pathname);
 
 // 检查是否在文章详情页
 const isPostPage = !!postSlug;
@@ -87,6 +98,8 @@ const banner = getBannerVisibilityState({
 	title,
 	bannerPostMeta,
 });
+// 布局骨架位于 Swup 替换容器之外，首页也必须保留完整 DOM。
+// 单栏效果由 body.is-home 的样式覆盖，离开首页时新版响应式网格可立即恢复。
 const sidebar = getEffectiveSidebarState({ isPostPage });
 
 const { hasWallpaper } = banner;
@@ -99,6 +112,7 @@ const {
 	gridColumnStyle,
 	gridDataAttrs,
 } = sidebar;
+
 ---
 
 <Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper}>
@@ -135,7 +149,9 @@ const {
             {/* 主内容区包装器 - 包含静态栏位和swup容器，作为单个grid item */}
             <div id="content-column" class={staticBarClass}>
                 {/* 分类导航栏 - 仅在首页、文章模块和关于模块显示 */}
-                {shouldRenderCategoryBar && <div id="category-bar-wrapper"><CategoryBar currentPostCategory={postCategory} /></div>}
+                <div id="category-bar-wrapper">
+                    {shouldRenderCategoryBar && <CategoryBar currentPostCategory={postCategory} />}
+                </div>
                 {/* 主内容区 - 始终渲染，确保 Swup 容器存在 */}
                 <main
                     id="swup-container"

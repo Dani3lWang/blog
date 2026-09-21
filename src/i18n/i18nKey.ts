@@ -521,6 +521,18 @@ enum I18nKey {
 	videoNext = "videoNext",
 	videoLoadError = "videoLoadError",
 
+	// 个人主页（芭乐通信 / GUAVA DISPATCH）
+	homeNow = "homeNow",
+	homeFeatured = "homeFeatured",
+	homeRecentDynamic = "homeRecentDynamic",
+	homePortalIndex = "homePortalIndex",
+	homeRandomPost = "homeRandomPost",
+	homeAllPosts = "homeAllPosts",
+	homeViewAll = "homeViewAll",
+	homeReadArticle = "homeReadArticle",
+	homeStats = "homeStats",
+	homeStatsCities = "homeStatsCities",
+
 	// 沉浸阅读 (immersive reading)
 	immersiveReading = "immersiveReading",
 	enterImmersiveReading = "enterImmersiveReading",

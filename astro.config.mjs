@@ -1,4 +1,5 @@
 import { setMaxListeners } from "node:events";
+import { existsSync } from "node:fs";
 import cloudflare from "@astrojs/cloudflare";
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
@@ -66,6 +67,20 @@ const adapter = process.env.CF_WORKERS
 	: undefined;
 
 // https://astro.build/config
+// local 字体源文件存在性检查：源文件由 scripts/fetch-fonts.ts 在构建前下载，
+// 缺失时（例如离线构建）直接跳过该字体而不是让 Astro 抛错中断整个构建，
+// 站点会按 fontConfig 中的 fallbacks 回退到系统字体。
+const localFontSourceExists = (font) => {
+	const variants = font.options?.variants;
+	if (!Array.isArray(variants) || variants.length === 0) return false;
+	return variants.some((variant) =>
+		(variant?.src ?? []).some((src) => {
+			const relative = src.replace(/^\.?\//, "");
+			return existsSync(new URL(relative, import.meta.url));
+		}),
+	);
+};
+
 export default defineConfig({
 	site: siteConfig.site_url,
 
@@ -81,6 +96,8 @@ export default defineConfig({
 		"/life/routines/": "/routines/",
 		"/life/places/": "/places/",
 		"/moments/shuoshuo/": "/dynamic/",
+		// 首页改为个人主页后，完整文章列表迁到 /posts/；旧的分页 URL 保留跳转
+		"/page/1/": "/posts/",
 	},
 
 	// 字体配置 - 只加载实际使用的字体，跳过未引用的以加快构建
@@ -91,6 +108,14 @@ export default defineConfig({
 		const used = collectUsedFontCssVars(fontConfig);
 		return fontsList
 			.filter((f) => used.has(f.cssVariable))
+			.filter((f) => {
+				if (f.provider !== "local") return true;
+				if (localFontSourceExists(f)) return true;
+				console.warn(
+					`[fonts] 跳过本地字体 "${f.name}"：源文件不存在，已回退系统字体。执行 \`pnpm fonts\` 可补齐。`,
+				);
+				return false;
+			})
 			.map((f) => {
 				let provider;
 				switch (f.provider) {

@@ -1,0 +1,76 @@
+---
+import HomeSectionHeading from "@/components/home/HomeSectionHeading.astro";
+import { homeConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import type { HomeStats } from "@/utils/home-utils";
+
+/**
+ * 数据页脚（报纸「出版信息」栏）
+ *
+ * 展示全站规模与更新节奏，让首页底部收束成一行可读的「出版物数据」。
+ * homeConfig.showStats 为 false 或数据缺失时整个板块不渲染。
+ */
+interface Props {
+	stats: HomeStats | null;
+}
+
+const { stats } = Astro.props;
+
+const formatStamp = (date: Date) =>
+	formatDateToYYYYMMDD(date).replace(/-/g, ".");
+
+const items = stats
+	? [
+			{
+				label: i18n(I18nKey.siteStatsPostCount),
+				value: stats.posts.toLocaleString(),
+			},
+			{
+				label: i18n(I18nKey.siteStatsDynamicCount),
+				value: stats.dynamics.toLocaleString(),
+			},
+			{
+				label: i18n(I18nKey.siteStatsTotalWords),
+				value: stats.words.toLocaleString(),
+			},
+			{
+				label: i18n(I18nKey.homeStatsCities),
+				value: stats.cities.toLocaleString(),
+			},
+			{
+				label: i18n(I18nKey.siteStatsRunningDays),
+				value: stats.siteDays.toLocaleString(),
+			},
+			{
+				label: i18n(I18nKey.siteStatsLastUpdate),
+				value: stats.updatedAt ? formatStamp(stats.updatedAt) : "—",
+			},
+		]
+	: [];
+---
+
+{
+	stats && items.length > 0 && (
+		<section class="ed-colophon ed-section" style="--ed-delay: 260ms">
+			<HomeSectionHeading
+				title={i18n(I18nKey.homeStats)}
+				english="COLOPHON"
+				icon="material-symbols:insert-chart-outline"
+			/>
+			<div class="ed-colophon__grid">
+				{items.map((item) => (
+					<div class="ed-colophon__item">
+						<span class="ed-colophon__label">{item.label}</span>
+						<span class="ed-colophon__value">{item.value}</span>
+					</div>
+				))}
+			</div>
+			<p class="ed-colophon__foot">
+				{homeConfig.brand.englishName} · UPDATED{" "}
+				{stats.updatedAt ? formatStamp(stats.updatedAt) : "N/A"}
+			</p>
+		</section>
+	)
+}

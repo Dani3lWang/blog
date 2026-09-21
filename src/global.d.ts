@@ -94,6 +94,8 @@ declare global {
 		__floatingTOCAutoCloseInit?: boolean;
 		/** 文章列表页布局监听器守卫,确保只注册一次 */
 		__postPageInit?: boolean;
+		/** 首页「换一篇」随机阅读监听器守卫,确保只注册一次 */
+		__homeRandomPostInit?: boolean;
 	}
 
 	interface MediaQueryList {

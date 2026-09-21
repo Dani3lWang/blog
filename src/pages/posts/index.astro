@@ -1,0 +1,17 @@
+---
+import PostListSection from "@/components/pages/posts/PostListSection.astro";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import {
+	getPostListHeading,
+	getPostListPageData,
+} from "@/utils/post-list-utils";
+
+// 完整文章列表第一页：/posts/
+// 后续页在 src/pages/posts/[page].astro，两处共用 post-list-utils 的分页计算
+const page = await getPostListPageData(1);
+const heading = getPostListHeading(page.currentPage);
+---
+
+<MainGridLayout heading={heading} title={heading}>
+  <PostListSection page={page} />
+</MainGridLayout>

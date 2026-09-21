@@ -1,0 +1,50 @@
+---
+import { homeConfig, siteConfig } from "@/config";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+
+/**
+ * 杂志刊头
+ *
+ * 左侧为中文站名（siteConfig.title）+「芭」字印章，
+ * 右侧为英文标识、刊号、构建日期与创刊标识，构成「持续出版」的观感。
+ *
+ * 站名刻意用 <p> 而不是 <h1>：文档级 h1 由 MainGridLayout 的 sr-only 标题承担，
+ * 这里只是版面上的刊头字，重复一个 h1 会破坏标题层级。
+ */
+interface Props {
+	/** 已解析占位符的刊号行 */
+	editionLabel: string;
+	/** 自动月度期号，如 "004"（写入 title 便于对照） */
+	issueNumber: string;
+}
+
+const { editionLabel, issueNumber } = Astro.props;
+
+const siteName = siteConfig.title;
+// 印章取站名首字，改名后无需替换资产
+const sealChar = Array.from(siteName)[0] ?? "记";
+const today = formatDateToYYYYMMDD(new Date()).replace(/-/g, ".");
+---
+
+<header class="ed-masthead onload-animation ed-section" style="--ed-delay: 0ms">
+  <p class="ed-masthead__name" title={`第 ${issueNumber} 期`}>
+    <span class="ed-masthead__seal" aria-hidden="true">{sealChar}</span>{siteName}
+  </p>
+
+  <div class="ed-masthead__side">
+    <span class="ed-masthead__english">{homeConfig.brand.englishName}</span>
+    <div class="ed-masthead__meta">
+      <span>{editionLabel}</span>
+      <span class="ed-masthead__meta-group">
+        <span aria-hidden="true">·</span>
+        <span>{today}</span>
+      </span>
+      {homeConfig.brand.since && (
+        <span class="ed-masthead__meta-group">
+          <span aria-hidden="true">·</span>
+          <span>{homeConfig.brand.since}</span>
+        </span>
+      )}
+    </div>
+  </div>
+</header>

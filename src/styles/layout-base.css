@@ -245,6 +245,29 @@
   }
 }
 
+/* 杂志首页与普通内页共用同一套、位于 Swup 容器外的主网格骨架。
+   首页只临时折叠侧栏并让内容跨满网格；body.is-home 在软导航开始时同步切换，
+   离开首页后原有响应式列与侧栏会自动恢复，避免主内容残留在 17.5rem 侧栏列。 */
+body.is-home #main-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+body.is-home #left-sidebar,
+body.is-home #right-sidebar,
+body.is-home #mobile-bottom-sidebar {
+  display: none !important;
+}
+
+body.is-home #content-column,
+body.is-home #main-grid > .footer {
+  grid-column: 1 / -1 !important;
+}
+
+body.is-home #content-column {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 /* 右侧栏平滑过渡（从 MainGridLayout 的内联 <style is:global> 迁出） */
 #right-sidebar {
   transition:

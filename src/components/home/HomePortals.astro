@@ -1,0 +1,55 @@
+---
+import { Icon } from "astro-icon/components";
+import HomeSectionHeading from "@/components/home/HomeSectionHeading.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { HomePortal } from "@/utils/home-utils";
+import { url } from "@/utils/url-utils";
+
+/**
+ * 生活索引
+ *
+ * homeConfig.portalOrder 决定顺序，siteConfig.pages 关闭的页面已在
+ * getHomeData 里过滤掉，不会出现「即将上线」的占位入口。
+ * 没有可用入口时不渲染该板块。
+ */
+interface Props {
+	portals: HomePortal[];
+}
+
+const { portals } = Astro.props;
+---
+
+{
+	portals.length > 0 && (
+		<section class="ed-section" style="--ed-delay: 220ms">
+			<HomeSectionHeading
+				title={i18n(I18nKey.homePortalIndex)}
+				english="INDEX"
+				icon="material-symbols:grid-view-outline"
+				count={portals.length}
+			/>
+			<div class="ed-portals">
+				{portals.map((portal) => (
+					<a class="ed-card ed-portal" href={url(portal.href)}>
+						<div class="ed-portal__head">
+							<span class="ed-portal__icon">
+								<Icon name={portal.icon} class="text-[1.05rem]" />
+							</span>
+							<span class="ed-portal__arrow" aria-hidden="true">
+								<Icon name="material-symbols:north-east-rounded" />
+							</span>
+						</div>
+						<h3 class="ed-portal__title">{portal.title}</h3>
+						{portal.description && (
+							<p class="ed-portal__desc">{portal.description}</p>
+						)}
+						<div class="ed-portal__meta">
+							<span class="ed-portal__path">{portal.href}</span>
+						</div>
+					</a>
+				))}
+			</div>
+		</section>
+	)
+}

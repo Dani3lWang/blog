@@ -25,6 +25,12 @@ export type { FontSelectionConfig } from "./fontConfig";
 export type { FriendLink, FriendsPageConfig } from "./friendsConfig";
 export type { GalleryAlbum, GalleryConfig } from "./galleryConfig";
 export type { GamePlatformId, GamesConfig } from "./gamesConfig";
+export type {
+	HomeConfig,
+	HomeNowItem,
+	HomePortalKey,
+	HomePortalOverride,
+} from "./homeConfig";
 export type { ImmersiveReadingConfig } from "./immersiveReadingConfig";
 export type { LicenseConfig } from "./licenseConfig";
 export type { MermaidConfig } from "./mermaidConfig";
