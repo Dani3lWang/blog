@@ -111,6 +111,7 @@ const minutes = remarkPluginFrontmatter.minutes;
     className,
   ]}
   style={style}
+  data-post-url={url}
 >
   <!-- pinned icon -->
   <div
@@ -259,25 +260,13 @@ const minutes = remarkPluginFrontmatter.minutes;
     )
   }
 
-  {
-    !hasCover && (
-      <a
-        href={url}
-        aria-label={title}
-        class:list={[
-          "post-card-enter-btn",
-          "flex btn-regular w-13",
-          "absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)",
-          "hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95",
-        ]}
-      >
-        <Icon
-          name="material-symbols:chevron-right-rounded"
-          class="transition text-(--primary) text-4xl mx-auto"
-        />
-      </a>
-    )
-  }
+  <div class="post-card-arrow" aria-hidden="true">
+    <Icon
+      name="material-symbols:arrow-outward-rounded"
+      is:inline
+      class="text-2xl"
+    />
+  </div>
 </div>
 
 <style define:vars={{ coverWidth, descriptionClampLines }}>

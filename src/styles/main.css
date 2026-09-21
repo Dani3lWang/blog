@@ -6,6 +6,7 @@
 @import './transition.css';
 @import './custom-scrollbar.css';
 @import './tags.css';
+@import './components/post-card-preview.css';
 @import './display-settings.css';
 @import './categories.css';
 @import './layout-base.css';
