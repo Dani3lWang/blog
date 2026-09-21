@@ -35,11 +35,15 @@ const SYSTEM_FONT_STACK =
 const MONO_FONT_STACK =
 	'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
 const selectedFontVars = selectedIds.filter((v) => v !== "system");
+// 每个 var() 都带上系统字体保底：本地字体源缺失（如未执行 fonts 下载脚本）时，
+// --font-xxx 不会被定义，若只写 var(--font-xxx) 会导致整条 font-family 声明失效、
+// 正文回落成浏览器默认字体。写成 var(--font-xxx, <系统栈>) 后始终能解析出有效值。
 const bodyFontFamily =
 	selectedFontVars.length > 0
-		? [...selectedFontVars.map((v) => `var(${v})`), SYSTEM_FONT_STACK].join(
-				", ",
-			)
+		? [
+				...selectedFontVars.map((v) => `var(${v}, ${SYSTEM_FONT_STACK})`),
+				SYSTEM_FONT_STACK,
+			].join(", ")
 		: SYSTEM_FONT_STACK;
 
 // 各区域字体 CSS 变量值

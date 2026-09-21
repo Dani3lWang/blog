@@ -10,6 +10,11 @@ import {
 	getSortedPosts,
 	getTagList,
 } from "@/utils/content-utils";
+import {
+	getLatestActivityDate,
+	getSiteRunningDays,
+	getSiteWordCount,
+} from "@/utils/site-stats-utils";
 
 interface Props {
 	class?: string;
@@ -29,24 +34,8 @@ const posts = await getSortedPosts();
 const categories = await getCategoryList();
 const tags = await getTagList();
 
-// 计算总字数
-let totalWords = 0;
-for (const post of posts) {
-	if (post.body) {
-		// 移除代码块和内联代码后计算字数
-		let text = post.body
-			.replace(/```[\s\S]*?```/g, "") // 移除代码块
-			.replace(/`[^`]*`/g, "") // 移除内联代码
-			.replace(/\s+/g, " ") // 合并空白
-			.trim();
-
-		// 分别计算中文字符和英文字符
-		const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
-		const englishChars = text.match(/[a-zA-Z]/g) || [];
-
-		totalWords += chineseChars.length + englishChars.length;
-	}
-}
+// 计算总字数（口径与首页数据页脚共用，见 site-stats-utils）
+const totalWords = await getSiteWordCount(posts);
 
 // 格式化数字（添加千位分隔符）
 function formatNumber(num: number): string {
@@ -54,17 +43,7 @@ function formatNumber(num: number): string {
 }
 
 // 获取「最后活动」时间：取每篇文章 published 与 updated 中较新的那个，再从全站所有文章里取最大值。这样新发文章和修改老文章都会刷新该字段。
-const getActivityDate = (post: (typeof posts)[number]): Date => {
-	const { published, updated } = post.data;
-	if (updated && updated > published) return updated;
-	return published;
-};
-
-const lastActivityDate = posts.reduce<Date | null>((latest, post) => {
-	const current = getActivityDate(post);
-	if (!latest || current > latest) return current;
-	return latest;
-}, null);
+const lastActivityDate = getLatestActivityDate(posts);
 
 const lastPostDate = lastActivityDate ? lastActivityDate.toISOString() : null;
 
@@ -95,7 +74,7 @@ const stats = [
 	{
 		icon: "material-symbols:calendar-clock-outline",
 		label: i18n(I18nKey.siteStatsRunningDays),
-		value: 0, // 将由客户端更新
+		value: getSiteRunningDays(siteStartDate), // 客户端会用当前时间刷新
 		suffix: i18n(I18nKey.siteStatsDays).replace("{days}", ""),
 		dynamic: true,
 		id: "running-days",

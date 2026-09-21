@@ -1,0 +1,40 @@
+---
+import HomeColophon from "@/components/home/HomeColophon.astro";
+import HomeDynamics from "@/components/home/HomeDynamics.astro";
+import HomeFeatured from "@/components/home/HomeFeatured.astro";
+import HomeHero from "@/components/home/HomeHero.astro";
+import HomeMasthead from "@/components/home/HomeMasthead.astro";
+import HomeNow from "@/components/home/HomeNow.astro";
+import HomePortals from "@/components/home/HomePortals.astro";
+import { siteConfig } from "@/config";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getHomeData } from "@/utils/home-utils";
+
+/**
+ * 芭乐通信 · 个人主页
+ *
+ * 首页只负责「精选与导览」：刊头 → 人物封面 → 本期主稿 → 此刻 → 最近动态 → 生活索引 → 数据页脚。
+ * 完整文章列表已迁到 /posts/。
+ *
+ * 所有数据由 getHomeData() 一次性算好，子组件不各自读取内容集合；
+ * 空模块（未配置或页面关闭）自动隐藏，不用演示数据填充。
+ * WebSite + Person 的 JSON-LD 由 Layout.astro 在首页统一注入，这里不再重复。
+ */
+const home = await getHomeData();
+---
+
+<!--
+  title / description 刻意不传：Layout 在没有 title 时直接用 siteConfig.title，
+  传了会拼成「芭乐通信 - 芭乐通信」；description 也会自动回落到 siteConfig.description。
+-->
+<MainGridLayout variant="editorial-home" heading={siteConfig.title}>
+  <div class="ed-home">
+    <HomeMasthead editionLabel={home.editionLabel} issueNumber={home.issue.number} />
+    <HomeHero randomPool={home.randomPool} />
+    <HomeFeatured featured={home.featured} secondary={home.secondary} />
+    <HomeNow now={home.now} />
+    <HomeDynamics dynamics={home.dynamics} />
+    <HomePortals portals={home.portals} />
+    <HomeColophon stats={home.stats} />
+  </div>
+</MainGridLayout>

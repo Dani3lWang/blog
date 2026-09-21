@@ -81,6 +81,32 @@ export const fontsList: FontDefinition[] = [
 		},
 		fallbacks: ["sans-serif"],
 	},
+	// ─── 霞鹜文楷（芭乐通信正文/导航字体）───
+	// 源文件由 scripts/fetch-fonts.ts 在构建前下载，不进仓库；
+	// 文件缺失时 astro.config.mjs 会跳过该字体，站点回退系统字体，不影响构建。
+	// 构建后由 scripts/subset-fonts.ts 按页面实际用字生成轻量 woff2 子集。
+	{
+		name: "LXGW WenKai Lite",
+		cssVariable: "--font-wenkai",
+		provider: "local",
+		options: {
+			variants: [
+				{
+					src: ["./public/assets/fonts/LXGWWenKaiLite-Regular.ttf"],
+					weight: 400,
+					style: "normal",
+				},
+			],
+		},
+		fallbacks: [
+			"LXGW WenKai",
+			"Kaiti SC",
+			"STKaiti",
+			"KaiTi",
+			"Songti SC",
+			"serif",
+		],
+	},
 ];
 
 // ─── 字体选择与区域覆盖 ─────────────────────────────────────
@@ -89,7 +115,8 @@ export const fontConfig: FontSelectionConfig = {
 	enable: true,
 	// 当前选择的字体 CSS 变量名（对应上方 fonts 中的 cssVariable）
 	// 使用 "system" 表示系统字体（不加载任何自定义字体）
-	selected: ["system"],
+	// 「芭乐通信」正文、导航与短描述统一使用霞鹜文楷，形成克制的杂志阅读感
+	selected: ["--font-wenkai"],
 
 	// 各区域独立字体设置（填写上方 fonts 中的 cssVariable，留空则使用全局 selected 字体）
 	// 例如：bannerTitleFont: "--font-inter", 表示主页横幅主标题使用 Inter 字体
@@ -97,7 +124,7 @@ export const fontConfig: FontSelectionConfig = {
 	bannerTitleFont: "--font-zen-maru-gothic",
 	// 主页横幅副标题字体
 	bannerSubtitleFont: "--font-inter",
-	// 导航栏标题字体
+	// 导航栏标题字体（刊头站名保持中文衬线，由 src/styles/editorial.css 接管）
 	navbarTitleFont: "",
 	// 代码块字体（用于代码高亮和等宽字体场景）
 	codeFont: "--font-jetbrains-mono",
@@ -108,6 +135,10 @@ export const fontConfig: FontSelectionConfig = {
 		"--font-greatvibes": {
 			// 额外包含的字符
 			extraChars: "",
+		},
+		// 霞鹜文楷体积大，必须子集化；额外补上页面动态内容可能用到的中文标点
+		"--font-wenkai": {
+			extraChars: "·—…“”‘’《》〈〉【】（）〔〕、。，；：？！～¥§¶†‡",
 		},
 	},
 };

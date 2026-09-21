@@ -445,6 +445,18 @@ export const zh_CN: Translation = {
 	[Key.siteStatsLastUpdate]: "最后活动",
 	[Key.siteStatsDaysAgo]: "{days} 天前",
 	[Key.siteStatsDays]: "{days} 天",
+
+	// 个人主页（芭乐通信 / GUAVA DISPATCH）
+	[Key.homeNow]: "此刻",
+	[Key.homeFeatured]: "本期主稿",
+	[Key.homeRecentDynamic]: "最近动态",
+	[Key.homePortalIndex]: "生活索引",
+	[Key.homeRandomPost]: "换一篇",
+	[Key.homeAllPosts]: "全部文章",
+	[Key.homeViewAll]: "查看全部",
+	[Key.homeReadArticle]: "阅读全文",
+	[Key.homeStats]: "站点数据",
+	[Key.homeStatsCities]: "去过的城市",
 	[Key.today]: "今天",
 
 	// 站点信息

@@ -59,7 +59,7 @@ const pages = resolvePageToggles({
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "LXBlog",
+	title: "芭乐通信",
 
 	// 站点副标题
 	subtitle: "",
@@ -68,14 +68,16 @@ export const siteConfig: SiteConfig = {
 	site_url: "https://lovelongxin.me",
 
 	// 站点描述
-	description: "",
+	description: "喊我吃芭乐的个人主页与内容档案",
 
 	// 站点关键词
 	keywords: [
-		"LXBlog",
-		"Fuwari",
+		"芭乐通信",
+		"喊我吃芭乐",
+		"个人主页",
+		"GUAVA DISPATCH",
+		"个人杂志",
 		"Astro",
-		"ACGN",
 		"博客",
 		"技术博客",
 		"静态博客",
@@ -134,13 +136,14 @@ export const siteConfig: SiteConfig = {
 		// image 和 url 类型可额外设置 valueDark，用于暗色模式下显示另一张图片，不设置则亮暗色共用 value
 		// 例如: { type: "image", value: "assets/images/logo.png", valueDark: "assets/images/logo-dark.png", alt: "Logo" }
 		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
+		// 芭乐切面与通信波纹组合标志；单图同时适配亮暗色背景。
 		logo: {
 			type: "image",
 			value: "assets/images/logo/guava-signal.png",
 			alt: "芭乐电波",
 		},
 		// 导航栏标题
-		title: "LXBlog",
+		title: "芭乐通信",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中

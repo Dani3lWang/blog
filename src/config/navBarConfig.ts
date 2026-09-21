@@ -18,9 +18,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	];
 
 	// 文章及其子菜单
+	// 2026-09-15:首页改为个人主页后，完整文章列表位于 /posts/，
+	// 父项直接指向列表页，子菜单仍进入归档 / 分类 / 标签 / 系列
 	links.push({
 		name: "文章",
-		url: "#",
+		url: "/posts/",
 		icon: "material-symbols:article",
 		children: [
 			// 归档

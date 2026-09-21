@@ -240,6 +240,7 @@ src/
 │   ├── FooterConfig.html           # 页脚配置
 │   ├── friendsConfig.ts          # 友链配置
 │   ├── galleryConfig.ts          # 相册配置
+│   ├── homeConfig.ts             # 个人主页（芭乐通信）配置
 │   ├── licenseConfig.ts          # 许可证配置
 │   ├── musicConfig.ts            # 音乐播放器配置
 │   ├── navBarConfig.ts           # 导航栏配置
@@ -250,6 +251,46 @@ src/
 │   ├── sidebarConfig.ts          # 侧边栏布局配置
 │   ├── sponsorConfig.ts          # 打赏配置
 ```
+
+### 个人主页（芭乐通信）
+
+首页是一份个人杂志：刊头、人物封面、本期主稿、此刻、最近动态、生活索引和数据页脚。完整文章列表在 `/posts/`（分页为 `/posts/2/`），文章详情 URL 不变。
+
+首页专属文案、刊号、主稿和模块顺序都在 `src/config/homeConfig.ts`；站名、描述、头像、签名和社交链接分别来自 `src/config/siteConfig.ts` 与 `src/config/profileConfig.ts`，不在 `homeConfig` 里重复维护。
+
+```typescript
+export const homeConfig: HomeConfig = {
+	brand: {
+		englishName: "GUAVA DISPATCH", // 刊头右侧英文标识
+		editionLabel: "ISSUE {issue} · PERSONAL ARCHIVE", // {issue}/{month}/{year} 自动替换
+		tagline: "你好，我是喊我吃芭乐。", // 人物封面主标题
+		since: "SINCE 2026",
+	},
+	hero: { kicker: "...", introduction: "...", primaryAction: "阅读文章", status: "" },
+	featuredPosts: {
+		slugs: [], // 手动指定主稿，留空则用最新文章
+		fallbackToLatest: true, // slug 写错或文章不存在时回退到最新文章
+		limit: 3, // 1 = 整版主稿；2-3 = 主稿 + 短稿；0 = 隐藏
+	},
+	now: [
+		{ label: "最近在读", value: "", icon: "material-symbols:book-2-outline", href: "/books/" },
+	],
+	recentDynamicLimit: 2, // 最近动态条数，0 = 隐藏
+	portalOrder: ["gallery", "books", "moviesGames", "games", "booknav", "guestbook"],
+	portals: { gallery: { title: "相册", description: "我看见的" } },
+	showStats: true, // 数据页脚
+	showRandomPost: true, // 「换一篇」随机阅读
+};
+```
+
+几点约定：
+
+- **留空即隐藏**：`now` 中 `value` 为空的行、`limit` 为 0 的板块都不会渲染，也不会用演示数据填充；这些都关闭时首页不会去查询对应的内容集合。
+- **主稿选择**：`featuredPosts.slugs` 填文章 slug（不带扩展名、可含分类目录，例如 `guide/firefly-wiki-link`）。匹配不到时构建阶段会输出警告并按 `fallbackToLatest` 回退。
+- **此刻 / NOW**：`value` 只填愿意公开的内容，例如「《XXX》读到第三章」；`href` 可指向书架、影视或任意外链，省略则渲染为不可点击卡片。
+- **生活索引**：顺序由 `portalOrder` 决定，同时受 `siteConfig.pages` 控制——页面关闭时入口自动消失，不显示「即将上线」占位。`portals` 可覆盖标题、说明和图标。
+- **随机阅读**：从已发布、非草稿、非加密的文章中随机挑选，并要求它不是本期主稿；没有合适文章时按钮自动隐藏。
+- **改名**：站名在 `siteConfig.title`，导航栏与刊头的中文名、以及刊头「芭」字印章都跟随它；导航栏站标是 `public/assets/images/logo/guava-seal-{light,dark}.svg`，替换这两个文件即可换标记。
 
 ## 🎬 影视与音乐（豆瓣评分）
 

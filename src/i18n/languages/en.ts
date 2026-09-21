@@ -463,6 +463,18 @@ export const en: Translation = {
 	[Key.siteStatsLastUpdate]: "Last Activity",
 	[Key.siteStatsDaysAgo]: "{days} days ago",
 	[Key.siteStatsDays]: "{days} days",
+
+	// Personal homepage (GUAVA DISPATCH)
+	[Key.homeNow]: "Now",
+	[Key.homeFeatured]: "This Issue",
+	[Key.homeRecentDynamic]: "Latest Updates",
+	[Key.homePortalIndex]: "Life Index",
+	[Key.homeRandomPost]: "Surprise Me",
+	[Key.homeAllPosts]: "All Posts",
+	[Key.homeViewAll]: "View all",
+	[Key.homeReadArticle]: "Read article",
+	[Key.homeStats]: "Colophon",
+	[Key.homeStatsCities]: "Cities visited",
 	[Key.today]: "Today",
 
 	// Site Info

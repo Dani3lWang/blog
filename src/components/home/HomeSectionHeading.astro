@@ -1,0 +1,32 @@
+---
+import { Icon } from "astro-icon/components";
+
+/**
+ * 分组标题：图标 + 中文标题 + 英文小注 + 数量 + 一条延伸横线。
+ * 个人主页各板块共用，保证「编辑式目录」的标题语言一致。
+ */
+interface Props {
+	/** 中文标题 */
+	title: string;
+	/** 英文小注（等宽小字，可留空） */
+	english?: string;
+	/** 左侧图标（Iconify 名称） */
+	icon?: string;
+	/** 右侧数量，null / undefined 时不显示 */
+	count?: number | null;
+}
+
+const { title, english = "", icon, count = null } = Astro.props;
+---
+
+<div class="ed-section-head">
+  {icon && (
+    <span class="ed-section-head__icon">
+      <Icon name={icon} class="text-[1.05rem]" />
+    </span>
+  )}
+  <h2 class="ed-section-head__title">{title}</h2>
+  {english && <span class="ed-section-head__en">{english}</span>}
+  <span class="ed-section-head__rule" aria-hidden="true"></span>
+  {count !== null && <span class="ed-section-head__count">{count}</span>}
+</div>

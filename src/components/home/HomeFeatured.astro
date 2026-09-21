@@ -1,0 +1,123 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import HomeSectionHeading from "@/components/home/HomeSectionHeading.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import type { HomeFeaturedPost } from "@/utils/home-utils";
+import { url } from "@/utils/url-utils";
+
+/**
+ * 本期主稿
+ *
+ * 第一条作为整版主稿（横排「左文右图」），其余作为右下短稿列表。
+ * 没有配置主稿时整个板块不渲染（首页不塞演示内容）。
+ */
+interface Props {
+	/** 主稿，null 时不渲染 */
+	featured: HomeFeaturedPost | null;
+	/** 短稿（主稿之后的若干条） */
+	secondary: HomeFeaturedPost[];
+}
+
+const { featured, secondary } = Astro.props;
+const postsUrl = url("/posts/");
+
+const formatStamp = (date: Date) =>
+	formatDateToYYYYMMDD(date).replace(/-/g, ".");
+---
+
+{
+	featured && (
+		<section class="ed-card ed-section" style="--ed-delay: 100ms">
+			<HomeSectionHeading
+				title={i18n(I18nKey.homeFeatured)}
+				english="IN THIS ISSUE"
+				icon="material-symbols:newspaper-outline"
+				count={secondary.length + 1}
+			/>
+
+			<div
+				class:list={[
+					"ed-featured-grid",
+					secondary.length > 0 && "ed-featured-grid--split",
+				]}
+			>
+				<article class="ed-featured">
+					<a
+						class:list={[
+							"ed-featured__link",
+							featured.image && "ed-featured__link--with-cover",
+						]}
+						href={featured.href}
+					>
+						<div class="ed-featured__body">
+							<p class="ed-featured__label">
+								{featured.encrypted
+									? i18n(I18nKey.postEncrypted)
+									: i18n(I18nKey.homeReadArticle)}
+							</p>
+							<h3 class="ed-featured__title">{featured.title}</h3>
+							{featured.description && (
+								<p class="ed-featured__desc">{featured.description}</p>
+							)}
+							<div class="ed-featured__meta">
+								{featured.category && (
+									<span>{featured.category}</span>
+								)}
+								<span>{formatStamp(featured.published)}</span>
+								<span>
+									{featured.minutes} {i18n(I18nKey.minuteCount)}
+								</span>
+								{featured.pinned && (
+									<span>
+										<Icon name="material-symbols:push-pin-outline" />{" "}
+										{i18n(I18nKey.pinned)}
+									</span>
+								)}
+							</div>
+						</div>
+						{featured.image && (
+							<div class="ed-featured__cover" aria-hidden="true">
+								<ImageWrapper
+									src={featured.image}
+									alt=""
+									loading="eager"
+									widths={[420, 720, 1080]}
+									sizes="(min-width: 900px) 42vw, 100vw"
+								/>
+							</div>
+						)}
+					</a>
+				</article>
+
+				{secondary.length > 0 && (
+					<div class="ed-shorts">
+						{secondary.map((post) => (
+							<a class="ed-card ed-short" href={post.href}>
+								<h3 class="ed-short__title">{post.title}</h3>
+								{post.description && (
+									<p class="ed-short__desc">{post.description}</p>
+								)}
+								<div class="ed-short__meta">
+									<span>{formatStamp(post.published)}</span>
+									<span>
+										{post.minutes} {i18n(I18nKey.minuteCount)}
+									</span>
+								</div>
+							</a>
+						))}
+					</div>
+				)}
+			</div>
+
+			<div class="ed-section-more">
+				<a href={postsUrl}>
+					{i18n(I18nKey.homeViewAll)}
+					<Icon name="material-symbols:arrow-forward-rounded" />
+				</a>
+			</div>
+		</section>
+	)
+}

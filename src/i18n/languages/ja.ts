@@ -456,6 +456,18 @@ export const ja: Translation = {
 	[Key.siteStatsLastUpdate]: "最終活動",
 	[Key.siteStatsDaysAgo]: "{days} 日前",
 	[Key.siteStatsDays]: "{days} 日",
+
+	// 個人ホームページ（GUAVA DISPATCH）
+	[Key.homeNow]: "現在",
+	[Key.homeFeatured]: "今号の特集",
+	[Key.homeRecentDynamic]: "最近の投稿",
+	[Key.homePortalIndex]: "ライフ索引",
+	[Key.homeRandomPost]: "おまかせ",
+	[Key.homeAllPosts]: "すべての記事",
+	[Key.homeViewAll]: "すべて見る",
+	[Key.homeReadArticle]: "全文を読む",
+	[Key.homeStats]: "サイトデータ",
+	[Key.homeStatsCities]: "訪れた都市",
 	[Key.today]: "今日",
 
 	// サイト情報

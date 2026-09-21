@@ -1,0 +1,143 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import { homeConfig, profileConfig } from "@/config";
+import type { HomeRandomCandidate } from "@/utils/home-utils";
+import { url } from "@/utils/url-utils";
+
+/**
+ * 人物封面
+ *
+ * 桌面端 7:5 不对称栅格：左侧小标题 / 主标题 / 简介 / 签名 / 三个入口，
+ * 右侧人物肖像（杂志裁切 + 细边框 + 图注）。
+ * 社交链接以页边注形式收在左下，不占据主视觉。
+ *
+ * 只展示用户显式配置的内容：homeConfig.hero.status 未填写时不推断任何隐私信息。
+ */
+interface Props {
+	/** 随机阅读候选池；为空时不渲染「换一篇」 */
+	randomPool: HomeRandomCandidate[] | null;
+}
+
+const { randomPool } = Astro.props;
+
+const hero = homeConfig.hero;
+const links = profileConfig.links ?? [];
+const aboutUrl = url("/about/");
+const postsUrl = url("/posts/");
+
+// 联系入口：优先取 profileConfig.links 里的邮件/外链，没有则回落到关于页
+const contactLink = links.find((item) => item.url?.startsWith("mailto:"));
+const socialLinks = links.filter((item) => item.url !== contactLink?.url);
+---
+
+<section class="ed-hero onload-animation ed-section" style="--ed-delay: 60ms">
+  <div class="ed-hero__main">
+    {hero.kicker && <p class="ed-hero__kicker">{hero.kicker}</p>}
+    <p class="ed-hero__title">{homeConfig.brand.tagline}</p>
+    {hero.introduction && <p class="ed-hero__intro">{hero.introduction}</p>}
+    {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
+
+    <div class="ed-hero__actions">
+      <a class="ed-action ed-action--solid" href={postsUrl}>
+        <Icon name="material-symbols:article-outline" class="text-[1.05rem]" />
+        {hero.primaryAction}
+      </a>
+      <a class="ed-action" href={aboutUrl}>
+        <Icon name="material-symbols:person-outline" class="text-[1.05rem]" />
+        关于我
+      </a>
+      {randomPool && randomPool.length > 0 && (
+        <button
+          type="button"
+          class="ed-action"
+          id="home-random-post"
+          data-candidates={JSON.stringify(randomPool)}
+        >
+          <Icon name="material-symbols:casino-outline" class="text-[1.05rem]" />
+          换一篇
+        </button>
+      )}
+      {contactLink && (
+        <a class="ed-action" href={contactLink.url}>
+          <Icon name="fa7-solid:envelope" class="text-[0.95rem]" />
+          联系我
+        </a>
+      )}
+    </div>
+
+    {
+      socialLinks.length > 0 && (
+        <div class="ed-margin-note">
+          <span aria-hidden="true">SOCIAL</span>
+          {socialLinks.map((item) => (
+            <a
+              href={item.url}
+              target={item.url?.startsWith("http") ? "_blank" : undefined}
+              rel={item.url?.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              <Icon name={item.icon} class="text-[0.9rem]" />
+              {item.name}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <figure class="ed-portrait">
+    <div class="ed-portrait__frame">
+      <ImageWrapper
+        src={profileConfig.avatar || ""}
+        alt={`${profileConfig.name} 的头像`}
+        class="ed-portrait__image"
+        loading="eager"
+        fetchpriority="high"
+        widths={[320, 480]}
+        sizes="(min-width: 1024px) 320px, 80vw"
+      />
+    </div>
+    <figcaption class="ed-portrait__caption">
+      {profileConfig.name}{profileConfig.bio ? ` · ${profileConfig.bio}` : ""}
+    </figcaption>
+    {hero.status && <p class="ed-portrait__status">{hero.status}</p>}
+  </figure>
+</section>
+
+<script>
+  // 「换一篇」：候选池在构建期注入，点击时在客户端随机挑一篇再跳转，
+  // 保证每次点到的不一样（静态站无法在构建期做到真随机）。
+  function initHomeRandomPost() {
+    const button = document.getElementById("home-random-post");
+    if (!button || button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+
+    button.addEventListener("click", () => {
+      let candidates = [];
+      try {
+        candidates = JSON.parse(button.dataset.candidates || "[]");
+      } catch {
+        candidates = [];
+      }
+      if (candidates.length === 0) return;
+
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      if (!pick?.href) return;
+
+      if (window.swup) {
+        window.swup.navigate(pick.href);
+      } else {
+        window.location.href = pick.href;
+      }
+    });
+  }
+
+  initHomeRandomPost();
+
+  // 防止 Swup 切页重跑脚本时重复注册监听器（与站内其他初始化守卫同一写法）
+  if (!window.__homeRandomPostInit) {
+    window.__homeRandomPostInit = true;
+    document.addEventListener("swup:contentReplaced", initHomeRandomPost);
+    document.addEventListener("astro:page-load", initHomeRandomPost);
+  }
+</script>

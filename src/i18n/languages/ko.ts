@@ -388,6 +388,18 @@ export const ko: Translation = {
 	[Key.siteStatsLastUpdate]: "최근 활동",
 	[Key.siteStatsDaysAgo]: "{days}일 전",
 	[Key.siteStatsDays]: "{days}일",
+
+	// 개인 홈페이지 (GUAVA DISPATCH)
+	[Key.homeNow]: "지금",
+	[Key.homeFeatured]: "이번 호",
+	[Key.homeRecentDynamic]: "최근 소식",
+	[Key.homePortalIndex]: "생활 색인",
+	[Key.homeRandomPost]: "아무거나 보기",
+	[Key.homeAllPosts]: "전체 글",
+	[Key.homeViewAll]: "전체 보기",
+	[Key.homeReadArticle]: "전문 읽기",
+	[Key.homeStats]: "사이트 데이터",
+	[Key.homeStatsCities]: "방문한 도시",
 	[Key.today]: "오늘",
 
 	// Site Info

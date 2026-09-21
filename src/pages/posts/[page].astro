@@ -1,0 +1,32 @@
+---
+import type { GetStaticPaths } from "astro";
+import PostListSection from "@/components/pages/posts/PostListSection.astro";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import {
+	getPostListHeading,
+	getPostListLastPage,
+	getPostListPageData,
+} from "@/utils/post-list-utils";
+
+// 完整文章列表第 2 页起：/posts/2/、/posts/3/ …
+//
+// 这里刻意用单段动态参数 [page] 而不是 rest 参数 [...page]：
+// 同目录下已有 /posts/[...slug]（文章详情），两个 rest 参数路由的匹配模式完全相同，
+// Astro 会判定为路由冲突；单段 [page] 只匹配一层路径，且优先级高于 rest 参数，
+// 因此 /posts/2/ 走这里、/posts/<分类>/<slug>/ 仍走详情页。
+export const getStaticPaths = (async () => {
+	const lastPage = await getPostListLastPage();
+	return Array.from({ length: Math.max(0, lastPage - 1) }, (_, index) => ({
+		params: { page: String(index + 2) },
+	}));
+}) satisfies GetStaticPaths;
+
+const { page: pageParam } = Astro.params;
+const currentPage = Number.parseInt(pageParam ?? "2", 10);
+const page = await getPostListPageData(currentPage);
+const heading = getPostListHeading(page.currentPage);
+---
+
+<MainGridLayout heading={heading} title={heading}>
+  <PostListSection page={page} />
+</MainGridLayout>

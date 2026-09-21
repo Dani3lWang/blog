@@ -1,0 +1,59 @@
+---
+import { Icon } from "astro-icon/components";
+import HomeSectionHeading from "@/components/home/HomeSectionHeading.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import type { HomeDynamicItem } from "@/utils/home-utils";
+import { url } from "@/utils/url-utils";
+
+/**
+ * 最近动态
+ *
+ * 数据来自 getHomeData() 里的 dynamics（已按置顶 + 时间排序并截断）。
+ * 单条动态没有稳定的锚点，因此整条卡片统一进入 /dynamic/ 列表页。
+ * 没有动态时不渲染该板块。
+ */
+interface Props {
+	dynamics: HomeDynamicItem[];
+}
+
+const { dynamics } = Astro.props;
+const dynamicUrl = url("/dynamic/");
+
+const formatStamp = (date: Date) =>
+	formatDateToYYYYMMDD(date).replace(/-/g, ".");
+---
+
+{
+	dynamics.length > 0 && (
+		<section class="ed-section" style="--ed-delay: 180ms">
+			<HomeSectionHeading
+				title={i18n(I18nKey.homeRecentDynamic)}
+				english="LATEST"
+				icon="material-symbols:dynamic-feed-outline"
+				count={dynamics.length}
+			/>
+			<div class="ed-dynamics">
+				{dynamics.map((item) => (
+					<a class="ed-card ed-dynamic" href={item.href}>
+						<p class="ed-dynamic__excerpt">{item.excerpt}</p>
+						<div class="ed-dynamic__meta">
+							<span>{formatStamp(item.published)}</span>
+							{item.location && <span>{item.location}</span>}
+							{item.pinned && (
+								<span class="ed-dynamic__pin">{i18n(I18nKey.pinned)}</span>
+							)}
+						</div>
+					</a>
+				))}
+			</div>
+			<div class="ed-section-more">
+				<a href={dynamicUrl}>
+					{i18n(I18nKey.homeViewAll)}
+					<Icon name="material-symbols:arrow-forward-rounded" />
+				</a>
+			</div>
+		</section>
+	)
+}

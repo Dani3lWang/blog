@@ -448,6 +448,18 @@ export const zh_TW: Translation = {
 	[Key.siteStatsLastUpdate]: "最後活動",
 	[Key.siteStatsDaysAgo]: "{days} 天前",
 	[Key.siteStatsDays]: "{days} 天",
+
+	// 個人主頁（芭樂通信 / GUAVA DISPATCH）
+	[Key.homeNow]: "此刻",
+	[Key.homeFeatured]: "本期主稿",
+	[Key.homeRecentDynamic]: "最近動態",
+	[Key.homePortalIndex]: "生活索引",
+	[Key.homeRandomPost]: "換一篇",
+	[Key.homeAllPosts]: "全部文章",
+	[Key.homeViewAll]: "查看全部",
+	[Key.homeReadArticle]: "閱讀全文",
+	[Key.homeStats]: "站點數據",
+	[Key.homeStatsCities]: "去過的城市",
 	[Key.today]: "今天",
 
 	// 站點資訊

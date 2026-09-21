@@ -10,13 +10,19 @@ interface Props {
 	page: Page;
 	class?: string;
 	style?: string;
+	/** 列表页所在的路径前缀，默认站点根（首页分页）；文章列表传 "/posts/" */
+	basePath?: string;
 }
 
-const { page, style } = Astro.props;
+const { page, style, basePath = "/" } = Astro.props;
 
 const HIDDEN = -1;
 
 const className = Astro.props.class;
+
+// 归一化前缀：以 "/" 开头且以 "/" 结尾，便于直接拼接页码（根路径保持为 "/"）
+const normalizedBase = basePath.replace(/^\/+|\/+$/g, "");
+const listBase = normalizedBase ? `/${normalizedBase}/` : "/";
 
 const ADJ_DIST = 2;
 const VISIBLE = ADJ_DIST * 2 + 1;
@@ -49,13 +55,13 @@ if (r === page.lastPage - 2) pages.push(page.lastPage - 1);
 if (r < page.lastPage) pages.push(page.lastPage);
 
 const getPageUrl = (p: number) => {
-	if (p === 1) return "/";
-	return `/${p}/`;
+	if (p === 1) return listBase;
+	return `${listBase}${p}/`;
 };
 
 // 传给 PageJump island 的跳转模板。函数没法跨 island 边界传，只能给字符串
-const jumpHrefTemplate = url("/{page}/");
-const jumpHrefFirst = url("/");
+const jumpHrefTemplate = url(`${listBase}{page}/`);
+const jumpHrefFirst = url(listBase);
 ---
 
 <div class:list={[className, "pagination-wrapper flex flex-col gap-4 items-center"]} style={style}>

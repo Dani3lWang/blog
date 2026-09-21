@@ -1,0 +1,57 @@
+---
+import { Icon } from "astro-icon/components";
+import HomeSectionHeading from "@/components/home/HomeSectionHeading.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { HomeNowItem } from "@/types/config";
+import { url } from "@/utils/url-utils";
+
+/**
+ * 此刻 / NOW
+ *
+ * 只展示 homeConfig.now 中 value 非空的条目（空值已在 getHomeData 里过滤）。
+ * 条目全部为空时整个板块不渲染，也不会用演示数据兜底。
+ * 带 href 的条目渲染为可点击卡片，否则为静态卡片。
+ */
+interface Props {
+	now: HomeNowItem[];
+}
+
+const { now } = Astro.props;
+---
+
+{
+	now.length > 0 && (
+		<section class="ed-section" style="--ed-delay: 140ms">
+			<HomeSectionHeading
+				title={i18n(I18nKey.homeNow)}
+				english="NOW"
+				icon="material-symbols:bolt-outline"
+				count={now.length}
+			/>
+			<div class="ed-now">
+				{now.map((item) => {
+					const inner = (
+						<>
+							<span class="ed-now__icon">
+								<Icon name={item.icon} class="text-[1.05rem]" />
+							</span>
+							<div>
+								<p class="ed-now__label">{item.label}</p>
+								<p class="ed-now__value">{item.value}</p>
+							</div>
+						</>
+					);
+
+					return item.href ? (
+						<a class="ed-card ed-now__item" href={url(item.href)}>
+							{inner}
+						</a>
+					) : (
+						<div class="ed-card ed-now__item">{inner}</div>
+					);
+				})}
+			</div>
+		</section>
+	)
+}
