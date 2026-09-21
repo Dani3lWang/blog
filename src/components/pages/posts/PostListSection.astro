@@ -3,9 +3,10 @@ import type { CollectionEntry } from "astro:content";
 import type { Page } from "astro";
 import { Icon } from "astro-icon/components";
 import Pagination from "@/components/common/Pagination.astro";
+import PostCard from "@/components/layout/PostCard.astro";
 import ArticleIndexCard from "@/components/pages/posts/ArticleIndexCard.astro";
 import { getCategoryList } from "@/utils/content-utils";
-import { url } from "@/utils/url-utils";
+import { getPostUrlBySlug, url } from "@/utils/url-utils";
 
 /**
  * 文章列表（/posts/、/posts/2/ …）
@@ -66,47 +67,97 @@ function getAccentHue(category: string | null, index: number): number {
 			<h2 id="post-index-title">文章列表</h2>
 		</header>
 
-		{
-			featuredEntries.length > 0 && (
-				<section class="post-index-featured" aria-labelledby="post-index-featured-title">
-					<h2 id="post-index-featured-title" class="post-index-section-title post-index-section-title--featured">
-						置顶
-					</h2>
-					<div class="post-index-featured__list">
-						{featuredEntries.map((entry, index) => (
-							<ArticleIndexCard
-								entry={entry}
-								variant="featured"
-								accentHue={getAccentHue(entry.data.category, index)}
-								loading={index === 0 ? "eager" : "lazy"}
-							/>
-						))}
-					</div>
-				</section>
-			)
-		}
-
 		<section class="post-index-articles" aria-labelledby="post-index-articles-title">
 			<div class="post-index-articles__heading">
 				<h2 id="post-index-articles-title" class="post-index-section-title">文章</h2>
-				<p>共 <strong>{page.total}</strong> 篇文章</p>
+				<div class="post-index-articles__tools">
+					<p>共 <strong>{page.total}</strong> 篇文章</p>
+					<div class="post-index-view-switch" role="group" aria-label="文章展示方式">
+						<button
+							type="button"
+							class="post-index-view-switch__button is-active"
+							data-post-index-view="list"
+							aria-pressed="true"
+							title="使用长条列表"
+						>
+							<Icon name="material-symbols:view-agenda-outline-rounded" />
+							<span>长条</span>
+						</button>
+						<button
+							type="button"
+							class="post-index-view-switch__button"
+							data-post-index-view="visual"
+							aria-pressed="false"
+							title="使用图文网格"
+						>
+							<Icon name="material-symbols:grid-view-rounded" />
+							<span>图文</span>
+						</button>
+					</div>
+				</div>
 			</div>
 
-			{
-				regularEntries.length > 0 ? (
-					<div class="post-index-card-grid">
-						{regularEntries.map((entry, index) => (
-							<ArticleIndexCard
-								entry={entry}
-								accentHue={getAccentHue(entry.data.category, index + featuredEntries.length)}
-								loading={index < 3 && featuredEntries.length === 0 ? "eager" : "lazy"}
-							/>
-						))}
-					</div>
-				) : (
-					<p class="post-index-empty">这一页的文章都已展示在置顶区域。</p>
-				)
-			}
+			<div class="post-index-list-view list-mode" data-post-index-panel="list">
+				{
+					page.data.map((entry, index) => (
+						<PostCard
+							entry={entry}
+							title={entry.data.title}
+							tags={entry.data.tags}
+							category={entry.data.category}
+							published={entry.data.published}
+							updated={entry.data.updated}
+							url={getPostUrlBySlug(entry.id)}
+							image={entry.data.image}
+							description={entry.data.description}
+							draft={entry.data.draft}
+							pinned={entry.data.pinned}
+							password={!!entry.data.password}
+							loading={index < 2 ? "eager" : "lazy"}
+							class="onload-animation post-index-list-card"
+							style={`animation-delay: calc(var(--content-delay) + ${index * 50}ms);`}
+						/>
+					))
+				}
+			</div>
+
+			<div class="post-index-visual-view" data-post-index-panel="visual" hidden>
+				{
+					featuredEntries.length > 0 && (
+						<section class="post-index-featured" aria-labelledby="post-index-featured-title">
+							<h2 id="post-index-featured-title" class="post-index-section-title post-index-section-title--featured">
+								置顶
+							</h2>
+							<div class="post-index-featured__list">
+								{featuredEntries.map((entry, index) => (
+									<ArticleIndexCard
+										entry={entry}
+										variant="featured"
+										accentHue={getAccentHue(entry.data.category, index)}
+										loading={index === 0 ? "eager" : "lazy"}
+									/>
+								))}
+							</div>
+						</section>
+					)
+				}
+
+				{
+					regularEntries.length > 0 ? (
+						<div class="post-index-card-grid">
+							{regularEntries.map((entry, index) => (
+								<ArticleIndexCard
+									entry={entry}
+									accentHue={getAccentHue(entry.data.category, index + featuredEntries.length)}
+									loading={index < 3 && featuredEntries.length === 0 ? "eager" : "lazy"}
+								/>
+							))}
+						</div>
+					) : (
+						<p class="post-index-empty">这一页的文章都已展示在置顶区域。</p>
+					)
+				}
+			</div>
 		</section>
 
 		{
@@ -131,3 +182,64 @@ function getAccentHue(category: string | null, index: number): number {
 		</div>
 	</aside>
 </div>
+
+<script is:inline>
+	(() => {
+		const root = document.querySelector(".post-index-layout");
+		if (!root) return;
+		const saved = localStorage.getItem("postIndexView");
+		const view = saved === "visual" ? "visual" : "list";
+		root.dataset.view = view;
+		root.querySelectorAll("[data-post-index-panel]").forEach((panel) => {
+			panel.hidden = panel.getAttribute("data-post-index-panel") !== view;
+		});
+		root.querySelectorAll("[data-post-index-view]").forEach((button) => {
+			const active = button.getAttribute("data-post-index-view") === view;
+			button.classList.toggle("is-active", active);
+			button.setAttribute("aria-pressed", String(active));
+		});
+	})();
+</script>
+
+<script>
+	type PostIndexView = "list" | "visual";
+	type PostIndexWindow = Window & { __postIndexViewInit?: boolean };
+
+	function applyPostIndexView(view: PostIndexView, persist = false) {
+		const root = document.querySelector<HTMLElement>(".post-index-layout");
+		if (!root) return;
+
+		root.dataset.view = view;
+		root.querySelectorAll<HTMLElement>("[data-post-index-panel]").forEach((panel) => {
+			panel.hidden = panel.dataset.postIndexPanel !== view;
+		});
+		root.querySelectorAll<HTMLButtonElement>("[data-post-index-view]").forEach((button) => {
+			const active = button.dataset.postIndexView === view;
+			button.classList.toggle("is-active", active);
+			button.setAttribute("aria-pressed", String(active));
+		});
+
+		if (persist) localStorage.setItem("postIndexView", view);
+	}
+
+	function initPostIndexView() {
+		const saved = localStorage.getItem("postIndexView");
+		applyPostIndexView(saved === "visual" ? "visual" : "list");
+	}
+
+	const postIndexWindow = window as PostIndexWindow;
+	if (!postIndexWindow.__postIndexViewInit) {
+		postIndexWindow.__postIndexViewInit = true;
+		document.addEventListener("click", (event) => {
+			const target = event.target instanceof Element
+				? event.target.closest<HTMLButtonElement>("[data-post-index-view]")
+				: null;
+			if (!target) return;
+			applyPostIndexView(target.dataset.postIndexView === "visual" ? "visual" : "list", true);
+		});
+		document.addEventListener("astro:page-load", initPostIndexView);
+		document.addEventListener("swup:contentReplaced", initPostIndexView);
+	}
+
+	initPostIndexView();
+</script>
