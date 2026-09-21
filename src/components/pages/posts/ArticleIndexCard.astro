@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import CoverImage from "@/components/common/CoverImage.astro";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
+import { getFileDirFromPath, getPostUrlBySlug } from "@/utils/url-utils";
+
+interface Props {
+	entry: CollectionEntry<"posts">;
+	variant?: "grid" | "featured";
+	accentHue?: number;
+	loading?: "lazy" | "eager";
+}
+
+const {
+	entry,
+	variant = "grid",
+	accentHue = 165,
+	loading = "lazy",
+} = Astro.props;
+
+const { remarkPluginFrontmatter } = await render(entry);
+const processedImage = processCoverImageSync(entry.data.image, entry.id);
+const apiUrls = getApiUrlList(entry.data.image, entry.id);
+const hasCover = Boolean(processedImage);
+const href = getPostUrlBySlug(entry.id);
+const category = entry.data.category?.trim() || "未分类";
+const description =
+	entry.data.description || remarkPluginFrontmatter.excerpt || "暂无文章摘要";
+const words = remarkPluginFrontmatter.words;
+const published = formatDateToYYYYMMDD(entry.data.published).replaceAll(
+	"-",
+	"/",
+);
+---
+
+<article
+	class:list={[
+		"post-index-card",
+		variant === "featured"
+			? "post-index-card--featured"
+			: "post-index-card--grid",
+	]}
+	style={`--post-accent-hue: ${accentHue};`}
+>
+	<div class="post-index-card__cover-wrap" aria-hidden="true">
+		{
+			hasCover ? (
+				<CoverImage
+					src={processedImage}
+					basePath={getFileDirFromPath(entry.filePath || "")}
+					alt=""
+					class="post-index-card__cover"
+					preview={true}
+					loading={loading}
+					apiUrls={apiUrls}
+				/>
+			) : (
+				<div class="post-index-card__placeholder">
+					<span class="post-index-card__placeholder-index">LX</span>
+					<span class="post-index-card__placeholder-orbit" />
+					<span class="post-index-card__placeholder-signal" />
+					<span class="post-index-card__placeholder-label">ARTICLE / {published}</span>
+				</div>
+			)
+		}
+	</div>
+
+	<div class="post-index-card__content">
+		<div class="post-index-card__title-row">
+			<h3 class="post-index-card__title">
+				<span>{entry.data.title}</span>
+			</h3>
+			{entry.data.pinned && <span class="post-index-card__pin">置顶</span>}
+		</div>
+
+		<div class="post-index-card__meta">
+			<span class="post-index-card__category">{category}</span>
+			<span class="post-index-card__meta-item">
+				<Icon name="material-symbols:calendar-month-outline-rounded" />
+				<time datetime={formatDateToYYYYMMDD(entry.data.published)}>{published}</time>
+			</span>
+			{
+				typeof words === "number" && (
+					<span class="post-index-card__meta-item">
+						<Icon name="material-symbols:notes-rounded" />
+						<span>{words.toLocaleString("zh-CN")} 字</span>
+					</span>
+				)
+			}
+		</div>
+
+		<div class="post-index-card__rule" aria-hidden="true"></div>
+		<p class="post-index-card__description">{description}</p>
+	</div>
+
+	<a
+		href={href}
+		class="post-index-card__surface-link"
+		aria-label={`查看文章：${entry.data.title}`}
+	></a>
+</article>

@@ -1,10 +1,11 @@
 ---
-import type { Page } from "astro";
 import type { CollectionEntry } from "astro:content";
+import type { Page } from "astro";
+import { Icon } from "astro-icon/components";
 import Pagination from "@/components/common/Pagination.astro";
-import PostPage from "@/components/layout/PostPage.astro";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
+import ArticleIndexCard from "@/components/pages/posts/ArticleIndexCard.astro";
+import { getCategoryList } from "@/utils/content-utils";
+import { url } from "@/utils/url-utils";
 
 /**
  * 文章列表（/posts/、/posts/2/ …）
@@ -20,89 +21,113 @@ interface Props {
 const { page } = Astro.props;
 
 const len = page.data.length;
-const listTitle = i18n(I18nKey.homeAllPosts);
-const rangeStart = page.total === 0 ? 0 : page.start + 1;
+const categories = await getCategoryList();
+const featuredEntries =
+	page.currentPage === 1 ? page.data.filter((entry) => entry.data.pinned) : [];
+const regularEntries = page.data.filter(
+	(entry) => page.currentPage !== 1 || !entry.data.pinned,
+);
+
+function getAccentHue(category: string | null, index: number): number {
+	const source = category?.trim() || `post-${index}`;
+	let hash = 0;
+	for (const char of source) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+	return (hash + 12) % 360;
+}
 ---
 
-<div class="post-archive-list">
-  <header class="post-archive-head">
-    <p class="post-archive-kicker">ARCHIVE</p>
-    <div class="post-archive-title-row">
-      <h2 class="post-archive-title">{listTitle}</h2>
-      {
-        page.total > 0 && (
-          <p class="post-archive-count">
-            {rangeStart}-{page.end} / {page.total}
-          </p>
-        )
-      }
-    </div>
-    <div class="post-archive-rule" aria-hidden="true"></div>
-  </header>
+<div class="post-index-layout">
+	<aside class="post-index-directory" aria-label="文章分类">
+		<div class="post-index-side-sticky">
+			<p class="post-index-side-label">文章</p>
+			<nav class="post-index-directory__nav">
+				<a href={url("/posts/")} class="post-index-directory__item is-active" aria-current="page">
+					<span class="post-index-directory__name">
+						<Icon name="material-symbols:article-outline-rounded" />
+						全部文章
+					</span>
+					<span class="post-index-directory__count">{page.total}</span>
+				</a>
+				{
+					categories.map((category) => (
+						<a href={category.url} class="post-index-directory__item">
+							<span class="post-index-directory__name">{category.name}</span>
+							<span class="post-index-directory__count">{category.count}</span>
+						</a>
+					))
+				}
+			</nav>
+		</div>
+	</aside>
 
-  <PostPage page={page} />
+	<section class="post-index-main" aria-labelledby="post-index-title">
+		<header class="post-index-header">
+			<p>ARTICLE INDEX</p>
+			<h2 id="post-index-title">文章列表</h2>
+		</header>
 
-  {
-    page.total > page.size && (
-      <Pagination
-        class="mx-auto onload-animation"
-        page={page}
-        basePath="/posts/"
-        style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
-      />
-    )
-  }
+		{
+			featuredEntries.length > 0 && (
+				<section class="post-index-featured" aria-labelledby="post-index-featured-title">
+					<h2 id="post-index-featured-title" class="post-index-section-title post-index-section-title--featured">
+						置顶
+					</h2>
+					<div class="post-index-featured__list">
+						{featuredEntries.map((entry, index) => (
+							<ArticleIndexCard
+								entry={entry}
+								variant="featured"
+								accentHue={getAccentHue(entry.data.category, index)}
+								loading={index === 0 ? "eager" : "lazy"}
+							/>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<section class="post-index-articles" aria-labelledby="post-index-articles-title">
+			<div class="post-index-articles__heading">
+				<h2 id="post-index-articles-title" class="post-index-section-title">文章</h2>
+				<p>共 <strong>{page.total}</strong> 篇文章</p>
+			</div>
+
+			{
+				regularEntries.length > 0 ? (
+					<div class="post-index-card-grid">
+						{regularEntries.map((entry, index) => (
+							<ArticleIndexCard
+								entry={entry}
+								accentHue={getAccentHue(entry.data.category, index + featuredEntries.length)}
+								loading={index < 3 && featuredEntries.length === 0 ? "eager" : "lazy"}
+							/>
+						))}
+					</div>
+				) : (
+					<p class="post-index-empty">这一页的文章都已展示在置顶区域。</p>
+				)
+			}
+		</section>
+
+		{
+			page.total > page.size && (
+				<Pagination
+					class="post-index-pagination onload-animation"
+					page={page}
+					basePath="/posts/"
+					style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
+				/>
+			)
+		}
+	</section>
+
+	<aside class="post-index-toc" aria-label="目录">
+		<div class="post-index-side-sticky">
+			<p class="post-index-side-label">目录</p>
+			<div class="post-index-toc__empty">
+				<span aria-hidden="true"></span>
+				<p>当前页面没有目录</p>
+			</div>
+		</div>
+	</aside>
 </div>
-
-<style>
-  .post-archive-list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .post-archive-head {
-    margin-bottom: 1.5rem;
-  }
-
-  .post-archive-kicker {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-editorial-mono, ui-monospace, monospace);
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--ed-ink-faint, rgba(0, 0, 0, 0.45));
-  }
-
-  .post-archive-title-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .post-archive-title {
-    margin: 0;
-    font-family: var(--font-editorial-serif, serif);
-    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem);
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0.02em;
-    color: var(--ed-ink, inherit);
-  }
-
-  .post-archive-count {
-    margin: 0;
-    font-family: var(--font-editorial-mono, ui-monospace, monospace);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    color: var(--ed-ink-faint, rgba(0, 0, 0, 0.45));
-  }
-
-  .post-archive-rule {
-    margin-top: 0.85rem;
-    height: 2px;
-    background: var(--ed-frame, currentColor);
-    opacity: 0.9;
-  }
-</style>
