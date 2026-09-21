@@ -676,8 +676,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	color: var(--ed-ink-soft);
 }
 
-.ed-short__meta,
-.ed-portal__meta {
+.ed-short__meta {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -905,12 +904,6 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	font-size: 0.83rem;
 	line-height: 1.7;
 	color: var(--ed-ink-soft);
-}
-
-.ed-portal__path {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 /* ── 数据页脚（报纸出版信息） ───────────────────────────── */
