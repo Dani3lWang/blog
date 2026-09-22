@@ -6,6 +6,7 @@ import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
 import { FLOATING_PANEL_CLOSE_EVENT } from "@/utils/floating-panel-utils";
+import { NAVBAR_SEARCH_DISABLE_EVENT } from "@/utils/navbar-search-utils";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
 
 // --- State ---
@@ -138,6 +139,22 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 
 // --- Initialization onMount ---
 onMount(() => {
+	const handleNavbarSearchDisable = (): void => {
+		const control = document.querySelector<HTMLElement>(
+			"[data-navbar-search-control]",
+		);
+		if (
+			control &&
+			document.activeElement instanceof HTMLElement &&
+			control.contains(document.activeElement)
+		) {
+			document.activeElement.blur();
+		}
+
+		closeSearchPanel();
+		cancelPendingSearch();
+	};
+
 	const initializePagefind = () => {
 		initialized = true;
 		if (keywordDesktop) search(keywordDesktop, true);
@@ -164,9 +181,17 @@ onMount(() => {
 
 	const panel = document.getElementById("search-panel");
 	panel?.addEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
+	document.addEventListener(
+		NAVBAR_SEARCH_DISABLE_EVENT,
+		handleNavbarSearchDisable,
+	);
 
 	return () => {
 		panel?.removeEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
+		document.removeEventListener(
+			NAVBAR_SEARCH_DISABLE_EVENT,
+			handleNavbarSearchDisable,
+		);
 		document.removeEventListener("pagefindready", initializePagefind);
 		document.removeEventListener("pagefindloaderror", initializePagefind);
 		cancelPendingSearch();

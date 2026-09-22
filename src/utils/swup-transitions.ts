@@ -11,6 +11,7 @@ import {
 	updateMainGridCols,
 	updateSidebarComponentsVisibility,
 } from "@/utils/grid-layout-utils";
+import { syncNavbarSearchVisibility } from "@/utils/navbar-search-utils";
 import { scrollFunction } from "@/utils/scroll-utils";
 import {
 	syncBannerHomeTextVisibility,
@@ -136,6 +137,8 @@ function registerSwupHooks(): void {
 	window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
 		// Start progress bar（WAAPI 合成线程动画，不强制回流）
 		startProgressBar();
+		const targetUrl = new URL(visit.to.url, window.location.href);
+		syncNavbarSearchVisibility(targetUrl.pathname);
 
 		// 先回顶，让后续 FLIP 在 scroll=0 的坐标系内计算：
 		// 若在切页后才回顶，FLIP 的 invert 是按切页前滚动位置校准的，scroll 一复位就会导致
@@ -213,6 +216,7 @@ function registerSwupHooks(): void {
 		}
 	});
 	window.swup.hooks.on("page:view", () => {
+		syncNavbarSearchVisibility(window.location.pathname);
 		// 更新网格列数和侧边栏组件可见性
 		updateMainGridCols();
 		updateSidebarComponentsVisibility();

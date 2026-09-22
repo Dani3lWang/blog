@@ -530,6 +530,10 @@ body.wallpaper-transparent #navbar > .navbar-shell,
         transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.navbar-search-control[hidden] {
+    display: none !important;
+}
+
 @media (min-width: 1024px) {
     .navbar-seg--center {
         display: flex;

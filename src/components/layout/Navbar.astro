@@ -19,6 +19,7 @@ import type { NavBarLink } from "@/types/config";
 import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
 import { isHomePage } from "@/utils/layout-utils";
 import { resolveNavMenuLinks } from "@/utils/nav-menu-utils";
+import { isNavbarSearchVisible } from "@/utils/navbar-search-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
 
@@ -26,6 +27,7 @@ const className = Astro.props.class;
 
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
+const showNavbarSearch = isNavbarSearchVisible(Astro.url.pathname);
 
 // 导航栏透明模式：banner 用 banner.navbar，fullscreen 用 fullscreen.navbar（semifull 仅首页动态）
 const navbarTransparentMode =
@@ -203,7 +205,12 @@ const logoVariants = await Promise.all(
             </div>
             <div class="navbar-seg navbar-seg--right">
                 <!--<SearchPanel client:load>-->
-                <div class="navbar-search-control">
+                <div
+                    class="navbar-search-control"
+                    data-navbar-search-control
+                    hidden={!showNavbarSearch}
+                    aria-hidden={!showNavbarSearch ? "true" : undefined}
+                >
                     <Search client:load />
                 </div>
                 {musicPlayerConfig.showInNavbar && (
@@ -251,6 +258,11 @@ const logoVariants = await Promise.all(
 </div>
 
 <script>
+import {
+    NAVBAR_SEARCH_VISIBILITY_EVENT,
+    syncNavbarSearchVisibility,
+} from "@/utils/navbar-search-utils";
+
 function loadButtonScript() {
     let settingBtn = document.getElementById("display-settings-switch");
     if (settingBtn) {
@@ -494,9 +506,17 @@ function initSegmentedNavbar() {
         moveHighlight(nav?.querySelector<HTMLElement>(".nav-item-active") ?? null);
     }, { passive: true, signal });
     desktopQuery.addEventListener("change", updateCompactState, { signal });
-    document.addEventListener("astro:page-load", detectActiveItem, { signal });
-    document.addEventListener("swup:content:replaced", detectActiveItem, { signal });
+    document.addEventListener("astro:page-load", () => {
+        syncNavbarSearchVisibility(window.location.pathname);
+        detectActiveItem();
+    }, { signal });
+    document.addEventListener("swup:contentReplaced", () => {
+        syncNavbarSearchVisibility(window.location.pathname);
+        detectActiveItem();
+    }, { signal });
+    document.addEventListener(NAVBAR_SEARCH_VISIBILITY_EVENT, requestUpdate, { signal });
 
+    syncNavbarSearchVisibility(window.location.pathname);
     detectActiveItem();
     updateCompactState();
 }
