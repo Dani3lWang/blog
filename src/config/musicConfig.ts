@@ -35,11 +35,11 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		// 认证 token（可选）
 		auth: "",
 		// 备用 API 配置：主源不可用时按顺序降级——先自建 meting-api
-		// (腾讯云 124.221.153.114,经 api.lovelongxin.me HTTPS 访问;其响应
-		// 缺 CORS 头,跨域会直接失败并落到后面的公共实例),
+		// (腾讯云 124.221.153.114,经 Cloudflare Tunnel 暴露为 meting.kinley7.cn;其响应
+		// 已带 CORS 头,跨域可直接使用),
 		// 再到 injahow/moeyao 公共实例(HTTPS 且 CORS 放行,直链可能为试听版)
 		fallbackApis: [
-			"https://api.lovelongxin.me/meting/api?server=:server&type=:type&id=:id",
+			"https://meting.kinley7.cn/api?server=:server&type=:type&id=:id",
 			"https://api.injahow.cn/meting/?server=:server&type=:type&id=:id",
 			"https://api.moeyao.cn/meting/?server=:server&type=:type&id=:id",
 		],
