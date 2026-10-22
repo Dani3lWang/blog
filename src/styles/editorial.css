@@ -329,14 +329,19 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-hero {
 	display: grid;
-	grid-template-columns: 1fr;
+	grid-template-columns: minmax(0, 1fr);
 	gap: clamp(1.5rem, 1rem + 3vw, 3rem);
 	align-items: center;
+	padding-block: 0.75rem;
+}
+
+.ed-hero__main {
+	min-width: 0;
 }
 
 @media (min-width: 1024px) {
 	.ed-hero {
-		grid-template-columns: 7fr 5fr;
+		grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
 	}
 }
 
@@ -344,7 +349,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	display: flex;
 	align-items: center;
 	gap: 0.55rem;
-	margin: 0 0 0.9rem;
+	margin: 0 0 1.5rem;
 	font-family: var(--font-editorial-mono);
 	font-size: 0.7rem;
 	letter-spacing: 0.3em;
@@ -363,40 +368,67 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-hero__title {
 	margin: 0;
-	font-family: var(--font-editorial-serif);
-	font-size: clamp(1.9rem, 1.2rem + 2.8vw, 3.1rem);
-	font-weight: 700;
-	line-height: 1.22;
-	letter-spacing: 0.03em;
+	font-family: var(--font-wenkai, "Kaiti SC", "KaiTi", serif);
+	font-size: clamp(1.75rem, 1.1rem + 2vw, 2.75rem);
+	font-weight: 400;
+	line-height: 1.5;
+	letter-spacing: 0.01em;
 	color: var(--ed-ink);
 	overflow-wrap: anywhere;
 }
 
-/* 首字下沉，强化印刷感 */
-.ed-hero__title::first-letter {
-	float: left;
-	margin: 0.06em 0.16em 0 0;
-	font-size: 2.6em;
-	line-height: 0.86;
+/* 完整问候独占一行，避免中文首字下沉把「你好」拆开。 */
+.ed-hero__greeting {
+	display: block;
+	margin: 0 0 0.18em -0.04em;
+	font-size: clamp(4rem, 3rem + 4vw, 6.75rem);
+	line-height: 1.08;
+	letter-spacing: -0.06em;
 	color: var(--ed-guava-green);
 }
 
+.ed-hero__identity {
+	display: block;
+	text-wrap: pretty;
+}
+
+.ed-hero__context {
+	font-size: 0.7em;
+	color: var(--ed-ink-soft);
+}
+
+.ed-hero__name {
+	padding-inline: 0.08em;
+	background: linear-gradient(var(--ed-guava-coral-soft), var(--ed-guava-coral-soft))
+		left 90% / 100% 0.24em no-repeat;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+}
+
 .ed-hero__intro {
-	margin: 1.1rem 0 0;
-	max-width: 34rem;
+	margin: 1.5rem 0 0;
+	max-width: 27em;
 	font-size: 1rem;
 	line-height: 1.85;
 	color: var(--ed-ink-soft);
 }
 
 .ed-hero__signature {
-	margin: 1.15rem 0 0;
-	padding-left: 0.9rem;
-	border-left: 3px solid var(--ed-guava-coral);
-	font-family: var(--font-editorial-serif);
+	display: flex;
+	align-items: baseline;
+	gap: 0.7rem;
+	margin: 0.75rem 0 0;
 	font-size: 0.95rem;
 	letter-spacing: 0.04em;
 	color: var(--ed-ink-soft);
+}
+
+.ed-hero__signature::before {
+	content: "";
+	flex: 0 0 1.5rem;
+	height: 1px;
+	background: var(--ed-guava-coral);
+	align-self: center;
 }
 
 .ed-hero__actions {
@@ -447,35 +479,56 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	outline-offset: 2px;
 }
 
-/* 人物肖像：杂志裁切 + 细边框 + 图注 */
+/* 人物肖像：错位叠纸 + 果肉色星芒，不依赖额外图片资源。 */
 .ed-portrait {
 	margin: 0;
 	justify-self: center;
-	width: min(100%, 21rem);
+	width: min(calc(100% - 2rem), 20rem);
 }
 
 .ed-portrait__frame {
 	position: relative;
-	padding: 0.6rem;
-	border: var(--ed-frame-width) solid var(--ed-frame);
-	border-radius: var(--ed-radius);
+	isolation: isolate;
+	padding: 0.7rem;
+	border: 1px solid var(--ed-rule);
+	border-radius: 5px;
 	background: var(--ed-paper-raised);
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--ed-ink) 7%, transparent);
 }
 
 .ed-portrait__frame::before {
-	content: "PROFILE / 01";
+	content: "";
 	position: absolute;
-	top: -0.72rem;
-	right: 1rem;
-	z-index: 1;
-	padding: 0.22rem 0.55rem;
-	border-radius: 999px;
-	background: var(--ed-guava-coral);
-	color: #fffaf2;
-	font-family: var(--font-editorial-mono);
-	font-size: 0.58rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
+	inset: 0;
+	z-index: -1;
+	border: 1px solid var(--ed-guava-green);
+	border-radius: inherit;
+	background: var(--ed-guava-green-soft);
+	transform: rotate(-4deg);
+	transition: transform 400ms ease;
+	pointer-events: none;
+}
+
+.ed-portrait__flourish {
+	position: absolute;
+	right: -1.5rem;
+	bottom: 1.25rem;
+	width: 4rem;
+	height: 4rem;
+	color: var(--ed-guava-coral);
+	transform: rotate(12deg);
+	transition: transform 400ms ease;
+	pointer-events: none;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.ed-portrait:hover .ed-portrait__frame::before {
+		transform: rotate(-2deg);
+	}
+
+	.ed-portrait:hover .ed-portrait__flourish {
+		transform: rotate(32deg);
+	}
 }
 
 .ed-portrait__image {
@@ -483,11 +536,11 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	width: 100%;
 	aspect-ratio: 4 / 5;
 	object-fit: cover;
-	border-radius: calc(var(--ed-radius) - 4px);
+	border-radius: 2px;
 }
 
 .ed-portrait__caption {
-	margin: 0.7rem 0 0;
+	margin: 1.25rem 0 0;
 	font-size: 0.76rem;
 	line-height: 1.6;
 	letter-spacing: 0.02em;
@@ -514,6 +567,49 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	font-size: 0.72rem;
 	letter-spacing: 0.12em;
 	color: var(--ed-ink-faint);
+}
+
+/* 每次进入首页随新 DOM 播放一次，无定时器和全局事件监听。 */
+@media (prefers-reduced-motion: no-preference) {
+	.ed-hero__kicker,
+	.ed-hero__title,
+	.ed-hero__intro,
+	.ed-hero__signature,
+	.ed-hero__actions,
+	.ed-hero .ed-margin-note,
+	.ed-portrait {
+		animation: ed-cover-reveal 650ms both cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.ed-hero__title {
+		animation-delay: 70ms;
+	}
+	.ed-hero__intro {
+		animation-delay: 140ms;
+	}
+	.ed-hero__signature {
+		animation-delay: 180ms;
+	}
+	.ed-hero__actions {
+		animation-delay: 220ms;
+	}
+	.ed-hero .ed-margin-note {
+		animation-delay: 260ms;
+	}
+	.ed-portrait {
+		animation-delay: 160ms;
+	}
+}
+
+@keyframes ed-cover-reveal {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .ed-margin-note a {
@@ -973,12 +1069,6 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 		justify-content: flex-start;
 	}
 
-	.ed-hero__title::first-letter {
-		float: none;
-		margin: 0;
-		font-size: 1em;
-	}
-
 	.ed-hero__actions {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -995,7 +1085,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	}
 
 	.ed-portrait {
-		width: min(100%, 18rem);
+		width: min(calc(100% - 2rem), 17rem);
 	}
 
 	.ed-featured__body {
@@ -1024,7 +1114,9 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 @media (prefers-reduced-motion: reduce) {
 	.ed-card,
 	.ed-action,
-	.ed-portal__arrow {
+	.ed-portal__arrow,
+	.ed-portrait__frame::before,
+	.ed-portrait__flourish {
 		transition: none;
 	}
 

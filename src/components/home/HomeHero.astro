@@ -8,8 +8,8 @@ import { url } from "@/utils/url-utils";
 /**
  * 人物封面
  *
- * 桌面端 7:5 不对称栅格：左侧小标题 / 主标题 / 简介 / 签名 / 三个入口，
- * 右侧人物肖像（杂志裁切 + 细边框 + 图注）。
+ * 桌面端 7:5 不对称栅格：左侧完整问候 / 姓名 / 简介 / 入口，
+ * 右侧人物肖像（叠纸相框 + 图注）。
  * 社交链接以页边注形式收在左下，不占据主视觉。
  *
  * 只展示用户显式配置的内容：homeConfig.hero.status 未填写时不推断任何隐私信息。
@@ -26,6 +26,15 @@ const links = profileConfig.links ?? [];
 const aboutUrl = url("/about/");
 const postsUrl = url("/posts/");
 
+// 按首个逗号或感叹号分行，保留原文；没有分隔符时仍完整显示配置的标题。
+const tagline = homeConfig.brand.tagline;
+const greetingMatch = tagline.match(/^(.+?[，,！!])\s*(.+)$/u);
+const greeting = greetingMatch?.[1];
+const identity = greetingMatch?.[2] ?? tagline;
+const nameIndex = profileConfig.name
+	? identity.indexOf(profileConfig.name)
+	: -1;
+
 // 联系入口：优先取 profileConfig.links 里的邮件/外链，没有则回落到关于页
 const contactLink = links.find((item) => item.url?.startsWith("mailto:"));
 const socialLinks = links.filter((item) => item.url !== contactLink?.url);
@@ -34,7 +43,14 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
 <section class="ed-hero onload-animation ed-section" style="--ed-delay: 60ms">
   <div class="ed-hero__main">
     {hero.kicker && <p class="ed-hero__kicker">{hero.kicker}</p>}
-    <p class="ed-hero__title">{homeConfig.brand.tagline}</p>
+    <p class="ed-hero__title">
+      {greeting && <span class="ed-hero__greeting">{greeting}</span>}
+      <span class="ed-hero__identity">
+        {nameIndex >= 0 ? (
+          <><span class="ed-hero__context">{identity.slice(0, nameIndex)}</span><span class="ed-hero__name">{profileConfig.name}</span><span class="ed-hero__context">{identity.slice(nameIndex + profileConfig.name.length)}</span></>
+        ) : identity}
+      </span>
+    </p>
     {hero.introduction && <p class="ed-hero__intro">{hero.introduction}</p>}
     {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
 
@@ -96,6 +112,10 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
         widths={[320, 480]}
         sizes="(min-width: 1024px) 320px, 80vw"
       />
+      <svg class="ed-portrait__flourish" viewBox="0 0 80 80" fill="none" aria-hidden="true" focusable="false">
+        <path d="M40 5C40 28 28 40 5 40C28 40 40 52 40 75C40 52 52 40 75 40C52 40 40 28 40 5Z" fill="currentColor" />
+        <circle cx="40" cy="40" r="7" fill="var(--ed-paper-raised)" />
+      </svg>
     </div>
     <figcaption class="ed-portrait__caption">
       {profileConfig.name}{profileConfig.bio ? ` · ${profileConfig.bio}` : ""}
