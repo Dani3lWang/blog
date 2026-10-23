@@ -65,7 +65,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "",
 
 	// 站点 URL
-	site_url: "https://kinley7.cn",
+	site_url: "https://blog.kinley7.cn",
 
 	// 站点描述
 	description: "喊我吃芭乐的个人主页与内容档案",
