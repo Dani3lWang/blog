@@ -129,6 +129,7 @@
 
 4. **配置博客：**
    - 编辑 `src/config/` 目录下的配置文件自定义博客设置
+   - 本站域名配置为 `https://blog.kinley7.cn`，在 `src/config/siteConfig.ts` 的 `site_url` 中维护，页面规范链接、站点地图和订阅链接会据此生成。
 
 5. **启动开发服务器：**
    ```bash
