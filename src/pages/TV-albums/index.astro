@@ -12,6 +12,7 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { formatDateI18nWithTime } from "@/utils/date-utils";
+import { resolveRecordImage } from "@/utils/record-image";
 import { removeFileExtension } from "@/utils/url-utils";
 
 // 豆瓣评分缓存（scripts/generate-douban-ratings.ts 构建时生成）
@@ -96,129 +97,132 @@ interface MusicItem {
 	tracks: MusicTrackItem[];
 }
 
-const mgItems: MgItem[] = customBangumi
-	.filter((item) => ["anime", "real"].includes(item.data.category))
-	.map((item) => {
-		const { data, id } = item;
-		const imageSrc =
-			typeof data.image === "string" ? data.image : data.image.src;
+const mgItems: MgItem[] = (
+	await Promise.all(
+		customBangumi
+			.filter((item) => ["anime", "real"].includes(item.data.category))
+			.map(async (item) => {
+				const { data, id } = item;
+				const imageSrc = await resolveRecordImage(data.image);
 
-		const finalLink = "/bangumi/" + removeFileExtension(id) + "/";
+				const finalLink = "/bangumi/" + removeFileExtension(id) + "/";
 
-		// 豆瓣评分缓存（构建时由 generate-douban-ratings.ts 生成）
-		const doubanEntry = data.doubanId
-			? doubanRatingsMap[String(data.doubanId)]
-			: undefined;
+				// 豆瓣评分缓存（构建时由 generate-douban-ratings.ts 生成）
+				const doubanEntry = data.doubanId
+					? doubanRatingsMap[String(data.doubanId)]
+					: undefined;
 
-		const subjectTypeMap: Record<string, number> = {
-			anime: 2,
-			game: 4,
-			real: 6,
-		};
+				const subjectTypeMap: Record<string, number> = {
+					anime: 2,
+					game: 4,
+					real: 6,
+				};
 
-		const subcategory = (data as any).subcategory as string | undefined;
+				const subcategory = (data as any).subcategory as string | undefined;
 
-		return {
-			subject_id: 0,
-			subject_type: subjectTypeMap[data.category] || 2,
-			rate: data.score || 0,
-			type: data.status,
-			comment: data.comment || null,
-			tags: data.tags || [],
-			ep_status: 0,
-			vol_status: 0,
-			updated_at: data.published?.toISOString() || new Date().toISOString(),
-			private: false,
-			link: finalLink,
-			douban: doubanEntry
-				? {
-						rate: doubanEntry.rate,
-						url: doubanEntry.url,
-						title: doubanEntry.title,
-					}
-				: undefined,
-			_subcategory: subcategory,
-			subject: {
-				id: 0,
-				type: subjectTypeMap[data.category] || 2,
-				name: data.title,
-				name_cn: data.name_cn || data.title,
-				short_summary: "",
-				images: {
-					medium: imageSrc,
-					large: imageSrc,
-					common: imageSrc,
-					small: imageSrc,
-					grid: imageSrc,
-				},
-				volumes: 0,
-				eps: 0,
-				collection_total: 0,
-				score: data.score || 0,
-				rank: 0,
-				tags: [],
-			},
-		};
-	})
-	.sort(
-		(a, b) =>
-			new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
-	);
-
-const musicItems: MusicItem[] = customBangumi
-	.filter((item) => item.data.category === "music")
-	.map((item) => {
-		const { data } = item;
-		const imageSrc =
-			typeof data.image === "string" ? data.image : data.image.src;
-		const finalLink = "/bangumi/" + removeFileExtension(item.id) + "/";
-		// 归一化曲目：字符串仅展示，对象可携带音源/外链
-		const tracks: MusicTrackItem[] = (data.tracks ?? []).map((t) =>
-			typeof t === "string"
-				? {
-						name: t,
-						url: "",
-						lrc: "",
-						metingServer: "",
-						metingId: "",
-						link: "",
-					}
-				: {
-						name: t.name,
-						url: t.url || "",
-						lrc: t.lrc || "",
-						metingServer: t.metingServer || "",
-						metingId: t.metingId || "",
-						link: t.link || "",
+				return {
+					subject_id: 0,
+					subject_type: subjectTypeMap[data.category] || 2,
+					rate: data.score || 0,
+					type: data.status,
+					comment: data.comment || null,
+					tags: data.tags || [],
+					ep_status: 0,
+					vol_status: 0,
+					updated_at: data.published?.toISOString() || new Date().toISOString(),
+					private: false,
+					link: finalLink,
+					douban: doubanEntry
+						? {
+								rate: doubanEntry.rate,
+								url: doubanEntry.url,
+								title: doubanEntry.title,
+							}
+						: undefined,
+					_subcategory: subcategory,
+					subject: {
+						id: 0,
+						type: subjectTypeMap[data.category] || 2,
+						name: data.title,
+						name_cn: data.name_cn || data.title,
+						short_summary: "",
+						images: {
+							medium: imageSrc,
+							large: imageSrc,
+							common: imageSrc,
+							small: imageSrc,
+							grid: imageSrc,
+						},
+						volumes: 0,
+						eps: 0,
+						collection_total: 0,
+						score: data.score || 0,
+						rank: 0,
+						tags: [],
 					},
-		);
-		const entryHasAudio = Boolean(data.audioUrl || data.metingId);
-		const albumHasAudio = tracks.some((t) => t.url || t.metingId);
-		return {
-			title: data.title,
-			artist: data.artist || "",
-			image: imageSrc,
-			score: data.score || 0,
-			status: data.status,
-			comment: data.comment || "",
-			musicType: data.musicType,
-			audioUrl: data.audioUrl || "",
-			lrcUrl: data.lrcUrl || "",
-			metingServer: data.metingServer || "",
-			metingId: data.metingId || "",
-			published: data.published?.toISOString() || new Date().toISOString(),
-			link: finalLink,
-			playlistIndex: -1,
-			hasAudio: entryHasAudio || albumHasAudio,
-			// 专辑模式优先(与详情页语义一致)：tracks 有可播曲目即整专播放，
-			// albumKey 用内容文件 id,防同名条目互相覆盖
-			albumKey: albumHasAudio ? removeFileExtension(item.id) : undefined,
-			tracks,
-		};
-	})
-	.sort(
-		(a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
-	);
+				};
+			}),
+	)
+).sort(
+	(a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+);
+
+const musicItems: MusicItem[] = (
+	await Promise.all(
+		customBangumi
+			.filter((item) => item.data.category === "music")
+			.map(async (item) => {
+				const { data } = item;
+				const imageSrc = await resolveRecordImage(data.image);
+				const finalLink = "/bangumi/" + removeFileExtension(item.id) + "/";
+				// 归一化曲目：字符串仅展示，对象可携带音源/外链
+				const tracks: MusicTrackItem[] = (data.tracks ?? []).map((t) =>
+					typeof t === "string"
+						? {
+								name: t,
+								url: "",
+								lrc: "",
+								metingServer: "",
+								metingId: "",
+								link: "",
+							}
+						: {
+								name: t.name,
+								url: t.url || "",
+								lrc: t.lrc || "",
+								metingServer: t.metingServer || "",
+								metingId: t.metingId || "",
+								link: t.link || "",
+							},
+				);
+				const entryHasAudio = Boolean(data.audioUrl || data.metingId);
+				const albumHasAudio = tracks.some((t) => t.url || t.metingId);
+				return {
+					title: data.title,
+					artist: data.artist || "",
+					image: imageSrc,
+					score: data.score || 0,
+					status: data.status,
+					comment: data.comment || "",
+					musicType: data.musicType,
+					audioUrl: data.audioUrl || "",
+					lrcUrl: data.lrcUrl || "",
+					metingServer: data.metingServer || "",
+					metingId: data.metingId || "",
+					published: data.published?.toISOString() || new Date().toISOString(),
+					link: finalLink,
+					playlistIndex: -1,
+					hasAudio: entryHasAudio || albumHasAudio,
+					// 专辑模式优先(与详情页语义一致)：tracks 有可播曲目即整专播放，
+					// albumKey 用内容文件 id,防同名条目互相覆盖
+					albumKey: albumHasAudio ? removeFileExtension(item.id) : undefined,
+					tracks,
+				};
+			}),
+	)
+).sort(
+	(a, b) => new Date(b.published).getTime() - new Date(a.published).getTime(),
+);
 
 // Build playlist only from entries that have top-level audioUrl or metingId
 //（专辑条目走 albums 整专播放，不进单曲列表）

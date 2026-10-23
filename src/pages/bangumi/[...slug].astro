@@ -8,6 +8,7 @@ import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import type { BangumiTrack } from "@/types/bangumi";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { resolveRecordImage } from "@/utils/record-image";
 import { removeFileExtension } from "@/utils/url-utils";
 
 // 豆瓣评分缓存（scripts/generate-douban-ratings.ts 构建时生成）
@@ -81,10 +82,7 @@ const getStatusText = (status: number) => {
 	}
 };
 
-const imageSrc =
-	typeof entry.data.image === "string"
-		? entry.data.image
-		: entry.data.image.src;
+const imageSrc = await resolveRecordImage(entry.data.image);
 
 const douban = entry.data.doubanId
 	? doubanRatingsMap[String(entry.data.doubanId)]

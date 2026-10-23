@@ -4,7 +4,7 @@ name_cn: "現在不是出軌的問題"
 category: "real"
 subcategory: "tv"
 status: 2
-image: "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2934748119.jpg"
+image: "./covers/xianzai-bushi-chugui-de-wenti.jpg"
 doubanId: 37501131
 comment: "片名是个陷阱：当出轨都算不上问题时，真正的问题早已烂到根里。网红夫妇与离婚诉讼中的医生夫妇被同一桩秘密拖下水，八集一路雪崩式失控；黑色喜剧与惊悚的比例调得刚好，金惠秀把“体面崩塌”演成了标本。别当婚姻启示录，当一部中产恐怖喜剧看，值回票价。"
 tags: ["韩剧", "剧情", "惊悚", "黑色喜剧", "金惠秀"]
