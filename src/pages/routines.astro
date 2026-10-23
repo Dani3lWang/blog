@@ -43,7 +43,7 @@ const entriesWithContent = await Promise.all(
 const totalEntries = entriesWithContent.length;
 ---
 
-<MainGridLayout title="日常规划" description="我的规划与思考">
+<MainGridLayout showDefaultHeading={false} title="日常规划" description="我的规划与思考">
 	<div class="routines-page flex w-full flex-col gap-5">
 		<!-- 导航栏 -->
 		<LifeNavTabs mode="records" />

@@ -87,6 +87,7 @@ const items = encrypted ? [] : computeTocItems(headings, { maxLevel: 3 });
 </style>
 
 <script>
+  import { updateMainGridCols, updateSidebarComponentsVisibility } from "@/utils/grid-layout-utils";
   import { TOCManager } from "@/utils/toc-utils";
 
   if (typeof window.SidebarTOC === "undefined") {
@@ -117,6 +118,13 @@ const items = encrypted ? [] : computeTocItems(headings, { maxLevel: 3 });
       });
 
       window.SidebarTOC.manager.attach();
+      // 解密和软导航可能重建目录，列几何应跟随实际目录内容。
+      const page = document.getElementById("swup-container");
+      if (page?.dataset.isDetail === "true") {
+        page.dataset.hasToc = String(!!tocContent.querySelector(".toc-item"));
+        updateMainGridCols();
+        updateSidebarComponentsVisibility();
+      }
     } catch (error) {
       console.error("Failed to load TOCManager for SidebarTOC:", error);
     }

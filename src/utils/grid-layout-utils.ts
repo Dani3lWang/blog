@@ -18,6 +18,7 @@ const sidebarStickyState: Record<
 
 // 检查当前页面是否为文章/项目详情页
 const isCurrentPagePost = (): boolean =>
+	document.getElementById("swup-container")?.dataset.isDetail === "true" ||
 	isArticleDetailPage(window.location.pathname);
 
 // 上一次写入 #main-grid 的几何，用于 page:view 重复调用时短路
@@ -34,6 +35,8 @@ export function updateMainGridCols(): void {
 	if (!mainGrid || !varHost) return;
 
 	const isPostPage = isCurrentPagePost();
+	const hasToc =
+		document.getElementById("swup-container")?.dataset.hasToc === "true";
 	// 缺省视为 true（fail-open）：属性缺失时不要误把整列折叠掉
 	const flag = (name: string): boolean =>
 		mainGrid.getAttribute(name) !== "false";
@@ -55,12 +58,16 @@ export function updateMainGridCols(): void {
 		hideSidebarOnPostPage:
 			mainGrid.getAttribute("data-grid-hide-sidebar-on-post") === "true",
 		isPostPage,
-		hasLeftWidgets: flag(
-			isPostPage ? "data-has-left-on-post" : "data-has-left-on-non-post",
-		),
-		hasRightWidgets: flag(
-			isPostPage ? "data-has-right-on-post" : "data-has-right-on-non-post",
-		),
+		hasLeftWidgets:
+			flag(
+				isPostPage ? "data-has-left-on-post" : "data-has-left-on-non-post",
+			) &&
+			(!isPostPage || hasToc || !flag("data-left-post-toc-only")),
+		hasRightWidgets:
+			flag(
+				isPostPage ? "data-has-right-on-post" : "data-has-right-on-non-post",
+			) &&
+			(!isPostPage || hasToc || !flag("data-right-post-toc-only")),
 		noSidebarContentWidth: Number.isFinite(capNum) ? capNum : undefined,
 	});
 
@@ -75,6 +82,8 @@ export function updateMainGridCols(): void {
 // 更新侧边栏组件的可见性
 export function updateSidebarComponentsVisibility(): void {
 	const isPostPage = isCurrentPagePost();
+	const hasToc =
+		document.getElementById("swup-container")?.dataset.hasToc === "true";
 
 	// 处理侧边栏级别的 hideSidebarOnPostPage 配置
 	document
@@ -102,6 +111,10 @@ export function updateSidebarComponentsVisibility(): void {
 			? widget.classList.add("hidden")
 			: widget.classList.remove("hidden");
 	});
+
+	document
+		.getElementById("sidebar-toc")
+		?.classList.toggle("hidden", !isPostPage || !hasToc);
 
 	// 组件可见性变化后，重新读取 top 容器可见性并重算 sticky 间距，避免 swup 切页后残留旧间距
 	refreshSidebarStickyState();

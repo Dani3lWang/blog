@@ -342,7 +342,7 @@ const musicDataJson = JSON.stringify({
 }).replace(/</g, "\\u003c");
 ---
 
-<MainGridLayout title={i18n(I18nKey.moviesGamesTitle)} description={i18n(I18nKey.moviesGamesSubtitle)}>
+<MainGridLayout showDefaultHeading={false} title={i18n(I18nKey.moviesGamesTitle)} description={i18n(I18nKey.moviesGamesSubtitle)}>
 	<LifeNavTabs mode="records" />
 	<div class="mg-page-wrapper flex w-full overflow-hidden relative min-h-32">
 		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
@@ -362,7 +362,7 @@ const musicDataJson = JSON.stringify({
 					{i18n(I18nKey.moviesGamesSubtitle)}
 				</p>
 				<p class="text-xs text-[var(--content-meta)] opacity-60 mt-1.5 pl-[3.5rem]">
-					{i18n(I18nKey.bangumiLastUpdated)} {buildTime}
+					{i18n(I18nKey.pageGeneratedAt)} {buildTime}
 				</p>
 			</header>
 

@@ -13,6 +13,8 @@ import {
 } from "@/utils/dynamic-utils";
 import { url } from "@/utils/url-utils";
 
+if (!siteConfig.pages.moments) return Astro.redirect("/404/");
+
 const dynamics = await getCollection("dynamic");
 const sortedDynamics = dynamics.sort(
 	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
@@ -52,7 +54,7 @@ const navItems = [
 ].filter((item) => item.enabled);
 ---
 
-<MainGridLayout title="动态" description="生活动态、相册与留言板">
+<MainGridLayout showDefaultHeading={false} title="动态" description="生活动态、相册与留言板">
 	<LifeNavTabs mode="moments" />
 
 	<div class="moments-overview flex w-full flex-col gap-6">

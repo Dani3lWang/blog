@@ -83,7 +83,7 @@ const folderName = isNotebookRootMatch
 ---
 
 {isNotebookIndex ? (
-	<MainGridLayout title={entry.data.name || "笔记本"} description={entry.data.summary || "笔记本记录"}>
+	<MainGridLayout showDefaultHeading={false} title={entry.data.name || "笔记本"} description={entry.data.summary || "笔记本记录"}>
 		<div class="diary-entry-page">
 			<!-- 返回链接 -->
 			<a href="/moments/notebooks/" class="diary-back-link">
@@ -201,7 +201,7 @@ const folderName = isNotebookRootMatch
 		</div>
 	</MainGridLayout>
 ) : (
-	<MainGridLayout title={item.data.name || item.data.title || "日记"}>
+	<MainGridLayout showDefaultHeading={false} title={item.data.name || item.data.title || "日记"}>
 		<div class="diary-detail-page">
 			<!-- 返回链接 -->
 			<a href={`/moments/notebooks/${folderName}/`} class="diary-back-link">

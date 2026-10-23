@@ -25,11 +25,13 @@ import {
 } from "@/utils/layout-utils";
 import { resolveNavMenuLinks } from "@/utils/nav-menu-utils";
 import { getEffectiveSidebarState } from "@/utils/sidebar-effective-utils";
+import { isArticleDetailPage } from "@/utils/url-utils";
 import Layout from "./Layout.astro";
 
 import "@/styles/expressive-code.css";
 
 interface Props {
+	showDefaultHeading?: boolean;
 	title?: string;
 	description?: string;
 	lang?: string;
@@ -77,6 +79,7 @@ const {
 	bannerPostMeta,
 	heading,
 	variant = "default",
+	showDefaultHeading = true,
 } = Astro.props;
 
 const isEditorialHome = variant === "editorial-home";
@@ -89,7 +92,8 @@ const shouldRenderCategoryBar =
 	isCategoryBarVisible(Astro.url.pathname);
 
 // 检查是否在文章详情页
-const isPostPage = !!postSlug;
+const isPostPage = !!postSlug || isArticleDetailPage(Astro.url.pathname);
+const hasToc = !encrypted && headings.length > 0;
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
 
 const banner = getBannerVisibilityState({
@@ -100,7 +104,7 @@ const banner = getBannerVisibilityState({
 });
 // 布局骨架位于 Swup 替换容器之外，首页也必须保留完整 DOM。
 // 单栏效果由 body.is-home 的样式覆盖，离开首页时新版响应式网格可立即恢复。
-const sidebar = getEffectiveSidebarState({ isPostPage });
+const sidebar = getEffectiveSidebarState({ isPostPage, hasToc });
 
 const { hasWallpaper } = banner;
 const {
@@ -112,7 +116,6 @@ const {
 	gridColumnStyle,
 	gridDataAttrs,
 } = sidebar;
-
 ---
 
 <Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper}>
@@ -157,9 +160,10 @@ const {
                     id="swup-container"
                     class="transition-main"
                     data-current-post-category={postCategory || ""}
+                    data-is-detail={String(isPostPage)} data-has-toc={String(hasToc)}
                 >
                 {/* 为每个页面提供一个隐藏的h1标题，用于SEO和可访问性 */}
-                <h1 class="sr-only">{heading || title}</h1>
+                {showDefaultHeading && <h1 class="sr-only">{heading || title}</h1>}
                 <div id="content-wrapper" class="onload-animation transition-leaving">
                     <slot></slot>
                 </div>

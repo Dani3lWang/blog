@@ -48,7 +48,7 @@ const readCount = bookItems.filter((b) => b.status === 2).length;
 const wishCount = bookItems.filter((b) => b.status === 1).length;
 ---
 
-<MainGridLayout title={i18n(I18nKey.booksTitle)} description={i18n(I18nKey.booksSubtitle)}>
+<MainGridLayout showDefaultHeading={false} title={i18n(I18nKey.booksTitle)} description={i18n(I18nKey.booksSubtitle)}>
 	<LifeNavTabs mode="records" />
 	<div class="books-page-wrapper flex w-full overflow-hidden relative min-h-32">
 		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
@@ -69,7 +69,7 @@ const wishCount = bookItems.filter((b) => b.status === 1).length;
 				</p>
 				<div class="flex items-center gap-4 mt-2 pl-[3.5rem]">
 					<p class="text-xs text-[var(--content-meta)] opacity-60">
-						{i18n(I18nKey.bangumiLastUpdated)} {buildTime}
+						{i18n(I18nKey.pageGeneratedAt)} {buildTime}
 					</p>
 					<div class="flex items-center gap-3 text-xs text-[var(--content-meta)]">
 						<span class="flex items-center gap-1">

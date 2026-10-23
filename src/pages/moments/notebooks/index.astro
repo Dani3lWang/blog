@@ -1,8 +1,8 @@
 ---
+// @ts-nocheck
 import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import LifeNavTabs from "@/components/pages/life/LifeNavTabs.astro";
-// @ts-nocheck
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 
 const allEntries = await getCollection("notebooks");
@@ -79,7 +79,7 @@ const thisMonthUpdates = sortedNotebooks.filter((item) =>
 ).length;
 ---
 
-<MainGridLayout title="笔记本" description="成长日记、学习复盘、灵感随笔">
+<MainGridLayout showDefaultHeading={false} title="笔记本" description="成长日记、学习复盘、灵感随笔">
 	<div class="diary-page flex w-full flex-col gap-6">
 		<!-- 导航栏 -->
 		<LifeNavTabs mode="moments" />

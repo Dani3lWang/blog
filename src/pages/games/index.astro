@@ -92,7 +92,7 @@ const activeTab =
 	"all";
 ---
 
-<MainGridLayout title={i18n(I18nKey.gamesTitle)} description={i18n(I18nKey.gamesSubtitle)}>
+<MainGridLayout showDefaultHeading={false} title={i18n(I18nKey.gamesTitle)} description={i18n(I18nKey.gamesSubtitle)}>
 	<LifeNavTabs mode="records" />
 	<div class="games-page-wrapper flex w-full overflow-hidden relative min-h-32">
 		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
@@ -112,7 +112,7 @@ const activeTab =
 					{i18n(I18nKey.gamesSubtitle)}
 				</p>
 				<p class="text-xs text-[var(--content-meta)] opacity-60 mt-1.5 pl-[3.5rem]">
-					{i18n(I18nKey.bangumiLastUpdated)} {buildTime}
+					{i18n(I18nKey.pageGeneratedAt)} {buildTime}
 				</p>
 			</header>
 

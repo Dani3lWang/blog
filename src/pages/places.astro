@@ -68,7 +68,7 @@ const clientSortedPlaces = sortedPlaces.map((p) => ({
 	date: p.date instanceof Date ? p.date.toISOString().split("T")[0] : "",
 }));
 ---
-<MainGridLayout title='去过的地方' description='足迹地图与旅行记录'>
+<MainGridLayout showDefaultHeading={false} title='去过的地方' description='足迹地图与旅行记录'>
 	<div class='life-page flex w-full flex-col gap-5'>
 		<!-- 导航栏 -->
 		<LifeNavTabs mode="records" />

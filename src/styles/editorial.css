@@ -52,6 +52,24 @@ html:root {
 	--card-bg: var(--ed-paper-raised);
 }
 
+/* 内页沿用首页的纸感、标题和分隔线。 */
+body:not(.is-home) #content-wrapper {
+	--radius-large: var(--ed-radius);
+}
+
+body:not(.is-home) #content-wrapper .card-base {
+	border: 1px solid var(--ed-rule);
+}
+
+body:not(.is-home) #content-wrapper h1 {
+	font-family: var(--font-editorial-serif);
+	color: var(--ed-ink);
+}
+
+body:not(.is-home) #content-wrapper hr {
+	border-color: var(--ed-rule);
+}
+
 /* 暗色不是简单反相：墨绿黑底 + 低饱和米色文字 */
 :root.dark {
 	--ed-paper: #0d1512;
@@ -886,23 +904,24 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-portals {
 	display: grid;
 	min-width: 0;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: repeat(min(2, var(--portal-count, 2)), minmax(0, 1fr));
 	gap: var(--ed-gap);
 }
 
 @media (min-width: 768px) {
 	.ed-portals {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(min(3, var(--portal-count, 3)), minmax(0, 1fr));
 	}
 }
 
 @media (min-width: 1280px) {
 	.ed-portals {
-		grid-template-columns: repeat(4, minmax(0, 1fr));
+		grid-template-columns: repeat(min(4, var(--portal-count, 4)), minmax(0, 1fr));
 	}
 }
 
 .ed-portal {
+	min-width: 0;
 	gap: 0.55rem;
 	overflow: hidden;
 }
@@ -1102,10 +1121,6 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 }
 
 @media (max-width: 420px) {
-	.ed-portals {
-		grid-template-columns: 1fr;
-	}
-
 	.ed-section-head__en {
 		display: none;
 	}

@@ -7,6 +7,7 @@ import {
 
 export interface EffectiveSidebarContext {
 	isPostPage: boolean;
+	hasToc?: boolean;
 }
 
 export interface EffectiveSidebarState {
@@ -27,7 +28,17 @@ export interface EffectiveSidebarState {
 export function getEffectiveSidebarState(
 	ctx: EffectiveSidebarContext,
 ): EffectiveSidebarState {
-	const { isPostPage } = ctx;
+	const { isPostPage, hasToc = true } = ctx;
+	const tocOnly = (components: typeof sidebarLayoutConfig.leftComponents) => {
+		const visible = components.filter(
+			(item) => item.enable && item.showOnPostPage !== false,
+		);
+		return (
+			visible.length > 0 && visible.every((item) => item.type === "sidebarToc")
+		);
+	};
+	const leftTocOnly = tocOnly(sidebarLayoutConfig.leftComponents);
+	const rightTocOnly = tocOnly(sidebarLayoutConfig.rightComponents);
 
 	const sidebarConfig = getResponsiveSidebarConfig();
 
@@ -41,10 +52,10 @@ export function getEffectiveSidebarState(
 		hideSidebarOnPostPage,
 		isPostPage,
 		hasLeftWidgets: isPostPage
-			? sidebarConfig.hasLeftWidgetsOnPost
+			? sidebarConfig.hasLeftWidgetsOnPost && (hasToc || !leftTocOnly)
 			: sidebarConfig.hasLeftWidgetsOnNonPost,
 		hasRightWidgets: isPostPage
-			? sidebarConfig.hasRightWidgetsOnPost
+			? sidebarConfig.hasRightWidgetsOnPost && (hasToc || !rightTocOnly)
 			: sidebarConfig.hasRightWidgetsOnNonPost,
 		noSidebarContentWidth: sidebarLayoutConfig.noSidebarContentWidth,
 	});
@@ -60,6 +71,8 @@ export function getEffectiveSidebarState(
 		staticBarClass: "min-w-0 overflow-x-clip overflow-y-visible",
 		gridColumnStyle: gridColumnVarsToStyle(gridColumnVars),
 		gridDataAttrs: {
+			"data-left-post-toc-only": String(leftTocOnly),
+			"data-right-post-toc-only": String(rightTocOnly),
 			"data-sidebar-enable": sidebarLayoutConfig.enable ? "true" : "false",
 			"data-grid-hide-sidebar-on-post": hideSidebarOnPostPage
 				? "true"
