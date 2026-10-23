@@ -1,9 +1,11 @@
 import { navBarConfig, siteConfig } from "@/config";
 import type { NavBarLink } from "@/types/navBarConfig";
 import { resolveNavbarLinks } from "@/utils/navbar-i18n";
+import { getPublicContentState } from "./public-content";
 
 /** 解析导航栏链接：按 siteConfig.pages 过滤 + i18n 名称解析。Navbar 与 NavMenuPanel 共用。 */
-export function resolveNavMenuLinks(): NavBarLink[] {
+export async function resolveNavMenuLinks(): Promise<NavBarLink[]> {
+	const { hasPublicPosts } = await getPublicContentState();
 	const pages = siteConfig.pages;
 
 	function isPageEnabled(link: NavBarLink): boolean {
@@ -12,6 +14,7 @@ export function resolveNavMenuLinks(): NavBarLink[] {
 	}
 
 	function filterLinks(link: NavBarLink): NavBarLink | null {
+		if (link.url === "/posts/" && !hasPublicPosts) return null;
 		if (!link.children) {
 			return isPageEnabled(link) ? link : null;
 		}

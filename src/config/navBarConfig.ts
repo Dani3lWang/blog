@@ -95,17 +95,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	}
 
 	if (recordChildren.length > 0) {
-		const defaultUrl = siteConfig.pages.books
-			? "/books/"
-			: siteConfig.pages.moviesGames
-				? "/TV-albums/"
-				: siteConfig.pages.games
-					? "/games/"
-					: siteConfig.pages.musicPage
-						? "/music/"
-						: siteConfig.pages.routines
-							? "/routines/"
-							: "/places/";
+		const defaultUrl = recordChildren[0].url;
 
 		links.push({
 			name: "记录",

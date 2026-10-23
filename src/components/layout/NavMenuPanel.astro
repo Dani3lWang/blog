@@ -28,6 +28,25 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
                     {link.children && link.children.length > 0 ? (
                         /* 有子菜单的项目：MD3 手风琴 */
                         <div class="mobile-dropdown" data-mobile-dropdown>
+                            {link.url && link.url !== "#" ? (
+                            <div class="mobile-menu-parent">
+                                <a
+                                    href={link.external ? link.url : url(link.url)}
+                                    class="mobile-menu-item"
+                                    data-nav-href={link.external ? undefined : url(link.url)}
+                                    target={link.external ? "_blank" : undefined}
+                                    rel={link.external ? "noopener noreferrer" : undefined}
+                                >
+                                    {link.icon && <Icon name={link.icon} class="mobile-menu-item-icon" />}
+                                    <span class="mobile-menu-item-label">{link.name}</span>
+                                </a>
+                                <button type="button" class="mobile-menu-item mobile-menu-expand"
+                                    data-mobile-dropdown-trigger aria-label={link.name}
+                                    aria-expanded="false" aria-controls={`mobile-submenu-${index}`}>
+                                    <Icon name="material-symbols:keyboard-arrow-down-rounded" class="mobile-menu-item-arrow" />
+                                </button>
+                            </div>
+                            ) : (
                             <button
                                 type="button"
                                 class="mobile-menu-item"
@@ -41,6 +60,7 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
                                       class="mobile-menu-item-arrow"
                                 />
                             </button>
+                            )}
                             <div id={`mobile-submenu-${index}`} class="mobile-submenu" data-mobile-submenu inert aria-hidden="true">
                                 {link.children.map((child) => (
                                     <a
@@ -288,6 +308,24 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
     }
 
     /* ---- 子项缩进 ---- */
+    .mobile-menu-parent {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .mobile-menu-parent > a {
+        flex: 1;
+        min-width: 0;
+    }
+    .mobile-menu-parent .mobile-menu-expand {
+        flex: 0 0 44px;
+        width: 44px;
+        padding: 0;
+        justify-content: center;
+    }
+    .mobile-menu-expand .mobile-menu-item-arrow {
+        margin: 0;
+    }
     .mobile-submenu .mobile-menu-item {
         padding-left: 52px;
     }
