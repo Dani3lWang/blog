@@ -16,7 +16,7 @@ declare global {
 		floatingTOCListenersInitialized?: boolean;
 		// biome-ignore lint/suspicious/noExplicitAny: External library
 		spinePlayerInstance?: any;
-		pagefind: {
+		pagefind?: {
 			search: (query: string) => Promise<{
 				results: Array<{
 					data: () => Promise<SearchResult>;

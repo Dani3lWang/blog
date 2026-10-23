@@ -9,6 +9,8 @@ export const zh_TW: Translation = {
 	[Key.searchNoResults]: "找不到相關結果。",
 	[Key.searchTypeSomething]: "請輸入搜尋關鍵字。",
 	[Key.searchLoading]: "搜尋中...",
+	[Key.searchError]: "搜尋暫時無法使用，請重試。",
+	[Key.searchRetry]: "重試搜尋",
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "內容",
 	[Key.searchViewMore]: "查看更多結果 ({count} 個更多)",

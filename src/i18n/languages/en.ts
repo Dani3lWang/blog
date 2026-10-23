@@ -9,6 +9,8 @@ export const en: Translation = {
 	[Key.searchNoResults]: "No results found.",
 	[Key.searchTypeSomething]: "Type something to search...",
 	[Key.searchLoading]: "Searching...",
+	[Key.searchError]: "Search is temporarily unavailable. Please try again.",
+	[Key.searchRetry]: "Retry search",
 	[Key.searchSummary]: "Summary",
 	[Key.searchContent]: "Content",
 	[Key.searchViewMore]: "View more results ({count} more)",

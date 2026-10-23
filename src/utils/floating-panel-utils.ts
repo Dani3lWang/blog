@@ -51,6 +51,12 @@ function syncFloatingPanelState(panel: HTMLElement): void {
 	// 该函数在初始化/class 变化/Swup 重扫时都会跑，各类关闭路径都会同步滚动锁。
 	if (panel.hasAttribute("data-floating-panel-scroll-lock")) {
 		document.body.classList.toggle("menu-open", isOpen);
+		if (isOpen && wasOpen !== true) {
+			requestAnimationFrame(() => {
+				if (!panel.inert)
+					panel.querySelector<HTMLElement>("button, a[href]")?.focus();
+			});
+		}
 	}
 }
 
@@ -60,6 +66,36 @@ function setFloatingPanelOpen(panel: HTMLElement, isOpen: boolean): void {
 }
 
 function handleEscape(event: KeyboardEvent): void {
+	if (event.key === "Tab") {
+		const modal = document.querySelector<HTMLElement>(
+			"[data-floating-panel-scroll-lock]:not(.float-panel-closed)",
+		);
+		if (!modal) return;
+		const items = Array.from(
+			modal.querySelectorAll<HTMLElement>(
+				"a[href], button, input, select, textarea, [tabindex='0']",
+			),
+		).filter((item) => !item.closest("[inert]") && isVisible(item));
+		const first = items[0];
+		const last = items.at(-1);
+		if (!first || !last) return;
+		if (
+			event.shiftKey &&
+			(document.activeElement === first ||
+				!modal.contains(document.activeElement))
+		) {
+			event.preventDefault();
+			last.focus();
+		} else if (
+			!event.shiftKey &&
+			(document.activeElement === last ||
+				!modal.contains(document.activeElement))
+		) {
+			event.preventDefault();
+			first.focus();
+		}
+		return;
+	}
 	if (event.key !== "Escape") return;
 
 	const target = event.target instanceof Node ? event.target : null;
@@ -141,7 +177,9 @@ export function setClickOutsideToClose(panel: string, ignores: string[]): void {
 		if (!(tDom instanceof Node)) return; // Ensure the event target is an HTML Node
 		for (const ig of ignores) {
 			const ie = document.getElementById(ig);
-			if (ie === tDom || ie?.contains(tDom)) {
+			// A retry can replace its button before this document listener runs.
+			// Keep the original event path so that it is still an inside click.
+			if (ie && (event.composedPath().includes(ie) || ie.contains(tDom))) {
 				return;
 			}
 		}

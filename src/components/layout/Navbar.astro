@@ -66,7 +66,7 @@ const hasDisplaySettings =
 	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
 
 // 解析导航栏链接（按 siteConfig.pages 过滤 + i18n 名称），桌面下拉与移动抽屉共用
-const links: NavBarLink[] = resolveNavMenuLinks();
+const links: NavBarLink[] = await resolveNavMenuLinks();
 
 // 处理导航栏 Logo 图片，image / url 类型支持亮暗色分别设置
 const logoConfig = siteConfig.navbar.logo;
@@ -430,35 +430,32 @@ if (document.readyState === 'loading') {
 {
     import.meta.env.PROD && (
         <script is:inline data-swup-ignore-script define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
-            {/* 你的 loadPagefind 函数的完整内容放在这里 */}
-            async function loadPagefind() {
-                try {
-                    const response = await fetch(scriptUrl, { method: 'HEAD' });
-                    if (!response.ok) {
-                        throw new Error(`Pagefind script not found: ${response.status}`);
+            (() => {
+                if (window.__loadPagefind) return;
+                let attempt = 0;
+                window.__loadPagefind = function () {
+                    if (window.pagefind) return Promise.resolve();
+                    if (!window.__pagefindLoading) {
+                        attempt += 1;
+                        window.__pagefindLoading = (async () => {
+                            try {
+                                const resource = new URL(scriptUrl, location.href);
+                                if (attempt > 1) resource.searchParams.set("retry", String(attempt));
+                                const pagefind = await import(resource.href);
+                                await pagefind.options({ excerptLength: 20, basePath: new URL("./", resource).pathname });
+                                window.pagefind = pagefind;
+                                document.dispatchEvent(new CustomEvent("pagefindready"));
+                            } catch (error) {
+                                window.__pagefindLoading = undefined;
+                                delete window.pagefind;
+                                document.dispatchEvent(new CustomEvent("pagefindloaderror"));
+                                throw error;
+                            }
+                        })();
                     }
-                    const pagefind = await import(scriptUrl);
-                    await pagefind.options({
-                        excerptLength: 20
-                    });
-                    window.pagefind = pagefind;
-                    document.dispatchEvent(new CustomEvent('pagefindready'));
-                    console.log('Pagefind loaded and initialized successfully, event dispatched.');
-                } catch (error) {
-                    console.error('Failed to load Pagefind:', error);
-                    window.pagefind = {
-                        search: () => Promise.resolve({ results: [] }),
-                        options: () => Promise.resolve(),
-                    };
-                    document.dispatchEvent(new CustomEvent('pagefindloaderror'));
-                    console.log('Pagefind load error, event dispatched.');
-                }
-            }
-
-            window.__loadPagefind = function () {
-                if (!window.__pagefindLoading) window.__pagefindLoading = loadPagefind();
-                return window.__pagefindLoading;
-            };
+                    return window.__pagefindLoading;
+                };
+            })();
         </script>
     )
 }

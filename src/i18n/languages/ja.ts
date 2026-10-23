@@ -9,6 +9,8 @@ export const ja: Translation = {
 	[Key.searchNoResults]: "結果が見つかりません。",
 	[Key.searchTypeSomething]: "検索キーワードを入力してください。",
 	[Key.searchLoading]: "検索中...",
+	[Key.searchError]: "検索を利用できません。もう一度お試しください。",
+	[Key.searchRetry]: "再試行",
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "内容",
 	[Key.searchViewMore]: "さらに結果を表示 ({count} 件)",

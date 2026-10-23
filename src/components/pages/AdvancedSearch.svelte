@@ -14,7 +14,6 @@ export let description = "";
 let keyword = "";
 let results: SearchResult[] = [];
 let isSearching = false;
-let initialized = false;
 
 // 在客户端获取 URL 参数
 const getInitialKeyword = (): string => {
@@ -39,77 +38,59 @@ const fakeResult: SearchResult[] = [
 	},
 ];
 
-// --- Core Search Logic ---
+let failed = false;
+let requestId = 0;
+let debounceTimer: ReturnType<typeof setTimeout>;
 const search = async () => {
-	if (!initialized || !keyword.trim()) {
-		results = [];
+	const current = ++requestId;
+	const query = keyword.trim();
+	results = [];
+	failed = false;
+	isSearching = false;
+	if (!query) return;
+	isSearching = true;
+	try {
+		if (import.meta.env.PROD) {
+			await window.__loadPagefind?.();
+			if (!window.pagefind) throw new Error("Pagefind is unavailable");
+			const response = await window.pagefind.search(query);
+			const matches = await Promise.all(
+				response.results.map((item) => item.data()),
+			);
+			if (current === requestId) results = matches;
+		} else if (current === requestId) results = fakeResult;
+	} catch {
+		if (current === requestId) failed = true;
+	} finally {
+		if (current === requestId) isSearching = false;
+	}
+};
+const handleInput = (event: Event) => {
+	keyword = (event.currentTarget as HTMLInputElement).value;
+	clearTimeout(debounceTimer);
+	requestId += 1;
+	results = [];
+	failed = false;
+	if (!keyword.trim()) {
+		isSearching = false;
 		return;
 	}
 	isSearching = true;
-
-	try {
-		if (import.meta.env.PROD && window.pagefind) {
-			const response = await window.pagefind.search(keyword);
-			const rawResults = await Promise.all(
-				response.results.map((item) => item.data()),
-			);
-			results = rawResults;
-		} else if (import.meta.env.DEV) {
-			// 开发模式下的模拟结果
-			results = fakeResult.filter(
-				(item) =>
-					item.excerpt.toLowerCase().includes(keyword.toLowerCase()) ||
-					item.meta.title.toLowerCase().includes(keyword.toLowerCase()),
-			);
-		}
-	} catch (error) {
-		console.error("Search error:", error);
-		results = [];
-	} finally {
-		isSearching = false;
-	}
+	debounceTimer = setTimeout(() => void search(), 300);
 };
-
-// --- Initialization onMount ---
+const retry = () => {
+	delete window.pagefind;
+	window.__pagefindLoading = undefined;
+	void search();
+};
 onMount(() => {
-	const initialize = async () => {
-		initialized = true;
-
-		// 从 URL 获取初始关键词
-		const initialKeyword = getInitialKeyword();
-		if (initialKeyword) {
-			keyword = initialKeyword;
-		}
-
-		// 如果有关键词，自动执行搜索
-		if (keyword.trim()) {
-			await search();
-		}
+	keyword = getInitialKeyword();
+	void search();
+	return () => {
+		requestId += 1;
+		clearTimeout(debounceTimer);
 	};
-
-	// 开发环境直接初始化
-	if (import.meta.env.DEV) {
-		initialize();
-	} else {
-		// 生产环境等待 Pagefind 加载
-		window.__loadPagefind?.();
-		if (window.pagefind) {
-			initialize();
-		} else {
-			document.addEventListener("pagefindready", initialize, {
-				once: true,
-			});
-		}
-	}
 });
-
-let debounceTimer: NodeJS.Timeout;
-const handleInput = () => {
-	clearTimeout(debounceTimer);
-	debounceTimer = setTimeout(() => {
-		search();
-	}, 300);
-};
 </script>
 
 <div class="card-base px-6 py-6 md:px-9 md:py-6 mb-4 rounded-(--radius-large)">
@@ -137,7 +118,7 @@ const handleInput = () => {
                 <Icon icon="material-symbols:search" class="text-2xl text-50" />
             </div>
             <input
-                type="text"
+                type="search" aria-label={i18n(I18nKey.search)}
                 class="block w-full p-4 pl-10 text-sm bg-transparent border border-black/10 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-(--primary) focus:border-(--primary) hover:border-black/20 dark:hover:border-white/20 text-75 placeholder:opacity-50 transition-colors outline-hidden"
                 placeholder={i18n(I18nKey.search)}
                 bind:value={keyword}
@@ -153,6 +134,11 @@ const handleInput = () => {
         {#if isSearching}
             <div class="flex justify-center py-10">
                 <Icon icon="svg-spinners:ring-resize" class="text-4xl text-(--primary)" />
+            </div>
+        {:else if failed}
+            <div class="card-base p-6" role="alert">
+                <p>{i18n(I18nKey.searchError)}</p>
+                <button type="button" class="btn-regular rounded-lg px-3 py-2 mt-2" on:click={retry}>{i18n(I18nKey.searchRetry)}</button>
             </div>
         {:else if results.length > 0}
             <div class="space-y-4">
