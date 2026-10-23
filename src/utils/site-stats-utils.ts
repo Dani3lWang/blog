@@ -38,9 +38,7 @@ export function getPostActivityDate(post: {
 }
 
 /** 获取全部已发布文章（未排序，含 body，供字数统计使用） */
-export async function getPublishedPosts(): Promise<
-	CollectionEntry<"posts">[]
-> {
+export async function getPublishedPosts(): Promise<CollectionEntry<"posts">[]> {
 	return await getCollection("posts", ({ data }) => isPublished(data));
 }
 
@@ -71,9 +69,7 @@ export function getLatestActivityDate(
 export async function getVisitedCityCount(): Promise<number> {
 	const lifeEntries = await getCollection("life");
 	const cities = lifeEntries
-		.filter((entry) =>
-			entry.id.replace(/\\/g, "/").startsWith("places/"),
-		)
+		.filter((entry) => entry.id.replace(/\\/g, "/").startsWith("places/"))
 		.map((entry) => entry.data.city)
 		.filter(Boolean);
 	return new Set(cities).size;

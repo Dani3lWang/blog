@@ -3,9 +3,9 @@ import type { ImageMetadata } from "astro";
 import type { CollectionConfig, SchemaContext } from "astro/content/config";
 import { glob } from "astro/loaders";
 import { type ZodType, z } from "astro/zod";
-import type { BangumiTrack } from "./types/bangumi";
 import type { MusicGenreId } from "./config/musicGenreConfig";
 import { musicGenreIds } from "./config/musicGenreConfig";
+import type { BangumiTrack } from "./types/bangumi";
 
 type PostData = {
 	title: string;

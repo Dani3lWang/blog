@@ -535,3 +535,26 @@ location: China # 位置
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+
+## 芭乐通信：内容与验证约定
+
+本站域名为 `https://blog.kinley7.cn`，使用杂志式个人主页。
+
+- **公开文章**：`draft: true` 表示草稿。暂无公开文章时，首页主按钮进入“关于我”，桌面和手机隐藏文章菜单；`/posts/` 保留空状态。发布 `draft: false` 的真实文章并重新构建，即可恢复文章入口、主稿和随机阅读候选。
+- **栏目恢复**：在 `src/config/siteConfig.ts` 的 `pages` 中开启对应开关，并准备真实内容。目前关闭书架、游戏、动态、笔记本、相册、留言板和生活聚合页，配置、集合及媒体保留。相册开启前请用真实条目替换两个演示配置；留言板开启前请配置实际评论服务。完整构建统一清理关闭栏目的页面和历史别名。
+- **首页与侧栏**：首页由 `homeConfig`、`profileConfig` 驱动。侧栏默认左侧单栏，非文章页显示个人资料，文章详情仅显示目录，无目录时正文占满。公告、日历、音乐和统计卡片保留配置但关闭；导航音乐入口继续使用唯一播放器。
+- **封面与日期**：封面与条目共置，以相对路径引用并经过构建优化。页面生成时间仅说明构建时间，最近活动使用真实内容日期。
+
+验证命令（Node.js ≥22.23.0，pnpm 11.22.0）：
+
+```sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm type-check
+pnpm build
+pnpm exec playwright install chromium
+pnpm test:blog:scenarios
+```
+
+`pnpm build` 包含字体准备、数据生成、Astro 构建、关闭页面清理、资源裁剪、字体子集化、脚本压缩、Pagefind 索引和产物验收。发布验证应执行完整命令。`pnpm test:blog` 验证已有产物；`pnpm test:blog:scenarios` 额外在 `.zcode/blog-verification/` 隔离副本中验证零篇及一篇文章，测试内容不进入原始内容或正式产物。浏览器不在默认位置时，可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` 指定 Chromium。

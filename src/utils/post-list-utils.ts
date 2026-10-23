@@ -1,5 +1,5 @@
-import type { Page } from "astro";
 import type { CollectionEntry } from "astro:content";
+import type { Page } from "astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -48,7 +48,10 @@ export async function getPostListPageData(
 	const pageSize = getPostsPerPage();
 	const total = posts.length;
 	const lastPage = Math.max(1, Math.ceil(total / pageSize));
-	const pageNumber = Math.min(Math.max(1, Math.floor(currentPage) || 1), lastPage);
+	const pageNumber = Math.min(
+		Math.max(1, Math.floor(currentPage) || 1),
+		lastPage,
+	);
 	const start = (pageNumber - 1) * pageSize;
 	const data = posts.slice(start, start + pageSize);
 

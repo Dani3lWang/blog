@@ -8,13 +8,13 @@
 // 通过 astro:page-load / swup:contentReplaced / DOMContentLoaded 事件
 // 在每次页面切换后执行，与新页面的 DOM 根节点（#swup-container）绑定。
 
-// 统一 meting 解析逻辑在 src/utils/music-source.ts(纯函数模块),
-// 本文件只保留页面绑定 / 高亮 / 缓存等 DOM 交互部分
-import { resolveMusicPlaylist } from "./music-source";
 import type {
 	MusicSourceData as MusicData,
 	MusicSourceTrack as MusicTrack,
 } from "./music-source";
+// 统一 meting 解析逻辑在 src/utils/music-source.ts(纯函数模块),
+// 本文件只保留页面绑定 / 高亮 / 缓存等 DOM 交互部分
+import { resolveMusicPlaylist } from "./music-source";
 
 type MusicManager = {
 	setPlaylist: (playlist: MusicTrack[]) => void;
@@ -123,7 +123,9 @@ function getMgr(): MusicManager | undefined {
 function clearPlayingUI(): void {
 	document
 		.querySelectorAll<HTMLElement>(".music-card.playing, .mg-track.playing")
-		.forEach((el) => el.classList.remove("playing"));
+		.forEach((el) => {
+			el.classList.remove("playing");
+		});
 }
 
 // 高亮当前播放:曲目行按歌单索引匹配(data-track-index),防重名误亮;
