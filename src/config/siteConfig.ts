@@ -13,16 +13,16 @@ const pages = resolvePageToggles({
 	// 友链页面开关
 	friends: false,
 	// 留言板页面开关，需要配置评论系统
-	guestbook: true,
+	guestbook: false,
 
 	// ── 我的 (My) ──────────────────────────────────
 
 	// 动态页面开关
-	dynamic: true,
+	dynamic: false,
 	// 项目展示页开关（尚未有内容，暂关闭；有项目后置 true 并在 src/content/projects/ 添加条目）
 	projects: false,
 	// 相册页面开关
-	gallery: true,
+	gallery: false,
 	// 书签导航页面开关
 	booknav: true,
 	// 番组计划页面开关
@@ -33,19 +33,19 @@ const pages = resolvePageToggles({
 	// ── 记录 (Records) ──────────────────────────────────
 
 	// 说说/记录模块页面开关
-	moments: true,
+	moments: false,
 	// 书架页面开关
-	books: true,
+	books: false,
 	// 影视和音乐页面开关
 	moviesGames: true,
 	// 游戏页面开关（平台游戏库：Steam/Switch/Xbox/Epic/PlayStation）
-	games: true,
+	games: false,
 	// 音乐页面开关
 	musicPage: false,
 	// 更新日志页面开关
 	changelog: true,
 	// 笔记本页面开关
-	notebooks: true,
+	notebooks: false,
 	// 规划页面开关
 	routines: false,
 	// 足迹页面开关

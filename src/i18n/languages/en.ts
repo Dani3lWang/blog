@@ -10,6 +10,8 @@ export const en: Translation = {
 	[Key.searchTypeSomething]: "Type something to search...",
 	[Key.searchLoading]: "Searching...",
 	[Key.searchError]: "Search is temporarily unavailable. Please try again.",
+	[Key.pageGeneratedAt]: "Page generated",
+	[Key.postsEmpty]: "Articles are being prepared. Please check back later.",
 	[Key.searchRetry]: "Retry search",
 	[Key.searchSummary]: "Summary",
 	[Key.searchContent]: "Content",

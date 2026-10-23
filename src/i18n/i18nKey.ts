@@ -8,6 +8,8 @@ enum I18nKey {
 	searchLoading = "searchLoading",
 	searchError = "searchError",
 	searchRetry = "searchRetry",
+	pageGeneratedAt = "pageGeneratedAt",
+	postsEmpty = "postsEmpty",
 	searchSummary = "searchSummary",
 	searchContent = "searchContent",
 	searchViewMore = "searchViewMore",

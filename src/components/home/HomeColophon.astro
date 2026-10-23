@@ -25,19 +25,19 @@ const items = stats
 	? [
 			{
 				label: i18n(I18nKey.siteStatsPostCount),
-				value: stats.posts.toLocaleString(),
+				value: stats.posts > 0 ? stats.posts.toLocaleString() : "",
 			},
 			{
 				label: i18n(I18nKey.siteStatsDynamicCount),
-				value: stats.dynamics.toLocaleString(),
+				value: stats.dynamics > 0 ? stats.dynamics.toLocaleString() : "",
 			},
 			{
 				label: i18n(I18nKey.siteStatsTotalWords),
-				value: stats.words.toLocaleString(),
+				value: stats.words > 0 ? stats.words.toLocaleString() : "",
 			},
 			{
 				label: i18n(I18nKey.homeStatsCities),
-				value: stats.cities.toLocaleString(),
+				value: stats.cities > 0 ? stats.cities.toLocaleString() : "",
 			},
 			{
 				label: i18n(I18nKey.siteStatsRunningDays),
@@ -45,9 +45,9 @@ const items = stats
 			},
 			{
 				label: i18n(I18nKey.siteStatsLastUpdate),
-				value: stats.updatedAt ? formatStamp(stats.updatedAt) : "—",
+				value: stats.updatedAt ? formatStamp(stats.updatedAt) : "",
 			},
-		]
+		].filter((item) => item.value !== "")
 	: [];
 ---
 
@@ -67,10 +67,10 @@ const items = stats
 					</div>
 				))}
 			</div>
-			<p class="ed-colophon__foot">
+			{stats.updatedAt && <p class="ed-colophon__foot">
 				{homeConfig.brand.englishName} · UPDATED{" "}
-				{stats.updatedAt ? formatStamp(stats.updatedAt) : "N/A"}
-			</p>
+				{formatStamp(stats.updatedAt)}
+			</p>}
 		</section>
 	)
 }

@@ -17,9 +17,10 @@ import { url } from "@/utils/url-utils";
 interface Props {
 	/** 随机阅读候选池；为空时不渲染「换一篇」 */
 	randomPool: HomeRandomCandidate[] | null;
+	hasPublicPosts: boolean;
 }
 
-const { randomPool } = Astro.props;
+const { randomPool, hasPublicPosts } = Astro.props;
 
 const hero = homeConfig.hero;
 const links = profileConfig.links ?? [];
@@ -55,14 +56,14 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
     {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
 
     <div class="ed-hero__actions">
-      <a class="ed-action ed-action--solid" href={postsUrl}>
-        <Icon name="material-symbols:article-outline" class="text-[1.05rem]" />
-        {hero.primaryAction}
+      <a class="ed-action ed-action--solid" href={hasPublicPosts ? postsUrl : aboutUrl}>
+        <Icon name={hasPublicPosts ? "material-symbols:article-outline" : "material-symbols:person-outline"} class="text-[1.05rem]" />
+        {hasPublicPosts ? hero.primaryAction : "关于我"}
       </a>
-      <a class="ed-action" href={aboutUrl}>
+      {hasPublicPosts && <a class="ed-action" href={aboutUrl}>
         <Icon name="material-symbols:person-outline" class="text-[1.05rem]" />
         关于我
-      </a>
+      </a>}
       {randomPool && randomPool.length > 0 && (
         <button
           type="button"

@@ -1,6 +1,6 @@
 ---
-import type { Page } from "astro";
 import type { CollectionEntry } from "astro:content";
+import type { Page } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
 import PostPage from "@/components/layout/PostPage.astro";
 import I18nKey from "@/i18n/i18nKey";
@@ -40,7 +40,7 @@ const rangeStart = page.total === 0 ? 0 : page.start + 1;
     <div class="post-archive-rule" aria-hidden="true"></div>
   </header>
 
-  <PostPage page={page} />
+  {page.total > 0 ? <PostPage page={page} /> : <p class="card-base p-6 text-(--content-meta)">{i18n(I18nKey.postsEmpty)}</p>}
 
   {
     page.total > page.size && (

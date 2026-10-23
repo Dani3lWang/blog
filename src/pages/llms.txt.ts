@@ -4,6 +4,7 @@ import { getSortedPosts } from "@utils/content-utils";
 import { url } from "@utils/url-utils";
 import type { APIRoute } from "astro";
 import { siteConfig } from "@/config";
+import { isPagePathEnabled } from "@/utils/page-registry";
 
 export const prerender = true;
 
@@ -111,8 +112,8 @@ export const GET: APIRoute = async ({ site }) => {
 	const base = site ?? new URL(siteConfig.site_url);
 	const abs = (path: string) => new URL(url(path), base).href;
 
-	const enabledPages = KEY_PAGES.filter(
-		(pageEntry) => !pageEntry.pageKey || siteConfig.pages[pageEntry.pageKey],
+	const enabledPages = KEY_PAGES.filter((pageEntry) =>
+		isPagePathEnabled(pageEntry.path),
 	);
 	const posts = await getSortedPosts();
 	const recentPosts = posts.slice(0, RECENT_POSTS_COUNT);

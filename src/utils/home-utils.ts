@@ -4,8 +4,9 @@ import { homeConfig, siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { HomeNowItem, HomePortalKey } from "@/types/config";
-import { getSortedPostsList, getSortedPosts } from "./content-utils";
+import { getSortedPosts, getSortedPostsList } from "./content-utils";
 import { dynamicPlainText, sortDynamics } from "./dynamic-utils";
+import { getPublicContentState } from "./public-content";
 import {
 	getLatestActivityDate,
 	getSiteRunningDays,
@@ -72,6 +73,7 @@ export type HomeRandomCandidate = {
 };
 
 export type HomeData = {
+	hasPublicPosts: boolean;
 	/** 刊号行占位符解析结果 */
 	issue: {
 		/** 自动月度期号，例如 "004" */
@@ -221,6 +223,7 @@ function resolveEditionLabel(
 
 export async function getHomeData(): Promise<HomeData> {
 	const now = new Date();
+	const { hasPublicPosts } = await getPublicContentState();
 	const issue = resolveIssue(siteConfig.siteStartDate, now);
 
 	// ── 数据按需加载 ─────────────────────────────────────
@@ -233,10 +236,15 @@ export async function getHomeData(): Promise<HomeData> {
 
 	const needPosts =
 		featuredLimit > 0 || homeConfig.showStats || homeConfig.showRandomPost;
-	const needDynamics = dynamicLimit > 0 || homeConfig.showStats;
+	const needDynamics =
+		siteConfig.pages.dynamic && (dynamicLimit > 0 || homeConfig.showStats);
 
-	const sortedPosts = needPosts ? await getSortedPosts() : [];
-	const sortedPostsList = needPosts ? await getSortedPostsList() : [];
+	const sortedPosts = needPosts
+		? (await getSortedPosts()).filter((post) => !post.data.draft)
+		: [];
+	const sortedPostsList = needPosts
+		? (await getSortedPostsList()).filter((post) => !post.data.draft)
+		: [];
 
 	// ── 本期主稿 ─────────────────────────────────────────
 	const selectedPosts: typeof sortedPosts = [];
@@ -364,7 +372,7 @@ export async function getHomeData(): Promise<HomeData> {
 			// 复用上面已取到的全量动态，避免重复查询集合
 			dynamics: allDynamics.length,
 			words: await getSiteWordCount(sortedPosts),
-			cities: await getVisitedCityCount(),
+			cities: siteConfig.pages.places ? await getVisitedCityCount() : 0,
 			siteDays: getSiteRunningDays(siteConfig.siteStartDate, now),
 			updatedAt,
 		};
@@ -386,6 +394,7 @@ export async function getHomeData(): Promise<HomeData> {
 			: null;
 
 	return {
+		hasPublicPosts,
 		issue,
 		editionLabel: resolveEditionLabel(homeConfig.brand.editionLabel, issue),
 		featured,

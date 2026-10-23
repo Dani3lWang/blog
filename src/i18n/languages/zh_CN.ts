@@ -10,6 +10,8 @@ export const zh_CN: Translation = {
 	[Key.searchTypeSomething]: "请输入搜索关键词。",
 	[Key.searchLoading]: "正在搜索...",
 	[Key.searchError]: "搜索暂时不可用，请重试。",
+	[Key.pageGeneratedAt]: "页面生成时间",
+	[Key.postsEmpty]: "文章整理中，欢迎稍后再来。",
 	[Key.searchRetry]: "重试搜索",
 	[Key.searchSummary]: "摘要",
 	[Key.searchContent]: "内容",

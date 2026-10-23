@@ -30,7 +30,7 @@ const home = await getHomeData();
 <MainGridLayout variant="editorial-home" heading={siteConfig.title}>
   <div class="ed-home">
     <HomeMasthead editionLabel={home.editionLabel} issueNumber={home.issue.number} />
-    <HomeHero randomPool={home.randomPool} />
+    <HomeHero randomPool={home.randomPool} hasPublicPosts={home.hasPublicPosts} />
     <HomeFeatured featured={home.featured} secondary={home.secondary} />
     <HomeNow now={home.now} />
     <HomeDynamics dynamics={home.dynamics} />

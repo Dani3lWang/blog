@@ -10,6 +10,8 @@ export const ko: Translation = {
 	[Key.searchTypeSomething]: "검색어를 입력하세요...",
 	[Key.searchLoading]: "검색 중...",
 	[Key.searchError]: "검색을 사용할 수 없습니다. 다시 시도해 주세요.",
+	[Key.pageGeneratedAt]: "페이지 생성 시간",
+	[Key.postsEmpty]: "글을 준비하고 있습니다. 나중에 다시 방문해 주세요.",
 	[Key.searchRetry]: "검색 다시 시도",
 	[Key.searchSummary]: "요약",
 	[Key.searchContent]: "내용",

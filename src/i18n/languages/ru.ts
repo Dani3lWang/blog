@@ -10,6 +10,8 @@ export const ru: Translation = {
 	[Key.searchTypeSomething]: "Введите ключевое слово для поиска...",
 	[Key.searchLoading]: "Поиск...",
 	[Key.searchError]: "Поиск временно недоступен. Попробуйте ещё раз.",
+	[Key.pageGeneratedAt]: "Страница создана",
+	[Key.postsEmpty]: "Статьи готовятся. Загляните позже.",
 	[Key.searchRetry]: "Повторить поиск",
 	[Key.searchSummary]: "Резюме",
 	[Key.searchContent]: "Содержание",

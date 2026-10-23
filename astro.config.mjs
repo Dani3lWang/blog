@@ -28,8 +28,6 @@ import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
 import {
-	commentConfig,
-	dynamicConfig,
 	expressiveCodeConfig,
 	fontConfig,
 	fontsList,
@@ -55,6 +53,7 @@ import { remarkPlantuml } from "./src/plugins/remark-plantuml.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { remarkWikiLink } from "./src/plugins/remark-wiki-link.js";
 import { collectUsedFontCssVars } from "./src/utils/fontHelper";
+import { isPagePathEnabled } from "./src/utils/page-registry";
 
 if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
@@ -87,18 +86,20 @@ export default defineConfig({
 	base: "/",
 	trailingSlash: "always",
 
-	redirects: {
-		"/gallery/": "/moments/gallery/",
-		"/guestbook/": "/moments/guestbook/",
-		"/movies-games/": "/TV-albums/",
-		"/life/": "/moments/",
-		"/life/notebooks/": "/moments/notebooks/",
-		"/life/routines/": "/routines/",
-		"/life/places/": "/places/",
-		"/moments/shuoshuo/": "/dynamic/",
-		// 首页改为个人主页后，完整文章列表迁到 /posts/；旧的分页 URL 保留跳转
-		"/page/1/": "/posts/",
-	},
+	redirects: Object.fromEntries(
+		Object.entries({
+			"/gallery/": "/moments/gallery/",
+			"/guestbook/": "/moments/guestbook/",
+			"/movies-games/": "/TV-albums/",
+			"/life/": "/moments/",
+			"/life/notebooks/": "/moments/notebooks/",
+			"/life/routines/": "/routines/",
+			"/life/places/": "/places/",
+			"/moments/shuoshuo/": "/dynamic/",
+			// 首页改为个人主页后，完整文章列表迁到 /posts/；旧的分页 URL 保留跳转
+			"/page/1/": "/posts/",
+		}).filter(([from, to]) => isPagePathEnabled(from) && isPagePathEnabled(to)),
+	),
 
 	// 字体配置 - 只加载实际使用的字体，跳过未引用的以加快构建
 	fonts: (() => {
@@ -272,85 +273,7 @@ export default defineConfig({
 		}),
 		svelte(),
 		sitemap({
-			filter: (page) => {
-				// 根据页面开关配置过滤sitemap
-				const url = new URL(page);
-				const pathname = url.pathname;
-				if (pathname === "/dynamic/" && !siteConfig.pages.dynamic) {
-					return false;
-				}
-				if (pathname.startsWith("/projects/") && !siteConfig.pages.projects) {
-					return false;
-				}
-				if (pathname.startsWith("/gallery/") && !siteConfig.pages.gallery) {
-					return false;
-				}
-				if (pathname === "/friends/" && !siteConfig.pages.friends) {
-					return false;
-				}
-				if (pathname === "/guestbook/" && !siteConfig.pages.guestbook) {
-					return false;
-				}
-				if (pathname === "/booknav/" && !siteConfig.pages.booknav) {
-					return false;
-				}
-				if (pathname === "/bangumi/" && !siteConfig.pages.bangumi) {
-					return false;
-				}
-				if (pathname === "/vndb/" && !siteConfig.pages.vndb) {
-					return false;
-				}
-				// 动态页评论嵌入页：评论关闭时重定向到 /404/，不应进 sitemap
-				if (
-					pathname === "/dynamic/comments/" &&
-					(dynamicConfig.showComment === false ||
-						!commentConfig.type ||
-						commentConfig.type === "none")
-				) {
-					return false;
-				}
-				if (pathname === "/sponsor/" && !siteConfig.pages.sponsor) {
-					return false;
-				}
-				if (pathname === "/moments/" && !siteConfig.pages.moments) {
-					return false;
-				}
-				if (pathname === "/moments/shuoshuo/" && !siteConfig.pages.moments) {
-					return false;
-				}
-				if (pathname === "/moments/gallery/" && !siteConfig.pages.gallery) {
-					return false;
-				}
-				if (pathname === "/moments/guestbook/" && !siteConfig.pages.guestbook) {
-					return false;
-				}
-				if (pathname === "/moments/notebooks/" && !siteConfig.pages.notebooks) {
-					return false;
-				}
-				if (pathname === "/routines/" && !siteConfig.pages.routines) {
-					return false;
-				}
-				if (pathname === "/places/" && !siteConfig.pages.places) {
-					return false;
-				}
-				if (pathname === "/books/" && !siteConfig.pages.books) {
-					return false;
-				}
-				if (pathname === "/TV-albums/" && !siteConfig.pages.moviesGames) {
-					return false;
-				}
-				if (pathname === "/games/" && !siteConfig.pages.games) {
-					return false;
-				}
-				if (pathname === "/music/" && !siteConfig.pages.musicPage) {
-					return false;
-				}
-				if (pathname === "/changelog/" && !siteConfig.pages.changelog) {
-					return false;
-				}
-
-				return true;
-			},
+			filter: (page) => isPagePathEnabled(new URL(page).pathname),
 		}),
 		mdx(),
 	],
