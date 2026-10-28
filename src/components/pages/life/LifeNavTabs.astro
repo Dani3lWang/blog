@@ -256,6 +256,8 @@ const navItems = config.items.filter((item) => {
 	// @ts-nocheck
 	document.addEventListener("DOMContentLoaded", initNavTabs);
 	document.addEventListener("astro:page-load", initNavTabs);
+	document.addEventListener("swup:contentReplaced", initNavTabs);
+	initNavTabs();
 
 	function initNavTabs() {
 		const wrapper = document.getElementById("life-nav-wrapper");
@@ -266,7 +268,7 @@ const navItems = config.items.filter((item) => {
 		if (tabs.dataset.initialized) return;
 		tabs.dataset.initialized = "true";
 
-		function updateActiveNav() {
+		const updateActiveNav = () => {
 			const pathname = window.location.pathname;
 			const navPills = tabs.querySelectorAll(".nav-tab:not(.nav-tab-home)");
 
@@ -278,7 +280,7 @@ const navItems = config.items.filter((item) => {
 				}
 			});
 
-			const homeTab = tabs.querySelector(".nav-tab-home");
+			const homeTab = wrapper.querySelector(".nav-tab-home");
 			if (homeTab) {
 				homeTab.removeAttribute("data-active");
 				const homeHref = homeTab.getAttribute("data-home-href") || "/moments/";
@@ -287,29 +289,25 @@ const navItems = config.items.filter((item) => {
 					homeTab.setAttribute("data-active", "");
 				}
 			}
-		}
+		};
 
-		updateActiveNav();
-		document.addEventListener("swup:contentReplaced", updateActiveNav);
-
-		function scrollToActiveTab() {
-			const activeTab = tabs.querySelector(".nav-tab[data-active]");
+		const scrollToActiveTab = () => {
+			const activeTab = tabs.querySelector<HTMLElement>(".nav-tab[data-active]");
 			if (activeTab) {
 				const scrollLeft =
 					activeTab.offsetLeft -
 					tabsScroll.offsetLeft -
 					(tabsScroll.clientWidth - activeTab.offsetWidth) / 2;
-				tabs.scrollTo({ left: Math.max(0, scrollLeft), behavior: "smooth" });
+				tabs.scrollTo({
+					left: Math.max(0, scrollLeft),
+					behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+						? "instant"
+						: "smooth",
+				});
 			}
-		}
-
-		const originalUpdateActiveNav = updateActiveNav;
-		updateActiveNav = function () {
-			originalUpdateActiveNav();
-			scrollToActiveTab();
 		};
 
-		function updateScrollIndicators() {
+		const updateScrollIndicators = () => {
 			const scrollLeft = tabs.scrollLeft;
 			const scrollWidth = tabs.scrollWidth;
 			const clientWidth = tabs.clientWidth;
@@ -319,15 +317,24 @@ const navItems = config.items.filter((item) => {
 				"show-right",
 				scrollLeft < scrollWidth - clientWidth - 10,
 			);
-		}
+		};
 
 		tabs.addEventListener("scroll", updateScrollIndicators);
-		window.addEventListener("resize", updateScrollIndicators);
+		const controller = new AbortController();
+		window.addEventListener("resize", updateScrollIndicators, {
+			signal: controller.signal,
+		});
+		document.addEventListener("swup:contentReplaced", () => controller.abort(), {
+			once: true,
+			signal: controller.signal,
+		});
+		updateActiveNav();
+		scrollToActiveTab();
 		updateScrollIndicators();
 
 		// 使用导航栏容器监听滚轮事件，仅在可水平滚动时阻止默认行为，
 		// 避免切换 body overflow 导致滚动条消失引起的窗口抖动。
-		const navContainer = tabsScroll.closest(".nav-container");
+		const navContainer = tabsScroll.closest<HTMLElement>(".nav-container");
 		if (navContainer) {
 			navContainer.addEventListener(
 				"wheel",

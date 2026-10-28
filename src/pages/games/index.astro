@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import ClientPagination from "@/components/common/ClientPagination.astro";
@@ -9,15 +10,12 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import type { GamePlatformId } from "@/types/config";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
 import type { FlattenedGame } from "@/utils/game-utils";
 import { sortGames } from "@/utils/game-utils";
 
 if (!siteConfig.pages.games) {
 	return Astro.redirect("/404/");
 }
-
-const buildTime = formatDateI18nWithTime(new Date());
 
 const gamesData = await getCollection("games");
 const platformData = gamesData[0]?.data;
@@ -94,28 +92,9 @@ const activeTab =
 
 <MainGridLayout title={i18n(I18nKey.gamesTitle)} description={i18n(I18nKey.gamesSubtitle)}>
 	<LifeNavTabs mode="records" />
-	<div class="games-page-wrapper flex w-full overflow-hidden relative min-h-32">
-		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
-			<!-- Page header -->
-			<header class="games-header relative w-full mb-8">
-				<div class="flex items-center gap-3 mb-4">
-					<div class="games-icon flex items-center justify-center w-12 h-12 rounded-2xl bg-[var(--primary)]/10 dark:bg-[var(--primary)]/15 border border-[var(--primary)]/20 shadow-sm">
-						<Icon name="material-symbols:sports-esports-outline-rounded" class="text-[1.4rem] text-[var(--primary)]" />
-					</div>
-					<div>
-						<h1 data-pagefind-meta="title" data-pagefind-weight="10" class="">
-							{i18n(I18nKey.gamesTitle)}
-						</h1>
-					</div>
-				</div>
-				<p class="text-sm text-[var(--content-meta)] leading-relaxed pl-[3.5rem]">
-					{i18n(I18nKey.gamesSubtitle)}
-				</p>
-				<p class="text-xs text-[var(--content-meta)] opacity-60 mt-1.5 pl-[3.5rem]">
-					{i18n(I18nKey.bangumiLastUpdated)} {buildTime}
-				</p>
-			</header>
-
+	<div class="games-page-wrapper flex w-full flex-col min-w-0 relative min-h-32">
+		<PageHeader headingTag="h2" title={i18n(I18nKey.gamesTitle)} description={i18n(I18nKey.gamesSubtitle)} eyebrow="PLAYING" count={allGames.length} indexTitle />
+		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full overflow-hidden">
 			{allGames.length > 0 ? (
 				<>
 					<!-- Platform Tabs -->
@@ -204,22 +183,6 @@ const activeTab =
 <style>
 	.games-page-wrapper {
 		border-radius: var(--radius-large);
-	}
-
-	.games-header {
-		animation: fadeSlideIn 0.4s ease-[var(--ease-standard)] both;
-	}
-
-	.games-icon {
-		transition: transform 0.2s ease-[var(--ease-standard)];
-	}
-	.games-icon:hover {
-		transform: scale(1.05);
-	}
-
-	@keyframes fadeSlideIn {
-		from { opacity: 0; transform: translateY(8px); }
-		to { opacity: 1; transform: translateY(0); }
 	}
 
 	.games-section {

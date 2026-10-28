@@ -33,56 +33,63 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
 
 <section class="ed-hero onload-animation ed-section" style="--ed-delay: 60ms">
   <div class="ed-hero__main">
-    {hero.kicker && <p class="ed-hero__kicker">{hero.kicker}</p>}
-    <p class="ed-hero__title">{homeConfig.brand.tagline}</p>
-    {hero.introduction && <p class="ed-hero__intro">{hero.introduction}</p>}
-    {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
+    <div class="ed-hero__heading">
+      {hero.kicker && <p class="ed-hero__kicker">{hero.kicker}</p>}
+      <p class="ed-hero__title">{homeConfig.brand.tagline}</p>
+    </div>
+    <div class="ed-hero__copy">
+      {hero.introduction && <p class="ed-hero__intro">{hero.introduction}</p>}
+      {profileConfig.bio && <p class="ed-hero__signature">{profileConfig.bio}</p>}
 
-    <div class="ed-hero__actions">
-      <a class="ed-action ed-action--solid" href={postsUrl}>
-        <Icon name="material-symbols:article-outline" class="text-[1.05rem]" />
-        {hero.primaryAction}
-      </a>
-      <a class="ed-action" href={aboutUrl}>
-        <Icon name="material-symbols:person-outline" class="text-[1.05rem]" />
-        关于我
-      </a>
-      {randomPool && randomPool.length > 0 && (
-        <button
-          type="button"
-          class="ed-action"
-          id="home-random-post"
-          data-candidates={JSON.stringify(randomPool)}
-        >
-          <Icon name="material-symbols:casino-outline" class="text-[1.05rem]" />
-          换一篇
-        </button>
-      )}
-      {contactLink && (
-        <a class="ed-action" href={contactLink.url}>
-          <Icon name="fa7-solid:envelope" class="text-[0.95rem]" />
-          联系我
-        </a>
-      )}
     </div>
 
-    {
-      socialLinks.length > 0 && (
-        <div class="ed-margin-note">
-          <span aria-hidden="true">SOCIAL</span>
-          {socialLinks.map((item) => (
-            <a
-              href={item.url}
-              target={item.url?.startsWith("http") ? "_blank" : undefined}
-              rel={item.url?.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
-              <Icon name={item.icon} class="text-[0.9rem]" />
-              {item.name}
-            </a>
-          ))}
-        </div>
-      )
-    }
+    <div class="ed-hero__links">
+      <div class="ed-hero__actions">
+        <a class="ed-action ed-action--solid" href={postsUrl}>
+          <Icon name="material-symbols:article-outline" class="text-[1.05rem]" />
+          {hero.primaryAction}
+        </a>
+        <a class="ed-action" href={aboutUrl}>
+          <Icon name="material-symbols:person-outline" class="text-[1.05rem]" />
+          关于我
+        </a>
+        {randomPool && randomPool.length > 0 && (
+          <button
+            type="button"
+            class="ed-action"
+            id="home-random-post"
+            data-candidates={JSON.stringify(randomPool)}
+          >
+            <Icon name="material-symbols:casino-outline" class="text-[1.05rem]" />
+            换一篇
+          </button>
+        )}
+        {contactLink && (
+          <a class="ed-action" href={contactLink.url}>
+            <Icon name="fa7-solid:envelope" class="text-[0.95rem]" />
+            联系我
+          </a>
+        )}
+      </div>
+
+      {
+        socialLinks.length > 0 && (
+          <div class="ed-margin-note">
+            <span aria-hidden="true">SOCIAL</span>
+            {socialLinks.map((item) => (
+              <a
+                href={item.url}
+                target={item.url?.startsWith("http") ? "_blank" : undefined}
+                rel={item.url?.startsWith("http") ? "noopener noreferrer" : undefined}
+              >
+                <Icon name={item.icon} class="text-[0.9rem]" />
+                {item.name}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
   </div>
 
   <figure class="ed-portrait">
@@ -93,8 +100,8 @@ const socialLinks = links.filter((item) => item.url !== contactLink?.url);
         class="ed-portrait__image"
         loading="eager"
         fetchpriority="high"
-        widths={[320, 480]}
-        sizes="(min-width: 1024px) 320px, 80vw"
+        widths={[128, 256, 320, 480]}
+        sizes="(min-width: 1024px) 320px, (min-width: 768px) 224px, 104px"
       />
     </div>
     <figcaption class="ed-portrait__caption">

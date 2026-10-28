@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import { Icon } from "astro-icon/components";
 import AlbumCard from "@/components/pages/gallery/AlbumCard.astro";
 import LifeNavTabs from "@/components/pages/life/LifeNavTabs.astro";
@@ -32,23 +33,11 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
 <MainGridLayout title={title} description={description}>
   <LifeNavTabs mode="moments" />
   <div class="page-shell">
-    <!-- 页面标题和描述面板（与下方相册列表分离） -->
-    <div class="card-base z-10 px-9 py-6 mb-4 relative w-full">
-      <div class="mb-4">
-        <div class="page-heading">
-          <div class="page-icon" aria-hidden="true">
-            <Icon name="material-symbols:photo-library" />
-          </div>
-          <div>
-            <h2>{title}</h2>
-            {description && <p>{description}</p>}
-          </div>
-        </div>
-      </div>
+    <PageHeader title={title} description={description} eyebrow="GALLERY" headingTag="h2" count={albums.length} />
 
       <!-- 搜索框 + 标签筛选 -->
       {albums.length > 0 && (
-        <gallery-filter class="mb-6">
+        <gallery-filter class="card-base block p-5 mb-6">
           <div class="relative mb-3">
             <Icon
               name="material-symbols:search"
@@ -82,7 +71,6 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
           )}
         </gallery-filter>
       )}
-    </div>
 
     <!-- 相册卡片网格（独立于标题面板） -->
     {albums.length > 0 ? (

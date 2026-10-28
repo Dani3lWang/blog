@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
@@ -56,19 +57,7 @@ const navItems = [
 	<LifeNavTabs mode="moments" />
 
 	<div class="moments-overview flex w-full flex-col gap-6">
-		<!-- 标题区 -->
-		<section class="hero-section card-base relative overflow-hidden rounded-[var(--radius-large)] p-6 md:p-8">
-			<div class="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-[var(--primary)]/5 blur-3xl"></div>
-			<div class="absolute -bottom-8 -left-8 h-64 w-64 rounded-full bg-[var(--primary)]/5 blur-3xl"></div>
-			<div class="relative">
-				<h1 class="text-3xl font-bold text-[var(--text-color)] mb-2">
-					☕ 动态
-				</h1>
-				<p class="max-w-2xl text-sm text-[var(--content-meta)] md:text-base">
-					记录生活中的点点滴滴，分享瞬间与回忆。
-				</p>
-			</div>
-		</section>
+		<PageHeader headingTag="h2" title="动态" eyebrow="LIFE" description="记录生活中的点点滴滴，分享瞬间与回忆。" />
 
 		<!-- 子模块入口 -->
 		<section class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -146,6 +135,10 @@ const navItems = [
 </MainGridLayout>
 
 <style>
+	.moments-overview :global(.content-header) {
+		margin-bottom: 0;
+	}
+
 	.moment-nav-card {
 		border: 1px solid var(--line-divider);
 	}
