@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import { getCollection } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import { Icon } from "astro-icon/components";
@@ -8,14 +9,11 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
 import { removeFileExtension } from "@/utils/url-utils";
 
 if (!siteConfig.pages.books) {
 	return Astro.redirect("/404/");
 }
-
-const buildTime = formatDateI18nWithTime(new Date());
 
 const customBangumi = await getCollection("bangumi");
 
@@ -50,44 +48,13 @@ const wishCount = bookItems.filter((b) => b.status === 1).length;
 
 <MainGridLayout showDefaultHeading={false} title={i18n(I18nKey.booksTitle)} description={i18n(I18nKey.booksSubtitle)}>
 	<LifeNavTabs mode="records" />
-	<div class="books-page-wrapper flex w-full overflow-hidden relative min-h-32">
-		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
-			<!-- Page header -->
-			<header class="books-header relative w-full mb-6">
-				<div class="flex items-center gap-3 mb-4">
-					<div class="books-icon flex items-center justify-center w-12 h-12 rounded-2xl bg-[var(--primary)]/10 dark:bg-[var(--primary)]/15 border border-[var(--primary)]/20 shadow-sm">
-						<Icon name="material-symbols:book-5-outline-rounded" class="text-[1.4rem] text-[var(--primary)]" />
-					</div>
-					<div>
-						<h1 data-pagefind-meta="title" data-pagefind-weight="10" class="">
-							{i18n(I18nKey.booksTitle)}
-						</h1>
-					</div>
-				</div>
-				<p class="text-sm text-[var(--content-meta)] leading-relaxed pl-[3.5rem]">
-					{i18n(I18nKey.booksSubtitle)}
-				</p>
-				<div class="flex items-center gap-4 mt-2 pl-[3.5rem]">
-					<p class="text-xs text-[var(--content-meta)] opacity-60">
-						{i18n(I18nKey.pageGeneratedAt)} {buildTime}
-					</p>
-					<div class="flex items-center gap-3 text-xs text-[var(--content-meta)]">
-						<span class="flex items-center gap-1">
-							<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-							{i18n(I18nKey.bookshelfRead)} {readCount}
-						</span>
-						<span class="flex items-center gap-1">
-							<span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
-							{i18n(I18nKey.bookshelfReading)} {readingCount}
-						</span>
-						<span class="flex items-center gap-1">
-							<span class="w-2 h-2 rounded-full bg-sky-500 inline-block"></span>
-							{i18n(I18nKey.bookshelfWantRead)} {wishCount}
-						</span>
-					</div>
-				</div>
-			</header>
-
+	<div class="books-page-wrapper flex w-full flex-col min-w-0 relative min-h-32">
+		<PageHeader title={i18n(I18nKey.booksTitle)} description={i18n(I18nKey.booksSubtitle)} eyebrow="READING" count={bookItems.length} indexTitle>
+			<span slot="meta">{i18n(I18nKey.bookshelfRead)} <strong>{readCount}</strong></span>
+			<span slot="meta">{i18n(I18nKey.bookshelfReading)} <strong>{readingCount}</strong></span>
+			<span slot="meta">{i18n(I18nKey.bookshelfWantRead)} <strong>{wishCount}</strong></span>
+		</PageHeader>
+		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full overflow-hidden">
 			{bookItems.length > 0 ? (
 				<Bookshelf books={bookItems} />
 			) : (
@@ -109,22 +76,6 @@ const wishCount = bookItems.filter((b) => b.status === 1).length;
 <style>
 	.books-page-wrapper {
 		border-radius: var(--radius-large);
-	}
-
-	.books-header {
-		animation: fadeSlideIn 0.4s ease-[var(--ease-standard)] both;
-	}
-
-	.books-icon {
-		transition: transform 0.2s ease-[var(--ease-standard)];
-	}
-	.books-icon:hover {
-		transform: scale(1.05);
-	}
-
-	@keyframes fadeSlideIn {
-		from { opacity: 0; transform: translateY(8px); }
-		to { opacity: 1; transform: translateY(0); }
 	}
 
 	@media (max-width: 640px) {

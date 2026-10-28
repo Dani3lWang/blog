@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import type { CollectionEntry } from "astro:content";
 import type { Page } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
@@ -25,20 +26,12 @@ const rangeStart = page.total === 0 ? 0 : page.start + 1;
 ---
 
 <div class="post-archive-list">
-  <header class="post-archive-head">
-    <p class="post-archive-kicker">ARCHIVE</p>
-    <div class="post-archive-title-row">
-      <h2 class="post-archive-title">{listTitle}</h2>
-      {
-        page.total > 0 && (
-          <p class="post-archive-count">
-            {rangeStart}-{page.end} / {page.total}
-          </p>
-        )
-      }
-    </div>
-    <div class="post-archive-rule" aria-hidden="true"></div>
-  </header>
+  <PageHeader
+    title={listTitle}
+    eyebrow="ARCHIVE"
+    headingTag="h2"
+    count={page.total > 0 ? `${rangeStart}-${page.end} / ${page.total}` : undefined}
+  />
 
   {page.total > 0 ? <PostPage page={page} /> : <p class="card-base p-6 text-(--content-meta)">{i18n(I18nKey.postsEmpty)}</p>}
 
@@ -60,49 +53,4 @@ const rangeStart = page.total === 0 ? 0 : page.start + 1;
     flex-direction: column;
   }
 
-  .post-archive-head {
-    margin-bottom: 1.5rem;
-  }
-
-  .post-archive-kicker {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-editorial-mono, ui-monospace, monospace);
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--ed-ink-faint, rgba(0, 0, 0, 0.45));
-  }
-
-  .post-archive-title-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .post-archive-title {
-    margin: 0;
-    font-family: var(--font-editorial-serif, serif);
-    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem);
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0.02em;
-    color: var(--ed-ink, inherit);
-  }
-
-  .post-archive-count {
-    margin: 0;
-    font-family: var(--font-editorial-mono, ui-monospace, monospace);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    color: var(--ed-ink-faint, rgba(0, 0, 0, 0.45));
-  }
-
-  .post-archive-rule {
-    margin-top: 0.85rem;
-    height: 2px;
-    background: var(--ed-frame, currentColor);
-    opacity: 0.9;
-  }
 </style>

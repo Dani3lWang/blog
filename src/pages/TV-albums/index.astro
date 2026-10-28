@@ -1,4 +1,5 @@
 ---
+import PageHeader from "@/components/common/PageHeader.astro";
 import { getCollection } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import { Icon } from "astro-icon/components";
@@ -11,7 +12,6 @@ import doubanRatings from "@/constants/douban-ratings.json";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import { formatDateI18nWithTime } from "@/utils/date-utils";
 import { resolveRecordImage } from "@/utils/record-image";
 import { removeFileExtension } from "@/utils/url-utils";
 
@@ -24,8 +24,6 @@ const doubanRatingsMap = doubanRatings as unknown as Record<
 if (!siteConfig.pages.moviesGames) {
 	return Astro.redirect("/404/");
 }
-
-const buildTime = formatDateI18nWithTime(new Date());
 
 const metingApiBase = musicPlayerConfig.meting?.api || "";
 
@@ -344,28 +342,9 @@ const musicDataJson = JSON.stringify({
 
 <MainGridLayout showDefaultHeading={false} title={i18n(I18nKey.moviesGamesTitle)} description={i18n(I18nKey.moviesGamesSubtitle)}>
 	<LifeNavTabs mode="records" />
-	<div class="mg-page-wrapper flex w-full overflow-hidden relative min-h-32">
-		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full">
-			<!-- Page header -->
-			<header class="mg-header relative w-full mb-8">
-				<div class="flex items-center gap-3 mb-4">
-					<div class="mg-icon flex items-center justify-center w-12 h-12 rounded-2xl bg-[var(--primary)]/10 dark:bg-[var(--primary)]/15 border border-[var(--primary)]/20 shadow-sm">
-						<Icon name="material-symbols:movie-outline-rounded" class="text-[1.4rem] text-[var(--primary)]" />
-					</div>
-					<div>
-						<h1 data-pagefind-meta="title" data-pagefind-weight="10" class="">
-							{i18n(I18nKey.moviesGamesTitle)}
-						</h1>
-					</div>
-				</div>
-				<p class="text-sm text-[var(--content-meta)] leading-relaxed pl-[3.5rem]">
-					{i18n(I18nKey.moviesGamesSubtitle)}
-				</p>
-				<p class="text-xs text-[var(--content-meta)] opacity-60 mt-1.5 pl-[3.5rem]">
-					{i18n(I18nKey.pageGeneratedAt)} {buildTime}
-				</p>
-			</header>
-
+	<div class="mg-page-wrapper flex w-full flex-col min-w-0 relative min-h-32">
+		<PageHeader title={i18n(I18nKey.moviesGamesTitle)} description={i18n(I18nKey.moviesGamesSubtitle)} eyebrow="COLLECTION" count={mgItems.length + musicItems.length} indexTitle />
+		<div data-pagefind-body class="card-base z-10 px-6 pt-8 pb-8 relative w-full overflow-hidden">
 			{mgItems.length > 0 ? (
 				<>
 					<!-- Tab Navigation -->
@@ -476,22 +455,6 @@ const musicDataJson = JSON.stringify({
 <style>
 	.mg-page-wrapper {
 		border-radius: var(--radius-large);
-	}
-
-	.mg-header {
-		animation: fadeSlideIn 0.4s ease-[var(--ease-standard)] both;
-	}
-
-	.mg-icon {
-		transition: transform 0.2s ease-[var(--ease-standard)];
-	}
-	.mg-icon:hover {
-		transform: scale(1.05);
-	}
-
-	@keyframes fadeSlideIn {
-		from { opacity: 0; transform: translateY(8px); }
-		to { opacity: 1; transform: translateY(0); }
 	}
 
 	.mg-section {
