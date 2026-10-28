@@ -15,12 +15,14 @@
 	--ed-paper-raised: #fffdf8;
 	--ed-ink: #1b1a17;
 	--ed-ink-soft: rgba(27, 26, 23, 0.68);
-	--ed-ink-faint: rgba(27, 26, 23, 0.44);
+	--ed-ink-faint: rgba(27, 26, 23, 0.64);
 	--ed-rule: rgba(27, 26, 23, 0.14);
 	--ed-frame: #1b1a17;
 	--ed-guava-green: #087653;
+	--ed-on-accent: #fffdf8;
 	--ed-guava-green-soft: rgba(8, 118, 83, 0.12);
 	--ed-guava-coral: #ee645f;
+	--ed-guava-coral-ink: #ad3835;
 	--ed-guava-coral-soft: rgba(238, 100, 95, 0.14);
 	--ed-frame-width: 1.5px;
 	--ed-frame-width-strong: 2px;
@@ -76,12 +78,14 @@ body:not(.is-home) #content-wrapper hr {
 	--ed-paper-raised: #131d18;
 	--ed-ink: #e9e3d5;
 	--ed-ink-soft: rgba(233, 227, 213, 0.74);
-	--ed-ink-faint: rgba(233, 227, 213, 0.46);
+	--ed-ink-faint: rgba(233, 227, 213, 0.62);
 	--ed-rule: rgba(233, 227, 213, 0.16);
 	--ed-frame: rgba(233, 227, 213, 0.55);
 	--ed-guava-green: #55c99b;
+	--ed-on-accent: #0d1512;
 	--ed-guava-green-soft: rgba(85, 201, 155, 0.14);
 	--ed-guava-coral: #ff817a;
+	--ed-guava-coral-ink: #ff817a;
 	--ed-guava-coral-soft: rgba(255, 129, 122, 0.16);
 	--ed-shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.5);
 }
@@ -137,7 +141,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
-	gap: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+	gap: clamp(2rem, 1.4rem + 2vw, 4rem);
 }
 
 /* 轻微纸张颗粒：固定在视口，位于内容层（z-30）之下，只作用在纸张底色上 */
@@ -236,7 +240,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-section-head__en {
 	font-family: var(--font-editorial-mono);
-	font-size: 0.66rem;
+	font-size: max(12px, 0.66rem);
 	letter-spacing: 0.22em;
 	text-transform: uppercase;
 	color: var(--ed-ink-faint);
@@ -246,8 +250,8 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-section-head__count {
 	flex: none;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.72rem;
-	color: var(--ed-guava-coral);
+	font-size: max(12px, 0.72rem);
+	color: var(--ed-guava-coral-ink);
 }
 
 .ed-section-head__rule {
@@ -328,7 +332,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	flex-wrap: wrap;
 	justify-content: flex-end;
 	gap: 0.4rem 0.6rem;
-	font-size: 0.68rem;
+	font-size: max(12px, 0.68rem);
 	letter-spacing: 0.1em;
 	color: var(--ed-ink-faint);
 }
@@ -369,7 +373,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	gap: 0.55rem;
 	margin: 0 0 1.5rem;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.7rem;
+	font-size: max(12px, 0.7rem);
 	letter-spacing: 0.3em;
 	text-transform: uppercase;
 	color: var(--ed-ink-faint);
@@ -459,12 +463,14 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-action {
 	display: inline-flex;
+	min-height: 44px;
+	min-width: 44px;
 	align-items: center;
 	gap: 0.45rem;
 	padding: 0.55rem 1.15rem;
 	border: var(--ed-frame-width) solid var(--ed-frame);
 	border-radius: var(--ed-radius-pill);
-	font-size: 0.88rem;
+	font-size: max(14px, 0.88rem);
 	font-weight: 600;
 	letter-spacing: 0.04em;
 	text-decoration: none;
@@ -480,7 +486,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-action--solid {
 	border-color: var(--ed-guava-green);
 	background: var(--ed-guava-green);
-	color: #fffdf8;
+	color: var(--ed-on-accent);
 }
 
 @media (hover: hover) {
@@ -488,7 +494,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 		transform: translateY(-1px);
 		border-color: var(--ed-guava-green);
 		background: var(--ed-guava-green);
-		color: #fffdf8;
+		color: var(--ed-on-accent);
 	}
 }
 
@@ -559,7 +565,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-portrait__caption {
 	margin: 1.25rem 0 0;
-	font-size: 0.76rem;
+	font-size: max(12px, 0.76rem);
 	line-height: 1.6;
 	letter-spacing: 0.02em;
 	color: var(--ed-ink-faint);
@@ -568,7 +574,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-portrait__status {
 	margin: 0.25rem 0 0;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.7rem;
+	font-size: max(12px, 0.7rem);
 	letter-spacing: 0.08em;
 	color: var(--ed-ink-soft);
 }
@@ -582,7 +588,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	padding-top: 0.9rem;
 	border-top: 1px solid var(--ed-rule);
 	font-family: var(--font-editorial-mono);
-	font-size: 0.72rem;
+	font-size: max(12px, 0.72rem);
 	letter-spacing: 0.12em;
 	color: var(--ed-ink-faint);
 }
@@ -682,10 +688,10 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-featured__label {
 	margin: 0;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.68rem;
+	font-size: max(12px, 0.68rem);
 	letter-spacing: 0.26em;
 	text-transform: uppercase;
-	color: var(--ed-guava-coral);
+	color: var(--ed-guava-coral-ink);
 }
 
 .ed-featured__title {
@@ -714,7 +720,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	padding-top: 0.6rem;
 	border-top: 1px solid var(--ed-rule);
 	font-family: var(--font-editorial-mono);
-	font-size: 0.72rem;
+	font-size: max(12px, 0.72rem);
 	letter-spacing: 0.06em;
 	color: var(--ed-ink-faint);
 }
@@ -781,7 +787,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	margin-top: auto;
 	padding-top: 0.5rem;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.68rem;
+	font-size: max(12px, 0.68rem);
 	letter-spacing: 0.06em;
 	color: var(--ed-ink-faint);
 }
@@ -798,7 +804,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	align-items: center;
 	gap: 0.35rem;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.74rem;
+	font-size: max(12px, 0.74rem);
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--ed-ink-soft);
@@ -839,7 +845,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-now__label {
 	margin: 0;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.68rem;
+	font-size: max(12px, 0.68rem);
 	letter-spacing: 0.16em;
 	color: var(--ed-ink-faint);
 }
@@ -887,7 +893,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	padding-top: 0.5rem;
 	border-top: 1px solid var(--ed-rule);
 	font-family: var(--font-editorial-mono);
-	font-size: 0.7rem;
+	font-size: max(12px, 0.7rem);
 	letter-spacing: 0.06em;
 	color: var(--ed-ink-faint);
 }
@@ -896,7 +902,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	padding: 0.05rem 0.4rem;
 	border: 1px solid var(--ed-rule);
 	border-radius: 999px;
-	font-size: 0.62rem;
+	font-size: max(12px, 0.62rem);
 }
 
 /* ── 生活索引（宽屏四列 / 平板三列 / 手机两列） ────────────── */
@@ -1043,7 +1049,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-colophon__label {
 	font-family: var(--font-editorial-mono);
-	font-size: 0.66rem;
+	font-size: max(12px, 0.66rem);
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: var(--ed-ink-faint);
@@ -1060,17 +1066,43 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 .ed-colophon__foot {
 	margin: 1.2rem 0 0;
 	font-family: var(--font-editorial-mono);
-	font-size: 0.66rem;
+	font-size: max(12px, 0.66rem);
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: var(--ed-ink-faint);
 }
 
-/* ── 移动端：单栏「掌上杂志」 ───────────────────────────── */
+/* 平板保留左右构图，避免头像被堆叠成第二个首屏。 */
+@media (min-width: 768px) and (max-width: 1023px) {
+	.ed-hero {
+		grid-template-columns: minmax(0, 1fr) minmax(180px, 14rem);
+		gap: 2rem;
+	}
+
+	.ed-portrait {
+		width: 100%;
+	}
+
+	.ed-hero__kicker {
+		margin-bottom: 1rem;
+	}
+
+	.ed-hero__intro,
+	.ed-hero__actions,
+	.ed-margin-note {
+		margin-top: 1.25rem;
+	}
+}
+
+/* 手机将问候与头像并排，简介和入口仍按 DOM 顺序阅读。 */
 
 @media (max-width: 767px) {
+	body.is-home #main-grid {
+		padding-inline: 16px;
+	}
+
 	.ed-home {
-		gap: 3rem;
+		gap: 32px;
 	}
 
 	.ed-masthead {
@@ -1086,11 +1118,71 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 	.ed-masthead__meta {
 		justify-content: flex-start;
+		letter-spacing: 0.02em;
+	}
+
+	.ed-hero {
+		grid-template-columns: minmax(0, 1fr) clamp(88px, 27vw, 104px);
+		grid-template-areas:
+			"heading portrait"
+			"copy copy"
+			"links links";
+		gap: 20px 16px;
+		padding-block: 0;
+	}
+
+	.ed-hero__main {
+		display: contents;
+	}
+
+	.ed-hero__heading {
+		grid-area: heading;
+		min-width: 0;
+	}
+
+	.ed-hero__copy {
+		grid-area: copy;
+		min-width: 0;
+	}
+
+	.ed-hero__links {
+		grid-area: links;
+		min-width: 0;
+	}
+
+	.ed-hero__kicker {
+		margin-bottom: 12px;
+		letter-spacing: 0.1em;
+		font-size: 11px;
+	}
+
+	.ed-hero__title {
+		font-size: clamp(21px, 5.8vw, 26px);
+		line-height: 1.5;
+	}
+
+	.ed-hero__greeting {
+		font-size: clamp(48px, 13vw, 60px);
+	}
+
+	.ed-hero__intro {
+		margin: 0;
+		max-width: none;
+		font-size: 16px;
+		line-height: 1.75;
+	}
+
+	.ed-hero__signature {
+		margin-top: 8px;
+		font-size: 14px;
+		line-height: 1.6;
 	}
 
 	.ed-hero__actions {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+		margin-top: 0;
 	}
 
 	.ed-action {
@@ -1099,12 +1191,56 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 		padding-inline: 0.8rem;
 	}
 
-	.ed-action--solid {
+	.ed-hero__actions > :only-child {
 		grid-column: 1 / -1;
 	}
 
+	.ed-margin-note {
+		align-items: center;
+		gap: 4px 16px;
+		margin-top: 12px;
+		padding-top: 4px;
+	}
+
+	.ed-margin-note a {
+		min-height: 44px;
+		font-size: 13px;
+	}
+
 	.ed-portrait {
-		width: min(calc(100% - 2rem), 17rem);
+		grid-area: portrait;
+		align-self: start;
+		width: 100%;
+		margin-top: 6px;
+	}
+
+	.ed-portrait__frame {
+		padding: 5px;
+	}
+
+	.ed-portrait__flourish {
+		right: -8px;
+		bottom: 8px;
+		width: 28px;
+		height: 28px;
+	}
+
+	/* 姓名和签名已在介绍区显示，小屏不重复图注。 */
+	.ed-portrait__caption {
+		display: none;
+	}
+
+	.ed-portrait__status {
+		font-size: 12px;
+		letter-spacing: 0;
+	}
+
+	.ed-home-music__card {
+		padding: 14px;
+	}
+
+	.ed-portal__desc {
+		font-size: 14px;
 	}
 
 	.ed-featured__body {

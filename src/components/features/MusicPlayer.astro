@@ -20,7 +20,7 @@ const widgetId =
 <div id={widgetId} class:list={["music-player-widget w-full relative transition-all duration-300", className]} style={style} role="region" aria-label={i18n(I18nKey.music)}>
 
     <!-- Top Row: Cover & Info -->
-<div class="flex items-center gap-2 mb-2 px-1">
+<div class="music-header flex items-center gap-2 mb-2 px-1">
     <!-- Circular Cover -->
     <div class="relative shrink-0 w-14 h-14 group">
             <div class="w-full h-full rounded-full overflow-hidden shadow-lg border-2 border-white dark:border-neutral-700 relative z-10 bg-(--primary)/10 flex items-center justify-center">
@@ -51,7 +51,7 @@ const widgetId =
         </div>
 
         <!-- Time Display & Volume -->
-        <div class="flex items-center gap-3 text-neutral-400 h-5">
+        <div class="music-timing flex items-center gap-3 text-neutral-400">
             <div class="text-[10px] font-mono flex items-center gap-1 shrink-0 h-full" aria-live="polite">
                 <span class="current-time">0:00</span>
                 <span class="opacity-50" aria-hidden="true">/</span>
@@ -84,7 +84,7 @@ const widgetId =
 </div>
 
 <!-- Controls Row -->
-<div class="flex items-center justify-between px-1 select-none">
+<div class="music-controls flex items-center justify-between px-1 select-none">
     <!-- Repeat Mode -->
     <button class="btn-repeat text-neutral-300 dark:text-neutral-600 hover:text-(--primary) transition-colors p-2 active:scale-95" title={i18n(I18nKey.musicPlayMode)} aria-label={i18n(I18nKey.musicPlayMode)}>
         <Icon name="material-symbols:repeat-rounded" class="icon-repeat text-xl" aria-hidden="true" />
@@ -145,6 +145,34 @@ const widgetId =
 </div>
 
 <style>
+    /* 扩大点击区域，不改变图标大小或播放器事件选择器。 */
+    .music-player-widget :is(.music-header, .music-controls) button {
+        min-width: 44px;
+        min-height: 44px;
+        flex-shrink: 0;
+        padding: 8px;
+    }
+    .music-player-widget :is(.music-header, .music-controls) button:not(.hidden) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .music-timing {
+        min-height: 44px;
+        color: var(--ed-ink-faint, var(--content-meta));
+    }
+    .music-title {
+        font-size: max(15px, 1rem);
+    }
+    .music-artist,
+    .current-time,
+    .total-time {
+        font-size: max(12px, 0.75rem);
+    }
+    :global(.dark) .btn-play.text-white {
+        color: var(--ed-on-accent, #0d1512);
+    }
+
     @keyframes spin-slow {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
