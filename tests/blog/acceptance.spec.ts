@@ -132,6 +132,8 @@ test("慢查询不能覆盖新查询，关闭后不能重开", async ({ page }) 
 test("手机搜索聚焦与父级链接", async ({ page }, testInfo) => {
 	await page.setViewportSize({ width: 390, height: 850 });
 	await ready(page);
+	await expect(page.locator("[data-navbar-search-control]")).toBeHidden();
+	await ready(page, "/TV-albums/");
 	await page.locator("#search-switch").click();
 	await expect(page.locator("#search-input-mobile")).toBeFocused();
 	await expect(page.locator("#search-panel")).toContainText("请输入搜索关键词");
@@ -139,6 +141,7 @@ test("手机搜索聚焦与父级链接", async ({ page }, testInfo) => {
 	await expect(page.locator(resultLink)).toBeVisible();
 	await page.keyboard.press("Escape");
 	await expect(page.locator("#search-switch")).toBeFocused();
+	await ready(page);
 	await page.locator("#nav-menu-switch").click();
 	await expect(page.locator(".mobile-menu-close")).toBeFocused();
 	await page.keyboard.press("Shift+Tab");
@@ -302,13 +305,48 @@ test("切页取消迟到查询，滚动后搜索可用", async ({ page }) => {
 		"true",
 	);
 	await expect(page.locator("audio")).toHaveCount(1);
+	await page.setViewportSize({ width: 1440, height: 600 });
 	await page.goto("/TV-albums/");
-	await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+	await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
 	await page.waitForTimeout(500);
+	await expect(page.locator("#navbar")).toHaveClass(/navbar-compact/);
+	await page.mouse.wheel(0, -60);
+	await expect(page.locator("#navbar-wrapper")).not.toHaveClass(/navbar-hidden/);
+	await page.locator(".navbar-seg--right").hover();
 	const input = page.locator("#search-input-desktop");
 	await input.click();
 	await page.keyboard.type(query);
 	await expect(page.locator(resultLink)).toBeVisible();
+});
+
+test("文章视图切换保留公共页头、空状态和偏好", async ({ page }) => {
+	await ready(page, "/posts/");
+	await expect(page.locator("h1")).toHaveCount(1);
+	await expect(page.locator(".content-header__title")).toBeVisible();
+	await page.locator('[data-post-index-view="visual"]').click();
+	await expect(page.locator('[data-post-index-panel="visual"]')).toBeVisible();
+	await expect(page.locator('[data-post-index-panel="list"]')).toBeHidden();
+	if (hasPosts) await expect(page.locator(".post-index-card").first()).toBeVisible();
+	else await expect(page.locator('[data-post-index-panel="visual"]')).toContainText("文章整理中");
+	await page.reload();
+	await expect(page.locator('[data-post-index-view="visual"]')).toHaveAttribute("aria-pressed", "true");
+	await page.locator('[data-post-index-view="list"]').click();
+	await expect(page.locator('[data-post-index-panel="list"]')).toBeVisible();
+	if (!hasPosts) await expect(page.locator('[data-post-index-panel="list"]')).toContainText("文章整理中");
+});
+
+test("搜索入口按页面切换并清理查询", async ({ page }) => {
+	await ready(page);
+	await expect(page.locator("[data-navbar-search-control]")).toBeHidden();
+	await ready(page, "/TV-albums/");
+	await expect(page.locator("[data-navbar-search-control]")).toBeVisible();
+	await page.locator("#search-input-desktop").fill(query);
+	await expect(page.locator(resultLink)).toBeVisible();
+	await page.locator('#navbar a[href="/"]').first().click();
+	await expect(page.locator(".ed-home")).toBeVisible();
+	await expect(page.locator("[data-navbar-search-control]")).toBeHidden();
+	await expect(page.locator("#search-panel")).toHaveAttribute("aria-hidden", "true");
+	await expect(page.locator("#search-input-desktop")).toHaveValue("");
 });
 
 test("内页窄屏、明暗主题和键盘焦点", async ({ page }, testInfo) => {

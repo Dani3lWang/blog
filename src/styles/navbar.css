@@ -325,3 +325,372 @@ html[data-has-wallpaper] #navbar[data-transparent-mode="semi"].navbar-sticky-sha
 :root.dark[data-has-wallpaper] #navbar[data-transparent-mode="semi"].navbar-sticky-shadow>div {
     box-shadow: inset 0 1px 0 var(--navbar-glass-highlight), 0 1px 0 var(--navbar-glass-hairline) !important;
 }
+
+/* ============================================
+ * 三段式胶囊导航栏
+ * 左右段在桌面端滚动后收成圆形并靠近中央菜单；移动端保持展开。
+ * ============================================ */
+#navbar > .navbar-shell,
+html[data-has-wallpaper] #navbar > .navbar-shell,
+body.wallpaper-transparent #navbar > .navbar-shell,
+#navbar.scrolled > .navbar-shell,
+#navbar.navbar-sticky-shadow > .navbar-shell {
+    position: relative;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    --navbar-surface-blur: 0px !important;
+}
+
+#navbar > .navbar-shell::before {
+    display: none;
+}
+
+#navbar.navbar-sticky-shadow {
+    box-shadow: none;
+}
+
+.navbar-segments {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: var(--page-width);
+    height: 4.5rem;
+    margin-inline: auto;
+}
+
+.navbar-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid color-mix(in oklch, var(--deep-text) 7%, transparent);
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--card-bg) 88%, transparent);
+    box-shadow:
+        0 0.25rem 1rem rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 color-mix(in oklch, white 45%, transparent);
+    backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.35);
+    -webkit-backdrop-filter: blur(var(--navbar-panel-blur, 20px)) saturate(1.35);
+    transform: translate3d(var(--navbar-segment-shift, 0px), -50%, 0);
+    transition:
+        width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        min-width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        padding 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    will-change: width, transform;
+}
+
+:root.dark .navbar-seg {
+    border-color: color-mix(in oklch, white 9%, transparent);
+    background: color-mix(in oklch, var(--card-bg) 90%, transparent);
+    box-shadow:
+        0 0.3rem 1.25rem rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 color-mix(in oklch, white 10%, transparent);
+}
+
+.navbar-seg--left,
+.navbar-seg--right {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.navbar-seg--left {
+    left: 0;
+    justify-content: flex-start;
+}
+
+.navbar-seg--center {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    display: none;
+    padding-inline: 0.4rem;
+}
+
+.navbar-seg--centered {
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.navbar-seg--start {
+    left: 10rem;
+    transform: translate3d(0, -50%, 0);
+}
+
+.navbar-seg--right {
+    right: 0;
+    justify-content: flex-end;
+    gap: 0.125rem;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 2.25rem;
+    padding-inline: 0.5rem;
+    color: var(--deep-text);
+    text-decoration: none;
+}
+
+.navbar-brand::before,
+.navbar-brand:hover::before,
+.navbar-seg--right .btn-plain::before,
+.navbar-seg--right .btn-plain:hover::before {
+    background: transparent !important;
+}
+
+.navbar-brand__content {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.navbar-brand__title {
+    display: inline-block;
+    max-width: 12rem;
+    overflow: hidden;
+    opacity: 1;
+    transition:
+        max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.2s ease,
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-nav {
+    gap: 0.125rem;
+    white-space: nowrap;
+}
+
+.navbar-nav > .dropdown-container {
+    position: relative;
+    z-index: 1;
+}
+
+.navbar-hover-highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 0;
+    height: 2.5rem;
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--deep-text) 9%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    transition:
+        width 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.navbar-nav.nav-has-active .navbar-hover-highlight {
+    background: color-mix(in oklch, var(--primary) 14%, var(--deep-text) 5%);
+    opacity: 1;
+}
+
+.navbar-nav:hover .navbar-hover-highlight,
+.navbar-nav:focus-within .navbar-hover-highlight {
+    opacity: 1;
+}
+
+.navbar-nav .navbar-link-item,
+.navbar-nav .navbar-link-item::before,
+.navbar-nav .navbar-link-item:hover,
+.navbar-nav .navbar-link-item:hover::before,
+.navbar-nav .navbar-link-item:focus-visible,
+.navbar-nav .navbar-link-item:focus-visible::before {
+    background: transparent !important;
+}
+
+.navbar-search-control,
+.navbar-utility-control {
+    display: flex;
+    align-items: center;
+    max-width: 20rem;
+    opacity: 1;
+    transition:
+        max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.18s ease,
+        transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar-search-control[hidden] {
+    display: none !important;
+}
+
+@media (min-width: 1024px) {
+    .navbar-seg--center {
+        display: flex;
+    }
+
+    #navbar.navbar-compact .navbar-seg--left,
+    #navbar.navbar-compact .navbar-seg--right {
+        width: 2.75rem;
+        min-width: 2.75rem;
+        max-width: 2.75rem;
+        padding-inline: 0.25rem;
+        overflow: hidden;
+    }
+
+    #navbar.navbar-compact .navbar-brand {
+        width: 2.25rem;
+        padding-inline: 0;
+        justify-content: center;
+    }
+
+    #navbar.navbar-compact .navbar-brand__title {
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(-0.4rem);
+    }
+
+    #navbar.navbar-compact .navbar-logo {
+        margin-right: 0 !important;
+    }
+
+    #navbar.navbar-compact .navbar-utility-control {
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(0.4rem);
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    #navbar.navbar-compact .navbar-search-control {
+        width: 2.25rem;
+        min-width: 2.25rem;
+        max-width: 2.25rem;
+    }
+
+    #navbar.navbar-compact #search-bar {
+        position: relative;
+        width: 2.25rem;
+        min-width: 2.25rem;
+        max-width: 2.25rem;
+        margin-right: 0;
+        justify-content: center;
+        background: transparent;
+    }
+
+    #navbar.navbar-compact #search-bar > svg,
+    #navbar.navbar-compact #search-bar > .iconify {
+        left: 50%;
+        margin-left: 0;
+        transform: translateX(-50%);
+    }
+
+    #navbar.navbar-compact #search-input-desktop {
+        width: 0 !important;
+        padding: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* 收缩后仍可通过鼠标或键盘展开搜索，浮层也不会被圆形容器裁切。 */
+    #navbar.navbar-compact .navbar-seg--right:is(:hover, :focus-within) {
+        width: 14rem;
+        min-width: 14rem;
+        max-width: 14rem;
+        overflow: visible;
+    }
+
+    #navbar.navbar-compact .navbar-seg--right:is(:hover, :focus-within) :is(.navbar-search-control, #search-bar) {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    #navbar.navbar-compact .navbar-seg--right:is(:hover, :focus-within) #search-input-desktop {
+        width: 100% !important;
+        padding: 0 0.5rem 0 2.5rem;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #navbar.navbar-compact .navbar-seg--right:is(:hover, :focus-within) #search-bar > :is(svg, .iconify) {
+        left: 0;
+        margin-left: 0.75rem;
+        transform: none;
+    }
+}
+
+/* 浮层跟随对应胶囊定位；移动端再用测得的偏移铺满安全宽度。 */
+#navbar .navbar-seg--right :is(#search-panel, #display-setting, #theme-mode-panel) {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    left: auto;
+}
+
+#navbar > .navbar-shell #music-nav-panel {
+    position: fixed;
+    top: 4.75rem;
+    right: max(4rem, calc((100vw - var(--page-width)) / 2 + 3rem));
+}
+
+@media (max-width: 1023px) {
+    .navbar-segments {
+        justify-content: space-between;
+    }
+
+    .navbar-seg {
+        transform: none;
+    }
+
+    .navbar-seg--left,
+    .navbar-seg--right {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+    }
+
+    .navbar-brand__title {
+        max-width: min(8rem, 30vw);
+        text-overflow: ellipsis;
+    }
+
+    .navbar-utility-control {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    #navbar .navbar-seg--right :is(#search-panel, #display-setting, #theme-mode-panel) {
+        right: auto;
+        left: var(--navbar-mobile-panel-left, -16rem);
+        width: calc(100vw - 2rem);
+    }
+
+    #navbar > .navbar-shell #music-nav-panel {
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-seg,
+    .navbar-brand__title,
+    .navbar-search-control,
+    .navbar-utility-control,
+    .navbar-hover-highlight {
+        transition-duration: 0.01ms !important;
+    }
+}

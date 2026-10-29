@@ -19,6 +19,7 @@ import type { NavBarLink } from "@/types/config";
 import { getFallbackFormat, getImageFormats } from "@/utils/image-utils";
 import { isHomePage } from "@/utils/layout-utils";
 import { resolveNavMenuLinks } from "@/utils/nav-menu-utils";
+import { isNavbarSearchVisible } from "@/utils/navbar-search-utils";
 import { url } from "@/utils/url-utils";
 import DropdownMenu from "./DropdownMenu.astro";
 
@@ -26,6 +27,7 @@ const className = Astro.props.class;
 
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
+const showNavbarSearch = isNavbarSearchVisible(Astro.url.pathname);
 
 // 导航栏透明模式：banner 用 banner.navbar，fullscreen 用 fullscreen.navbar（semifull 仅首页动态）
 const navbarTransparentMode =
@@ -155,16 +157,14 @@ const logoVariants = await Promise.all(
         navbar.style.setProperty("--navbar-glass-blur", `${blur}px`);
       })();
     </script>
-    <div class:list={[
-        className,
-        "overflow-visible! h-18 px-4"
-    ]}>
-        <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-3 md:px-5 font-bold active:scale-95">
-                <div class:list={[
-                    "flex flex-row items-center text-md",
-                    siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
-                ]} style="font-family: var(--font-navbar-title, inherit)">
+    <div class:list={[className, "navbar-shell overflow-visible! h-18 px-4"]}>
+        <div class="navbar-segments">
+            <div class="navbar-seg navbar-seg--left">
+                <a href={url('/')} class="navbar-brand btn-plain scale-animation font-bold active:scale-95">
+                    <div class:list={[
+                        "navbar-brand__content flex flex-row items-center text-md",
+                        siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
+                    ]} style="font-family: var(--font-navbar-title, inherit)">
                                     {logoConfig?.type === "icon" ? (
                                         <Icon name={logoConfig.value || "material-symbols:home-pin-outline"} class="navbar-logo text-[1.75rem] mb-1 mr-2" />
                                     ) : logoIsImage && logoVariants.length > 0 ? (
@@ -186,48 +186,63 @@ const logoVariants = await Promise.all(
                                     ) : (
                                         <Icon name="material-symbols:home-pin-outline" class="navbar-logo text-[1.75rem] mb-1 mr-2" />
                                     )}
-                    {navbarTitle}
-                </div>
-            </a>
+                        <span class="navbar-brand__title">{navbarTitle}</span>
+                    </div>
+                </a>
+            </div>
             <div class:list={[
-                "hidden lg:flex items-center space-x-1 col-start-2",
+                "navbar-seg navbar-seg--center hidden lg:flex",
                 isNavbarMenuCentered
-                    ? "justify-center"
-                    : "justify-start pl-2"
-            ]}>
+                    ? "navbar-seg--centered justify-center"
+                    : "navbar-seg--start justify-start"
+            ]} data-navbar-nav>
+                <div class="navbar-nav flex items-center relative">
+                    <div class="navbar-hover-highlight" data-navbar-highlight aria-hidden="true"></div>
                 {links.map((l) => {
                     return <DropdownMenu link={l} />;
                 })}
+                </div>
             </div>
-            <div class="flex col-start-3 justify-self-end">
+            <div class="navbar-seg navbar-seg--right">
                 <!--<SearchPanel client:load>-->
-                <Search
-                    client:load
-                />
+                <div
+                    class="navbar-search-control"
+                    data-navbar-search-control
+                    hidden={!showNavbarSearch}
+                    aria-hidden={!showNavbarSearch ? "true" : undefined}
+                >
+                    <Search client:load />
+                </div>
                 {musicPlayerConfig.showInNavbar && (
-                    <button aria-label={i18n(I18nKey.music)} aria-controls="music-nav-panel" aria-expanded="false" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
-                        <Icon name="material-symbols:music-note-rounded" class="text-[1.25rem]"></Icon>
-                    </button>
+                    <div class="navbar-utility-control">
+                        <button aria-label={i18n(I18nKey.music)} aria-controls="music-nav-panel" aria-expanded="false" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="music-player-switch">
+                            <Icon name="material-symbols:music-note-rounded" class="text-[1.25rem]"></Icon>
+                        </button>
+                    </div>
                 )}
                 {backgroundWallpaper.playerEnable && backgroundWallpaper.mode !== "none" && (
-                    <button
-                        aria-label={i18n(I18nKey.videoPlay)}
-						class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 hidden md:flex"
-                        id="bg-player-toggle"
-                        data-i18n-play={i18n(I18nKey.videoPlay)}
-                        data-i18n-pause={i18n(I18nKey.videoPause)}
-                    >
-                        <span class="bg-player-icon-play"><Icon name="material-symbols:play-arrow-rounded" class="text-[1.5rem]" /></span>
-                        <span class="bg-player-icon-pause hidden"><Icon name="material-symbols:pause-rounded" class="text-[1.5rem]" /></span>
-                    </button>
+                    <div class="navbar-utility-control hidden md:block">
+                        <button
+                            aria-label={i18n(I18nKey.videoPlay)}
+							class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 flex"
+                            id="bg-player-toggle"
+                            data-i18n-play={i18n(I18nKey.videoPlay)}
+                            data-i18n-pause={i18n(I18nKey.videoPause)}
+                        >
+                            <span class="bg-player-icon-play"><Icon name="material-symbols:play-arrow-rounded" class="text-[1.5rem]" /></span>
+                            <span class="bg-player-icon-pause hidden"><Icon name="material-symbols:pause-rounded" class="text-[1.5rem]" /></span>
+                        </button>
+                    </div>
                 )}
                 {hasDisplaySettings && (
+                    <div class="navbar-utility-control">
                         <button aria-label="Display Settings" aria-controls="display-setting" aria-expanded="false" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
                             <Icon name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
                         </button>
+                    </div>
                 )}
                 {/* @ts-ignore */}
-                <LightDarkSwitch client:load></LightDarkSwitch>
+                <div class="navbar-utility-control"><LightDarkSwitch client:load /></div>
                 <button aria-label="Menu" aria-controls="nav-menu-panel" aria-expanded="false" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
                     <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
                 </button>
@@ -243,6 +258,11 @@ const logoVariants = await Promise.all(
 </div>
 
 <script>
+import {
+    NAVBAR_SEARCH_VISIBILITY_EVENT,
+    syncNavbarSearchVisibility,
+} from "@/utils/navbar-search-utils";
+
 function loadButtonScript() {
     let settingBtn = document.getElementById("display-settings-switch");
     if (settingBtn) {
@@ -348,6 +368,166 @@ function loadButtonScript() {
 
 loadButtonScript();
 
+let segmentedNavbarController: AbortController | null = null;
+
+function initSegmentedNavbar() {
+    segmentedNavbarController?.abort();
+    segmentedNavbarController = new AbortController();
+    const { signal } = segmentedNavbarController;
+
+    const navbar = document.getElementById("navbar");
+    const segments = navbar?.querySelector<HTMLElement>(".navbar-segments");
+    const center = navbar?.querySelector<HTMLElement>(".navbar-seg--center");
+    const left = navbar?.querySelector<HTMLElement>(".navbar-seg--left");
+    const right = navbar?.querySelector<HTMLElement>(".navbar-seg--right");
+    const nav = navbar?.querySelector<HTMLElement>(".navbar-nav");
+    const highlight = navbar?.querySelector<HTMLElement>("[data-navbar-highlight]");
+    if (!navbar || !segments || !left || !right) return;
+
+    const navbarElement: HTMLElement = navbar;
+    const segmentsElement: HTMLElement = segments;
+    const leftSegment: HTMLElement = left;
+    const rightSegment: HTMLElement = right;
+
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const compactSize = 44;
+    const compactGap = 8;
+    let frame = 0;
+
+    function normalizePath(pathname: string) {
+        const normalized = pathname.replace(/\/+$/, "");
+        return normalized || "/";
+    }
+
+    function hrefMatchesCurrentPath(href: string) {
+        try {
+            const target = new URL(href, window.location.origin);
+            if (target.origin !== window.location.origin) return false;
+            const currentPath = normalizePath(window.location.pathname);
+            const targetPath = normalizePath(target.pathname);
+            return targetPath === "/"
+                ? currentPath === "/"
+                : currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+        } catch {
+            return false;
+        }
+    }
+
+    function moveHighlight(item: HTMLElement | null) {
+        if (!nav || !highlight || !item) {
+            if (highlight) highlight.style.opacity = "0";
+            return;
+        }
+        const itemRect = item.getBoundingClientRect();
+        const navRect = nav.getBoundingClientRect();
+        highlight.style.width = `${itemRect.width}px`;
+        highlight.style.height = `${itemRect.height}px`;
+        highlight.style.transform = `translate3d(${itemRect.left - navRect.left}px, ${itemRect.top - navRect.top}px, 0)`;
+        highlight.style.opacity = "1";
+    }
+
+    function detectActiveItem() {
+        if (!nav) return null;
+        let activeItem: HTMLElement | null = null;
+        const items = nav.querySelectorAll<HTMLElement>(":scope > .dropdown-container");
+        items.forEach((item) => {
+            const matched = Array.from(item.querySelectorAll<HTMLAnchorElement>("a[href]"))
+                .some((link) => hrefMatchesCurrentPath(link.href));
+            item.classList.toggle("nav-item-active", matched);
+            const topLevelLink = item.querySelector<HTMLElement>(":scope > .navbar-link-item");
+            if (matched) topLevelLink?.setAttribute("aria-current", "page");
+            else topLevelLink?.removeAttribute("aria-current");
+            if (matched && !activeItem) activeItem = item;
+        });
+        nav.classList.toggle("nav-has-active", !!activeItem);
+        moveHighlight(activeItem);
+        return activeItem;
+    }
+
+    function updateSegmentPositions() {
+        const rightRect = rightSegment.getBoundingClientRect();
+        rightSegment.style.setProperty(
+            "--navbar-mobile-panel-left",
+            `${16 - rightRect.left}px`,
+        );
+        if (!desktopQuery.matches || !center) {
+            leftSegment.style.removeProperty("--navbar-segment-shift");
+            rightSegment.style.removeProperty("--navbar-segment-shift");
+            return;
+        }
+        if (!navbarElement.classList.contains("navbar-compact")) {
+            leftSegment.style.setProperty("--navbar-segment-shift", "0px");
+            rightSegment.style.setProperty("--navbar-segment-shift", "0px");
+            return;
+        }
+        const segmentsRect = segmentsElement.getBoundingClientRect();
+        const centerRect = center.getBoundingClientRect();
+        const leftTarget = centerRect.left - segmentsRect.left - compactGap - compactSize;
+        const rightTarget = centerRect.right - segmentsRect.left + compactGap;
+        const rightOrigin = segmentsRect.width - rightSegment.offsetWidth;
+        leftSegment.style.setProperty("--navbar-segment-shift", `${leftTarget}px`);
+        rightSegment.style.setProperty("--navbar-segment-shift", `${rightTarget - rightOrigin}px`);
+    }
+
+    function updateCompactState() {
+        if (!desktopQuery.matches) {
+            navbarElement.classList.remove("navbar-compact");
+        } else if (window.scrollY > 80) {
+            navbarElement.classList.add("navbar-compact");
+        } else if (window.scrollY < 40) {
+            navbarElement.classList.remove("navbar-compact");
+        }
+        updateSegmentPositions();
+        frame = 0;
+    }
+
+    function requestUpdate() {
+        if (frame) return;
+        frame = requestAnimationFrame(updateCompactState);
+    }
+
+    const segmentResize = new ResizeObserver(updateSegmentPositions);
+    segmentResize.observe(rightSegment);
+    signal.addEventListener("abort", () => {
+        segmentResize.disconnect();
+        cancelAnimationFrame(frame);
+    }, { once: true });
+
+    nav?.querySelectorAll<HTMLElement>(":scope > .dropdown-container").forEach((item) => {
+        item.addEventListener("mouseenter", () => moveHighlight(item), { signal });
+        item.addEventListener("focusin", () => moveHighlight(item), { signal });
+    });
+
+    nav?.addEventListener("mouseleave", () => {
+        moveHighlight(nav.querySelector<HTMLElement>(".nav-item-active"));
+    }, { signal });
+    nav?.addEventListener("focusout", (event) => {
+        if (!(event.relatedTarget instanceof Node) || !nav.contains(event.relatedTarget)) {
+            moveHighlight(nav.querySelector<HTMLElement>(".nav-item-active"));
+        }
+    }, { signal });
+
+    window.addEventListener("scroll", requestUpdate, { passive: true, signal });
+    window.addEventListener("resize", () => {
+        updateSegmentPositions();
+        moveHighlight(nav?.querySelector<HTMLElement>(".nav-item-active") ?? null);
+    }, { passive: true, signal });
+    desktopQuery.addEventListener("change", updateCompactState, { signal });
+    document.addEventListener("astro:page-load", () => {
+        syncNavbarSearchVisibility(window.location.pathname);
+        detectActiveItem();
+    }, { signal });
+    document.addEventListener("swup:contentReplaced", () => {
+        syncNavbarSearchVisibility(window.location.pathname);
+        detectActiveItem();
+    }, { signal });
+    document.addEventListener(NAVBAR_SEARCH_VISIBILITY_EVENT, requestUpdate, { signal });
+
+    syncNavbarSearchVisibility(window.location.pathname);
+    detectActiveItem();
+    updateCompactState();
+}
+
 // 为semifull模式添加滚动检测逻辑
 function initSemifullScrollDetection() {
     const navbar = document.getElementById('navbar');
@@ -421,9 +601,13 @@ window.initSemifullScrollDetection = initSemifullScrollDetection;
 
 // 页面加载完成后初始化滚动检测
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSemifullScrollDetection);
+    document.addEventListener('DOMContentLoaded', () => {
+        initSemifullScrollDetection();
+        initSegmentedNavbar();
+    });
 } else {
     initSemifullScrollDetection();
+    initSegmentedNavbar();
 }
 </script>
 

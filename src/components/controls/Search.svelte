@@ -6,6 +6,7 @@ import { onMount, tick } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
 import { FLOATING_PANEL_CLOSE_EVENT } from "@/utils/floating-panel-utils";
+import { NAVBAR_SEARCH_DISABLE_EVENT } from "@/utils/navbar-search-utils";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
 
 type SearchState = "idle" | "loading" | "success" | "empty" | "error";
@@ -138,6 +139,14 @@ function handleResultClick(event: MouseEvent, href: string): void {
 
 onMount(() => {
 	mounted = true;
+	const handleNavbarSearchDisable = () => {
+		const control = document.querySelector("[data-navbar-search-control]");
+		if (document.activeElement instanceof HTMLElement && control?.contains(document.activeElement)) {
+			document.activeElement.blur();
+		}
+		closeSearchPanel();
+	};
+	document.addEventListener(NAVBAR_SEARCH_DISABLE_EVENT, handleNavbarSearchDisable);
 	const panel = document.getElementById("search-panel");
 	let swup: typeof window.swup | undefined;
 	const bindNavigation = () => {
@@ -156,6 +165,7 @@ onMount(() => {
 	document.addEventListener("swup:contentReplaced", onPageLoad);
 	window.addEventListener("popstate", closeSearchPanel);
 	return () => {
+		document.removeEventListener(NAVBAR_SEARCH_DISABLE_EVENT, handleNavbarSearchDisable);
 		cancelPendingSearch();
 		swup?.hooks.off("visit:start", closeSearchPanel);
 		panel?.removeEventListener(FLOATING_PANEL_CLOSE_EVENT, resetSearch);

@@ -656,7 +656,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	height: auto;
 	padding: 0;
 	border: var(--ed-frame-width) solid var(--ed-frame);
-	border-radius: var(--ed-radius);
+	border-radius: calc(var(--ed-radius) * 0.7);
 	background: var(--ed-paper-raised);
 	overflow: hidden;
 	max-width: 100%;
@@ -735,6 +735,13 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	transition: transform 450ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+@media (hover: hover) {
+	.ed-featured__link:hover .ed-featured__cover img {
+		transform: scale(1.035);
+	}
 }
 
 /* 主稿 + 短稿：主稿占三分之二 */
@@ -760,6 +767,12 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-short {
 	gap: 0.5rem;
+	min-height: 0;
+	padding: 1rem 0.15rem;
+	border: 0;
+	border-top: 1px solid var(--ed-rule);
+	border-radius: 0;
+	background: transparent;
 }
 
 .ed-short__title {
@@ -778,8 +791,7 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	color: var(--ed-ink-soft);
 }
 
-.ed-short__meta,
-.ed-portal__meta {
+.ed-short__meta {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -862,13 +874,29 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-dynamics {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-	gap: var(--ed-gap);
+	grid-template-columns: 1fr;
+	border-top: 1px solid var(--ed-rule);
 }
 
 .ed-dynamic {
-	gap: 0.6rem;
-	border-left: var(--ed-frame-width-strong) solid var(--ed-frame);
+	flex-direction: row;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1.5rem;
+	height: auto;
+	padding: 1rem 0.15rem;
+	border: 0;
+	border-bottom: 1px solid var(--ed-rule);
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+@media (hover: hover) {
+	.ed-dynamic:hover {
+		transform: translateX(3px);
+		box-shadow: none;
+	}
 }
 
 .ed-dynamic__excerpt {
@@ -889,9 +917,9 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.4rem 0.7rem;
-	margin-top: auto;
-	padding-top: 0.5rem;
-	border-top: 1px solid var(--ed-rule);
+	flex: none;
+	margin-top: 0;
+	padding-top: 0;
 	font-family: var(--font-editorial-mono);
 	font-size: max(12px, 0.7rem);
 	letter-spacing: 0.06em;
@@ -911,7 +939,8 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	display: grid;
 	min-width: 0;
 	grid-template-columns: repeat(min(2, var(--portal-count, 2)), minmax(0, 1fr));
-	gap: var(--ed-gap);
+	column-gap: clamp(1rem, 3vw, 2rem);
+	border-top: 1px solid var(--ed-rule);
 }
 
 @media (min-width: 768px) {
@@ -928,21 +957,19 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 
 .ed-portal {
 	min-width: 0;
-	gap: 0.55rem;
 	overflow: hidden;
+	gap: 0.65rem;
+	height: auto;
+	padding: 1.1rem 0.1rem;
+	border: 0;
+	border-bottom: 1px solid var(--ed-rule);
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
 }
 
 .ed-portal::before {
-	content: "";
-	position: absolute;
-	inset: 0 auto auto 0;
-	width: 100%;
-	height: 4px;
-	background: var(--ed-guava-green);
-}
-
-.ed-portal:nth-child(even)::before {
-	background: var(--ed-guava-coral);
+	content: none;
 }
 
 .ed-portal__head {
@@ -958,21 +985,21 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	justify-content: center;
 	width: 2rem;
 	height: 2rem;
-	border: var(--ed-frame-width) solid var(--ed-guava-green);
-	border-radius: 8px;
+	border: 1px solid var(--ed-rule);
+	border-radius: 50%;
 	color: var(--ed-guava-green);
 	background: var(--ed-guava-green-soft);
 }
 
 .ed-portal:nth-child(even) .ed-portal__icon {
-	border-color: var(--ed-guava-coral);
+	border-color: var(--ed-rule);
 	color: var(--ed-guava-coral);
-	background: var(--ed-guava-coral-soft);
+	background: transparent;
 }
 
 .ed-portal__arrow {
 	flex: none;
-	opacity: 0;
+	opacity: 0.55;
 	transform: translate(-2px, 2px);
 	transition:
 		opacity var(--duration-medium, 200ms) ease,
@@ -984,6 +1011,11 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	.ed-portal:hover .ed-portal__arrow {
 		opacity: 1;
 		transform: translate(0, 0);
+	}
+
+	.ed-portal:hover {
+		transform: translateY(-1px);
+		box-shadow: none;
 	}
 }
 
@@ -1008,12 +1040,6 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 	font-size: 0.83rem;
 	line-height: 1.7;
 	color: var(--ed-ink-soft);
-}
-
-.ed-portal__path {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 /* ── 数据页脚（报纸出版信息） ───────────────────────────── */
@@ -1276,4 +1302,8 @@ html[data-wallpaper-mode="none"] #navbar .dropdown-trigger {
 		animation: none;
 		opacity: 1;
 	}
+}
+
+@media (max-width: 767px) {
+	.ed-dynamic { flex-direction: column; gap: 0.65rem; }
 }

@@ -47,7 +47,8 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// 子项通过 pageKey 由 Navbar 按 siteConfig.pages 自动过滤（关闭的页面不显示）
 	links.push({
 		name: "我的",
-		url: "#",
+		// 桌面端父项本身可点击，直接进入个人资料页；下拉菜单继续提供各生活页面。
+		url: "/about/",
 		icon: "material-symbols:person",
 		children: [
 			// 动态
